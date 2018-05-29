@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop":false,
+    "outDir": "dist/",
+    "watch": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "typeRoots":[
+      "../node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+}
