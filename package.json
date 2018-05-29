@@ -1,0 +1,26 @@
+{
+  "name": "node-mce",
+  "version": "1.0.0",
+  "description": "Make command executable easily",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gerard2p/node-mce.git"
+  },
+  "keywords": [
+    "mce",
+    "commander",
+    "command",
+    "line",
+    "cmd"
+  ],
+  "author": "Gerardo Pérez Pérez <gerard2perez@bitsun.com.mx>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gerard2p/node-mce/issues"
+  },
+  "homepage": "https://github.com/gerard2p/node-mce#readme"
+}
