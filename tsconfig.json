@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "./",
     "module": "commonjs",
     "target": "es2017",
     "sourceMap": true,
@@ -7,18 +8,12 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "esModuleInterop":false,
-    "outDir": "dist/",
-    "watch": true,
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    "typeRoots":[
-      "../node_modules/@types"
-    ]
+    "esModuleInterop":false
   },
   "include": [
     "src/**/*.ts"
   ],
+  "exclude": [
+    "node_modules"
+  ]
 }
