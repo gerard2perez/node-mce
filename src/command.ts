@@ -141,9 +141,10 @@ class Command {
                     tag = `, ${tag}`;
                 }
                 let rawvalue = info.rawvalue || '';
-                rawvalue += expresion ? ` ${expresion}` : '';
+                let regexp = ' ' + ( (`${expresion}` || '').split('/')[1] || '').replace(/\^|\$/gi, '')
                 let len = short.length + tag.length;
-                let arg_len = rawvalue.length;
+                let arg_len = rawvalue.length + regexp.length;
+                rawvalue = chalk.cyan(rawvalue) + chalk.green(regexp);
                 
                 if(longest < len) longest = len;
                 if(longest_arg < arg_len) longest_arg = arg_len;
@@ -155,7 +156,7 @@ class Command {
                 let post_arg = '';
                 while(len < longest){post += ' ';len++}
                 while(arg_len < longest_arg){post_arg += ' ';arg_len++}
-                help += `${terminal}${post} ${chalk.cyan(val)}${post_arg}  ${desc}`;
+                help += `${terminal}${post} ${val}${post_arg}  ${desc}`;
             }
         process.stdout.write(help+'\n\n');
     }
