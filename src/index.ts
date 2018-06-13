@@ -2,13 +2,13 @@ import { existsSync, readdirSync } from "fs";
 import { resolve, join } from "path";
 import { Command } from "./command";
 
-let {version, bin} = require(join(__dirname.replace('src', ''), 'package.json'));
-let [name] = Object.keys(bin);
 class MCE {
 	help: boolean;   
 	name: string;
 	version: string;
-	constructor (private localdir:string) {
+	constructor (private root:string) {
+		let {version, bin} = require(join(this.root.replace('src', ''), 'package.json'));
+		let [name] = Object.keys(bin);
 		this.name = name;
 		this.version = version;
 		process.argv.splice(0, 2);
@@ -24,23 +24,36 @@ class MCE {
 		let mce_sub_command:any = require(source).default;
 		return (new mce_sub_command(`${this.name} ${subcommand.replace('.js', '')}`.trim()) as Command);
 	}
-	command () {
-
-	}
-	subcommand (args:string[]) {
+	command (args:string[]) {
+		let root = resolve(this.root);
 		if (!this.help) {
 			let [subcommand] = args.splice(0,1);
-			let sub = resolve(`./commands/${subcommand}.js`); 
+			let exists = existsSync( root );
+			if ( !exists ) {
+				console.log('Command does not exists');
+			} else {
+				return this.getCommand(root).call(args);
+			}
+		} else {
+			this.getCommand(root).help();
+		}
+	}
+	subcommand (args:string[]) {
+		let root = resolve(this.root, './commands');
+		console.log(root);
+		if (!this.help) {
+			let [subcommand] = args.splice(0,1);
+			let sub = resolve(root, `${subcommand}.js`);
 			let exists = existsSync( sub );
 			if ( !exists ) {
 				console.log('Command does not exists');
 			} else {
-				return this.getCommand(`./commands/${subcommand}`, subcommand).call(args);
+				return this.getCommand(sub, subcommand).call(args);
 			}
 		} else {
-			for(const subcommand of readdirSync('./commands')) {
+			for(const subcommand of readdirSync(root)) {
 				if ( subcommand.search(/.*\.js$/i) === 0 ) {
-					this.getCommand(resolve(`./commands/${subcommand}`), subcommand).help();
+					this.getCommand(resolve(root, subcommand), subcommand).help();
 				}
 			}
 		}

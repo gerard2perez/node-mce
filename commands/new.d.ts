@@ -1,33 +1,17 @@
 import { Parsed, Command } from "../command";
 declare let _options: {
-    integer: [string, string, Parser, RegExp, any, number];
-    float: [string, string, Parser, RegExp, any, number];
-    range: [string, string, Parser, RegExp, any, [number, number]];
-    list: [string, string, Parser, RegExp, any, string[]];
-    optional: [string, string, Parser, RegExp, any, string];
-    collect: [string, string, Parser, RegExp, any, string[]];
-    collectName: [string, string, Parser, RegExp, any, string];
-    verbose: [string, string, Parser, RegExp, any, number];
-    size: [string, string, Parser, RegExp, any, string];
-    fixed: [string, string, Parser, RegExp, any, boolean];
-    fix: [string, string, Parser, RegExp, any, boolean];
+    force: [string, string, Parser, RegExp, any, boolean];
+    npm: [string, string, Parser, RegExp, any, boolean];
+    style: [string, string, Parser, RegExp, any, string];
 };
 export default class New extends Command {
     description: string;
     arguments: string;
     options: {
-        integer: [string, string, Parser, RegExp, any, number];
-        float: [string, string, Parser, RegExp, any, number];
-        range: [string, string, Parser, RegExp, any, [number, number]];
-        list: [string, string, Parser, RegExp, any, string[]];
-        optional: [string, string, Parser, RegExp, any, string];
-        collect: [string, string, Parser, RegExp, any, string[]];
-        collectName: [string, string, Parser, RegExp, any, string];
-        verbose: [string, string, Parser, RegExp, any, number];
-        size: [string, string, Parser, RegExp, any, string];
-        fixed: [string, string, Parser, RegExp, any, boolean];
-        fix: [string, string, Parser, RegExp, any, boolean];
+        force: [string, string, Parser, RegExp, any, boolean];
+        npm: [string, string, Parser, RegExp, any, boolean];
+        style: [string, string, Parser, RegExp, any, string];
     };
-    action(file: string, options: Parsed<typeof _options>): Promise<void>;
+    action(application: string, options: Parsed<typeof _options>): Promise<void>;
 }
 export {};

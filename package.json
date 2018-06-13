@@ -2,7 +2,7 @@
   "name": "node-mce",
   "version": "1.0.0",
   "description": "Make command executable easily",
-  "main": "./mce",
+  "main": "./index.js",
   "bin": {
     "mce": "./mce"
   },
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "chalk": "^2.4.1",
+    "cross-spawn-async": "^2.2.5",
     "signal-exit": "^3.0.2"
   }
 }

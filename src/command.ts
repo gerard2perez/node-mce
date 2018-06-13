@@ -277,7 +277,7 @@ class Command {
             };
             if(short) {
                 if(this.shortTags[short.replace('-', '')]) {
-                    throw new Error(`Duplicated short tag ${short}. This is a problem related to the program.`)
+                    throw new Error(`On Command: ${this.command}. duplicated short tag ${short}. This is a problem related to the program.`)
                 }
                 this.shortTags[short.replace('-', '')] = this.mappedTags[key]; 
             }

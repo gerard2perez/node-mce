@@ -49,5 +49,5 @@ export declare class Spinner {
 declare function cliSpinner(options: ISpinnerOptions | string): Spinner;
 export declare function wait(time?: number): Promise<{}>;
 export declare const MainSpinner: Spinner;
-export declare function spin(display: string | ISpinnerOptions, fn: (info: Function, warn: Function, error: Function, ok: Function) => Promise<string | void>): Promise<string>;
+export declare function spin(display: string | ISpinnerOptions, fn: () => Promise<string | void>): Promise<string>;
 export { cliSpinner };

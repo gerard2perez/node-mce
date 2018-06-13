@@ -1,11 +1,11 @@
 declare class MCE {
-    private localdir;
+    private root;
     help: boolean;
     name: string;
     version: string;
-    constructor(localdir: string);
+    constructor(root: string);
     private getCommand;
-    command(): void;
+    command(args: string[]): void;
     subcommand(args: string[]): void;
 }
 declare function make(localdir?: string): MCE;

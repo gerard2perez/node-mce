@@ -11,10 +11,9 @@
     "esModuleInterop":false
   },
   "include": [
-    "./src/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "templates",
     "node_modules"
   ]
 }

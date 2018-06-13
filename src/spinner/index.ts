@@ -233,24 +233,10 @@ export function wait(time:number=1000) {
 	});
 }
 export const MainSpinner = new Spinner('');
-export async function spin(display:string | ISpinnerOptions, fn:(info:Function, warn:Function, error:Function, ok:Function) => Promise<string|void>) : Promise<string> {
+export async function spin(display:string | ISpinnerOptions, fn:() => Promise<string|void>) : Promise<string> {
 	MainSpinner.text = display;
 	MainSpinner.start();
-	const info = (text:string)=>{
-		if( parseInt(process.env.MCE_VERBOSE) >= 2)
-			MainSpinner.info(text);
-	}
-	const warn = (text:string)=>{
-		if( parseInt(process.env.MCE_VERBOSE) >= 1)
-			MainSpinner.warn(text);
-	}
-	const error = (text:string)=>{
-		MainSpinner.error(text);
-	}
-	const ok = (text:string)=>{
-		MainSpinner.ok(text);
-	}
-	return fn(info, warn, error, ok).then(success => {
+	return fn().then(success => {
 		if(success){
 			MainSpinner.succeed(success);
 			return success;
