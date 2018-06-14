@@ -1,4 +1,7 @@
-/**/*.js
-/**/*.map
-/node_modules/
-/coverage/
+**/*.d.ts
+**/*.js
+**/*.map
+!**/.gitkeep
+*.tgz
+node_modules
+coverage

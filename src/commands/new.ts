@@ -1,4 +1,5 @@
-import { bool, Parsed, Command, text } from "../command";
+import { text, bool, Parsed} from '../options';
+import { Command } from "../command";
 import { ok, error, ask } from "../console";
 import { spin } from "../spinner";
 import { existsSync, mkdirSync, copyFileSync, chmodSync, writeFileSync } from "fs";

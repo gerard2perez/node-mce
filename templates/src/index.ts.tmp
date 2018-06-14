@@ -1,6 +1,7 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, Parsed, Command } from "node-mce/command";
+import { numeric, floating, range, text, list, collect, bool, verbose, Parsed} from '../options';
 import { ok, error, warn, info, ask, input } from 'node-mce/console';
 import { spin } from 'node-mce/spinner';
+import { Command } from "../command";
 
 let _options = {
     number: numeric('-n <n>', 'A number'),

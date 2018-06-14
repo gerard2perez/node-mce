@@ -1,4 +1,5 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, Parsed, Command } from "../command";
+import { numeric, floating, range, text, list, collect, bool, verbose, Parsed} from '../options';
+import { Command } from "../command";
 import { ok, error, warn, info, ask, input } from '../console';
 import { spin } from '../spinner';
 
