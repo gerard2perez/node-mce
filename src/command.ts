@@ -56,6 +56,7 @@ class Command {
         if ( process.argv.includes('-h') || process.argv.includes('--help') ) {
             this.help()
         } else {
+            this.prepare();
             this.execute(argv);
         }
 
@@ -105,6 +106,11 @@ class Command {
             }
         process.stdout.write(help+'\n\n');
     }
+    private prepare() {
+        for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
+            this.getTags(key, opt, parser, expression, defaults);
+        }
+    }
     execute (args:string[]) {
         let argum:string[] = [];
         let options:any = {};
@@ -122,9 +128,11 @@ class Command {
             if (!matched) argum.push(arg);
         }
         argum = this.repetableShort(argum, options);
-        for(const [key, {value}] of this.mappedTags) {
+        for(const [key, {value, defaults}] of this.mappedTags) {
             if (value === OptionKind.boolean && !options[key]) {
                 options[key] = false
+            } else if (!options[key] && defaults){
+                options[key] = defaults;
             }
         }
         let final_args = [];
