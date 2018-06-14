@@ -1,4 +1,4 @@
-import { text, bool, Parsed} from '../options';
+import { text, bool, Parsed, enumeration} from '../options';
 import { Command } from "../command";
 import { ok, error, ask } from "../console";
 import { spin } from "../spinner";
@@ -10,9 +10,9 @@ import { spawn } from "../spawn";
 
 const templateDir = join(__dirname, '../templates');
 let _options = {
-	force: bool('-f', 'Overrides target directory'),
+	force: bool('-f', 'Overrides target directory',true),
 	npm: bool('-n', 'Install npm dependencies'),
-	style: text('-s <style>', 'Define the style of command you will use', /^(git|single)$/,'single')
+	style: enumeration('-s <style>', 'Define the style of command you will use', ['git', 'single'],'single'),
 };
 let RelPathRoot;
 function fFile(...path:string[]) {

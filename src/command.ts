@@ -37,6 +37,7 @@ enum OptionKind {
     varidac
 }
 interface ParserCommands {
+    options?:string[],
     rawvalue:string
     tags:string[]
     defaults:any
@@ -100,7 +101,7 @@ class Command {
                 while(len < longest){post += ' ';len++}
                 while(arg_len < longest_arg){post_arg += ' ';arg_len++}
                 let def = defaults && defaults.length ? `[${chalk.red(defaults)}]` : '';
-                help += `${terminal}${post} ${val}${post_arg}  ${desc}. ${def}`;
+                help += `${terminal}${post} ${val}${post_arg}  ${chalk.white(desc)}. ${def}`;
             }
         process.stdout.write(help+'\n\n');
     }
@@ -159,7 +160,12 @@ class Command {
     }
     private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
         options[key] = options[key] || parsed.defaults;
-        let matched = parsed.expression ? parsed.expression.exec(args[i + 1]) != null:true;
+        let matched = false;
+        if (parsed.expression && parsed.expression instanceof RegExp) {
+            matched = parsed.expression ? parsed.expression.exec(args[i + 1]) != null:true;
+        } else if (parsed.expression && parsed.expression instanceof Array) {
+            matched = parsed.expression.includes(args[i+1]);
+        }
         if(parsed.value == OptionKind.required) {
             i++;
             if(!args[i] || args[i].includes('-'))throw new Error(`Missing value for argument ${args[i - 1]}`);
@@ -174,7 +180,6 @@ class Command {
         } else if(key === 'verbose') {
             options[key] = parsed.parser(args[i], options[key]);
         } else if (parsed.value === OptionKind.boolean) {
-        // } else if(parsed.parser === (Parser.truefalse as any)) {
             options[key] = true;
         } else {
             console.log(parsed);
@@ -221,6 +226,8 @@ class Command {
             // let tag = short ? `--${key}` : `-${key}`;
             this.mappedTags[key] = {
                 tags: [tag, short],
+                // options: (expression instanceof Array ? expression:undefined),
+                // expression: (expression instanceof Array ? undefined:expression),
                 expression,
                 defaults,
                 parser: parser as any,

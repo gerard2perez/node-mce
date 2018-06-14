@@ -17,7 +17,8 @@ export enum Parser {
     collect = <any>_collect,
     increaseVerbosity = <any>_increaseVerbosity,
     string = <any>(s => s.toString()),
-    truefalse = <any> (s=> s==="false" ? false : !!s)
+    truefalse = <any> (s=> s==="false" ? false : !!s),
+    enum = <any>(s => s.toString()),
 }
 export type range = [number, number];
 export type list = string[];
@@ -27,10 +28,14 @@ export interface DataGroup2 {
 export type Parsed<T extends DataGroup2 > = { readonly [P in keyof T]: T[P][5]; }
 export type tOptions<T> = [string, string, Parser, RegExp, any, T];
 function preOptions<T>(parser:Parser, option:string, description:string, exp:RegExp | any =undefined, defaults:any=undefined) {
-    if ( !(exp instanceof RegExp) ) {
+    if( arguments.length === 4) {
         defaults = exp;
         exp = undefined;
     }
+    // if ( !(exp instanceof RegExp || exp instanceof Array) ) {
+    //     defaults = exp;
+    //     exp = undefined;
+    // }
     switch(parser) {
         case Parser.increaseVerbosity:
             defaults = 0;
@@ -45,9 +50,13 @@ function preOptions<T>(parser:Parser, option:string, description:string, exp:Reg
 }
 
 interface OptionBuilder<T> {
-    (option:string, description:string, exp:RegExp, defaults?:any) : tOptions<T>;
-    (option:string, description:string, defaults?:any) : tOptions<T>;
+    (option:string, description:string, exp:RegExp, defaults?:T) : tOptions<T>;
+    (option:string, description:string, defaults?:T) : tOptions<T>;
 }
+export function enumeration (option:string, description:string, options:string[], defaults?:any) : tOptions<string> {
+    return preOptions(Parser.enum, option, description, options, defaults);
+}
+// export const enumeration: OptionBuilder<string> = preOptions.bind(null, Parser.enum)
 export const numeric: OptionBuilder<number> = preOptions.bind(null, Parser.int)
 export const floating: OptionBuilder<number> = preOptions.bind(null, Parser.float)
 export const range: OptionBuilder<range> = preOptions.bind(null, Parser.range)
