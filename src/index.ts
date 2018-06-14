@@ -21,8 +21,19 @@ class MCE {
 		}
 	}
 	private getCommand (source:string, subcommand:string='') {
-		let mce_sub_command:any = require(source).default;
-		return (new mce_sub_command(`${this.name} ${subcommand.replace('.js', '')}`.trim()) as Command);
+		let command_name = `${this.name} ${subcommand.replace('.js', '')}`.trim();
+		let mce_sub_command:Command;
+		let mce_definition:any = require(source);
+		if(mce_definition.default) {
+			mce_sub_command  = (new mce_definition.default(command_name) as Command);
+		} else {
+			mce_sub_command = new Command(command_name);
+			mce_sub_command.arguments = mce_definition.arguments || '';
+			mce_sub_command.options = mce_definition.options || [];
+			mce_sub_command.description = mce_definition.description || '';
+			mce_sub_command.action = mce_definition.action;
+		}
+		return mce_sub_command;
 	}
 	command (args:string[]) {
 		let root = resolve(this.root);

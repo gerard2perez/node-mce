@@ -128,12 +128,12 @@ class Command {
             }
         }
         let final_args = [];
-        let main_arguments = this.arguments.split(' ');
+        let main_arguments = this.arguments.split(' ').filter(f => f);
         let main_args = main_arguments.map(this.argInfo);
         for(let i=0; i<main_args.length; i++) {
             if(main_args[i] === OptionKind.required) {
                 if(!argum[0])throw new Error(`Missing argument ${main_arguments[i]}`);
-                final_args.push(argum[0])
+                final_args.push(argum[0]);
                 argum.splice(0,1);
             } else if (main_args[i] === OptionKind.varidac) {
                 if ( i !== main_args.length - 1)throw new Error(`Varidac argument can only be in last place`);
@@ -149,7 +149,7 @@ class Command {
         }
         let nargs = final_args.length + 1;
         if(nargs !== this.action.length)
-            throw new Error(`Argument count Mmssmatch, your function should have only ${nargs}`);
+            throw new Error(`Argument count Missmatch, your function should have only ${nargs}`);
         process.env.MCE_VERBOSE = options.verbose || 0;
         this.action( ...final_args, options);
     }
@@ -160,7 +160,7 @@ class Command {
     }
     private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
         options[key] = options[key] || parsed.defaults;
-        let matched = false;
+        let matched = true;
         if (parsed.expression && parsed.expression instanceof RegExp) {
             matched = parsed.expression ? parsed.expression.exec(args[i + 1]) != null:true;
         } else if (parsed.expression && parsed.expression instanceof Array) {
