@@ -118,7 +118,7 @@ class Command {
     }
     drawArg(arg:string) {
         return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
-        .replace(/[(.*)]/, `[${chalk.blueBright("$1")}]`);
+            .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
     }
     help() {
         let help = chalk.yellow( `    ${this.command} `);
@@ -143,20 +143,21 @@ class Command {
                 let rawvalue = info.rawvalue || '';
                 let regexp = ' ' + ( (`${expresion}` || '').split('/')[1] || '').replace(/\^|\$/gi, '')
                 let len = short.length + tag.length;
-                let arg_len = rawvalue.length + regexp.length;
-                rawvalue = chalk.cyan(rawvalue) + chalk.green(regexp);
+                let arg_len = rawvalue.length; // + regexp.length;
+                rawvalue = chalk.cyan(rawvalue); // + chalk.green(regexp);
                 
                 if(longest < len) longest = len;
                 if(longest_arg < arg_len) longest_arg = arg_len;
-                options.push( [`\n        ${chalk.cyan(short)}${chalk.gray(tag)}`, desciprtion || '', len, rawvalue, arg_len ]);
+                options.push( [`\n        ${chalk.cyan(short)}${chalk.gray(tag)}`, desciprtion || '', len, rawvalue, arg_len, defaults ]);
                 // help += `\n        ${chalk.cyan(short)}${chalk.gray(tag)}`;
             }
-            for (let [terminal, desc, len, val, arg_len] of options) {
+            for (let [terminal, desc, len, val, arg_len, defaults] of options) {
                 let post = '';
                 let post_arg = '';
                 while(len < longest){post += ' ';len++}
                 while(arg_len < longest_arg){post_arg += ' ';arg_len++}
-                help += `${terminal}${post} ${val}${post_arg}  ${desc}`;
+                let def = defaults && defaults.length ? `[${chalk.red(defaults)}]` : '';
+                help += `${terminal}${post} ${val}${post_arg}  ${desc}. ${def}`;
             }
         process.stdout.write(help+'\n\n');
     }
@@ -265,8 +266,16 @@ class Command {
     private getTags(key:string, arg:string, parser:Parser, expression:RegExp, defaults:any) {
         if(!this.mappedTags[key]) {
             let [short, value] = arg.split(' ');
-            if(short.includes('--'))short = undefined;
+            if(!short.includes('-')) {
+                value = short;
+                short = undefined;
+            }
+            if(short && short.includes('--'))short = undefined;
             let tag = `--${key}`;
+            if ( short || key.length === 1) {
+                tag = `-${key}`;
+            }
+            // let tag = short ? `--${key}` : `-${key}`;
             this.mappedTags[key] = {
                 tags: [tag, short],
                 expression,

@@ -40,22 +40,19 @@ class MCE {
 	}
 	subcommand (args:string[]) {
 		let root = resolve(this.root, './commands');
-		console.log(root);
-		if (!this.help) {
-			let [subcommand] = args.splice(0,1);
-			let sub = resolve(root, `${subcommand}.js`);
-			let exists = existsSync( sub );
-			if ( !exists ) {
-				console.log('Command does not exists');
-			} else {
-				return this.getCommand(sub, subcommand).call(args);
-			}
-		} else {
+		let [subcommand] = args.splice(0,1);
+		let sub = resolve(root, `${subcommand}.js`);
+		let exists = existsSync( sub );
+		if ( exists ) {
+			this.getCommand(sub, subcommand).call(args);
+		} else if (this.help) {
 			for(const subcommand of readdirSync(root)) {
 				if ( subcommand.search(/.*\.js$/i) === 0 ) {
 					this.getCommand(resolve(root, subcommand), subcommand).help();
 				}
 			}
+		} else {
+			console.log('Command does not exists');
 		}
 	}
 }
