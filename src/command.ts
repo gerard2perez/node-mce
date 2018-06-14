@@ -214,6 +214,7 @@ class Command {
     private getTags(key:string, arg:string, parser:Parser, expression:RegExp, defaults:any) {
         if(!this.mappedTags[key]) {
             let [short, value] = arg.split(' ');
+            let stagdesc = short;
             if(!short.includes('-')) {
                 value = short;
                 short = undefined;
@@ -222,25 +223,22 @@ class Command {
             let tag = `--${key}`;
             if ( key.length === 1) {
                 tag = `-${key}`;
+                stagdesc = tag;
             }
-            // let tag = short ? `--${key}` : `-${key}`;
             this.mappedTags[key] = {
                 tags: [tag, short],
-                // options: (expression instanceof Array ? expression:undefined),
-                // expression: (expression instanceof Array ? undefined:expression),
                 expression,
                 defaults,
                 parser: parser as any,
                 rawvalue: value,
                 value: !value ? ( Parser.truefalse === parser ?  OptionKind.boolean: OptionKind.no) : (value.includes("<") ? OptionKind.required : OptionKind.optional)
             };
-            if(short) {
-                if(this.shortTags[short.replace('-', '')]) {
-                    throw new Error(`On Command: ${this.command}. duplicated short tag ${short}. This is a problem related to the program.`)
+            if(stagdesc) {
+                if(this.shortTags[stagdesc.replace('-', '')]) {
+                    throw new Error(`On Command: ${this.command}. duplicated short tag ${stagdesc}. This is a problem related to the program.`)
                 }
-                this.shortTags[short.replace('-', '')] = this.mappedTags[key]; 
+                this.shortTags[stagdesc.replace('-', '')] = this.mappedTags[key]; 
             }
-            // .push([short.replace('-', ''), this.mappedTags[key].value]);
         }
         return this.mappedTags[key];
         

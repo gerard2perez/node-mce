@@ -10,7 +10,7 @@ import { spawn } from "../spawn";
 
 const templateDir = join(__dirname, '../templates');
 let _options = {
-	force: bool('-f', 'Overrides target directory',true),
+	force: bool('-f', 'Overrides target directory'),
 	npm: bool('-n', 'Install npm dependencies'),
 	style: enumeration('-s <style>', 'Define the style of command you will use', ['git', 'single'],'single'),
 };

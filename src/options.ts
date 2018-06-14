@@ -56,12 +56,12 @@ interface OptionBuilder<T> {
 export function enumeration (option:string, description:string, options:string[], defaults?:any) : tOptions<string> {
     return preOptions(Parser.enum, option, description, options, defaults);
 }
-// export const enumeration: OptionBuilder<string> = preOptions.bind(null, Parser.enum)
+// export const enumeration2: OptionBuilder<string> = preOptions.bind(null, Parser.enum)
 export const numeric: OptionBuilder<number> = preOptions.bind(null, Parser.int)
 export const floating: OptionBuilder<number> = preOptions.bind(null, Parser.float)
 export const range: OptionBuilder<range> = preOptions.bind(null, Parser.range)
 export const text: OptionBuilder<string> = preOptions.bind(null, Parser.string)
 export const list: OptionBuilder<list> = preOptions.bind(null, Parser.list)
 export const collect: OptionBuilder<list> = preOptions.bind(null, Parser.collect)
-export const bool: OptionBuilder<boolean> = preOptions.bind(null, Parser.truefalse)
+export const bool: (short:string, description:string) => tOptions<boolean> = preOptions.bind(null, Parser.truefalse)
 export const verbose: (desciprtion?:string)=>tOptions<number> = preOptions.bind(null, Parser.increaseVerbosity, '-v')
