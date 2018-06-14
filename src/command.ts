@@ -220,7 +220,7 @@ class Command {
             }
             if(short && short.includes('--'))short = undefined;
             let tag = `--${key}`;
-            if ( short || key.length === 1) {
+            if ( key.length === 1) {
                 tag = `-${key}`;
             }
             // let tag = short ? `--${key}` : `-${key}`;
