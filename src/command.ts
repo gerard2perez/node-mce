@@ -27,8 +27,7 @@ Object.defineProperty(Object.prototype, Symbol.iterator, {
 			}
 		};
 	}
-})
-
+});
 enum OptionKind {
     no,
     required,
@@ -56,10 +55,8 @@ class Command {
         if ( process.argv.includes('-h') || process.argv.includes('--help') ) {
             this.help()
         } else {
-            this.prepare();
             this.execute(argv);
         }
-
     }
     drawArg(arg:string) {
         return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
@@ -77,7 +74,7 @@ class Command {
         if (this.description)
             help += `\n      ${this.description}`;
             for ( const [option, [arg, desciprtion, parser, expresion, defaults]] of this.options) {
-                const info = this.getTags(option, arg, parser,expresion, defaults);
+                const info = this.mapTags(option, arg, parser,expresion, defaults);
                 let [tag, short] = info.tags;
                 if(!short) {
                     short = tag;
@@ -86,7 +83,7 @@ class Command {
                     tag = `, ${tag}`;
                 }
                 let rawvalue = info.rawvalue || '';
-                let regexp = ' ' + ( (`${expresion}` || '').split('/')[1] || '').replace(/\^|\$/gi, '')
+                // let regexp = ' ' + ( (`${expresion}` || '').split('/')[1] || '').replace(/\^|\$/gi, '')
                 let len = short.length + tag.length;
                 let arg_len = rawvalue.length; // + regexp.length;
                 rawvalue = chalk.cyan(rawvalue); // + chalk.green(regexp);
@@ -106,19 +103,18 @@ class Command {
             }
         process.stdout.write(help+'\n\n');
     }
-    private prepare() {
-        for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
-            this.getTags(key, opt, parser, expression, defaults);
-        }
-    }
-    execute (args:string[]) {
+    private prepare(args:string[]) : [any,string[]] {
         let argum:string[] = [];
-        let options:any = {};
+        let options = {};
+        for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
+            let {value} = this.mapTags(key, opt, parser, expression, defaults);
+            options[key] = value === OptionKind.boolean ?  false : defaults;
+        }
         for(let i = 0; i<args.length; i ++) {
             let arg = args[i];
             let matched = false;
             for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
-                let parsed = this.getTags(key, opt, parser, expression, defaults);
+                let parsed = this.mapTags(key, opt, parser, expression, defaults);
                 if( parsed.tags.includes( arg )) {
                     matched = true;
                     i = this.extractValue(key,options, i, parsed, args);
@@ -128,37 +124,37 @@ class Command {
             if (!matched) argum.push(arg);
         }
         argum = this.repetableShort(argum, options);
-        for(const [key, {value, defaults}] of this.mappedTags) {
-            if (value === OptionKind.boolean && !options[key]) {
-                options[key] = false
-            } else if (!options[key] && defaults){
-                options[key] = defaults;
-            }
-        }
+        return [options, argum];
+    }
+    execute (args:string[]) {
+        let [options, argum] = this.prepare(args);
         let final_args = [];
         let main_arguments = this.arguments.split(' ').filter(f => f);
         let main_args = main_arguments.map(this.argInfo);
         for(let i=0; i<main_args.length; i++) {
-            if(main_args[i] === OptionKind.required) {
-                if(!argum[0])throw new Error(`Missing argument ${main_arguments[i]}`);
-                final_args.push(argum[0]);
-                argum.splice(0,1);
-            } else if (main_args[i] === OptionKind.varidac) {
-                if ( i !== main_args.length - 1)throw new Error(`Varidac argument can only be in last place`);
-                if(main_args[i - 1] === OptionKind.optional) {
-                    throw new Error(`Optional argument and Varidac cannot be next to each other`);
-                }
-                final_args.push(argum);
-                break;
-            } else if (main_args[i] === OptionKind.optional) {
-                final_args.push(argum[0])
-                argum.splice(0,1);
+            switch(main_args[i]) {
+                case OptionKind.required:
+                    if(!argum[0])throw new Error(`Missing argument ${main_arguments[i]}`);
+                    final_args.push(argum[0]);
+                    argum.splice(0,1);
+                    break;
+                case OptionKind.varidac:
+                    if ( i !== main_args.length - 1)throw new Error(`Varidac argument can only be in last place`);
+                    if(main_args[i - 1] === OptionKind.optional) {
+                        throw new Error(`Optional argument and Varidac cannot be next to each other`);
+                    }
+                    final_args.push(argum);
+                    break;
+                case OptionKind.optional:
+                    final_args.push(argum[0])
+                    argum.splice(0,1);
+                    break;
             }
         }
         let nargs = final_args.length + 1;
         if(nargs !== this.action.length)
             throw new Error(`Argument count Missmatch, your function should have only ${nargs}`);
-        process.env.MCE_VERBOSE = options.verbose || 0;
+        process.env.MCE_VERBOSE = options.verbose;
         this.action( ...final_args, options);
     }
     private argInfo(arg:string) : OptionKind {
@@ -166,17 +162,24 @@ class Command {
         if(arg.includes('...'))return OptionKind.varidac;
         return OptionKind.optional;
     }
-    private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
-        options[key] = options[key] || parsed.defaults;
+    private validateValue(expression:RegExp|Array<string>, val:string) {
         let matched = true;
-        if (parsed.expression && parsed.expression instanceof RegExp) {
-            matched = parsed.expression ? parsed.expression.exec(args[i + 1]) != null:true;
-        } else if (parsed.expression && parsed.expression instanceof Array) {
-            matched = parsed.expression.includes(args[i+1]);
+        if (expression instanceof RegExp) {
+            matched = expression.exec(val) != null;
+        } else if (expression instanceof Array) {
+            matched = expression.includes(val);
         }
+        return matched;
+    }
+    private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
+        if(!this.validateValue(parsed.expression, args[i + 1]))
+            throw new Error(`Argument '${args[i]}' does not match expression '${parsed.expression}'`);
         if(parsed.value == OptionKind.required) {
             i++;
             if(!args[i] || args[i].includes('-'))throw new Error(`Missing value for argument ${args[i - 1]}`);
+            if(key === 'days') {
+                console.log(args[i], options[key], parsed.parser.toString());
+            }
             options[key] = parsed.parser(args[i], options[key]);
         } else if(parsed.value == OptionKind.optional) {
             if(args[i + 1] && !args[i + 1].includes('-')) {
@@ -193,8 +196,6 @@ class Command {
             console.log(parsed);
             throw new Error('Case not implemented');
         }
-        if(!matched)
-            throw new Error(`Argument '${args[i]}' does not match expression '${parsed.expression}'`);
         return i;
     }
     private repetableShort(argum:string[], options:any) {
@@ -219,21 +220,25 @@ class Command {
         }
         return res;
     }
-    private getTags(key:string, arg:string, parser:Parser, expression:RegExp, defaults:any) {
+    private formatTags(key:string, option:string) {
+        let [short, value] = option.split(' ');
+        let stagdesc = short;
+        if(!short.includes('-')) {
+            value = short;
+            short = undefined;
+        }
+        if(short && short.includes('--'))short = undefined;
+        let tag = `--${key}`;
+        if ( key.length === 1) {
+            tag = `-${key}`;
+            stagdesc = tag;
+        }
+        tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
+        return {tag, short, value, stagdesc};
+    }
+    private mapTags(key:string, arg:string, parser:Parser, expression:RegExp, defaults:any) {
         if(!this.mappedTags[key]) {
-            let [short, value] = arg.split(' ');
-            let stagdesc = short;
-            if(!short.includes('-')) {
-                value = short;
-                short = undefined;
-            }
-            if(short && short.includes('--'))short = undefined;
-            let tag = `--${key}`;
-            if ( key.length === 1) {
-                tag = `-${key}`;
-                stagdesc = tag;
-            }
-            tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
+            let {tag, short, value, stagdesc} = this.formatTags(key, arg);
             this.mappedTags[key] = {
                 tags: [tag, short],
                 expression,
@@ -250,7 +255,6 @@ class Command {
             }
         }
         return this.mappedTags[key];
-        
     }
     action( ...data:any[]) {}
 }
