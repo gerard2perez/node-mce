@@ -225,6 +225,7 @@ class Command {
                 tag = `-${key}`;
                 stagdesc = tag;
             }
+            tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
             this.mappedTags[key] = {
                 tags: [tag, short],
                 expression,

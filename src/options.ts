@@ -22,10 +22,10 @@ export enum Parser {
 }
 export type range = [number, number];
 export type list = string[];
-export interface DataGroup2 { 
+export interface DataGroup { 
     [p:string]: tOptions<number> | tOptions<range> | tOptions<boolean> | tOptions<string> | tOptions<range> | tOptions<list>;
 }
-export type Parsed<T extends DataGroup2 > = { readonly [P in keyof T]: T[P][5]; }
+export type Parsed<T extends DataGroup > = { readonly [P in keyof T]: T[P][5]; }
 export type tOptions<T> = [string, string, Parser, RegExp, any, T];
 function preOptions<T>(parser:Parser, option:string, description:string, exp:RegExp | any =undefined, defaults:any=undefined) {
     if( arguments.length === 4) {
