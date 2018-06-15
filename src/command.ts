@@ -1,5 +1,25 @@
 import chalk from 'chalk';
 import { tOptions, Parser } from './options';
+function countmax ()  {
+    let maxvalue=0;
+    return (text:string = '') => {
+        if (text.length > maxvalue)maxvalue = text.length;
+        return maxvalue;
+    };
+}
+function padding(text:string, len:Function, long?:number) {
+    if(long >= 0) {
+        let after = '';
+        while (long < len()) {
+            long++;
+            after += ' '
+        }
+        text += after;
+    } else {
+        while(text.length < len())text += ' ';
+    }
+    return text;
+}
 declare global {
 	interface Object {
 		[Symbol.iterator]:() => Iterator<[string, any, number, number]>
@@ -33,7 +53,8 @@ enum OptionKind {
     required,
     optional,
     boolean,
-    varidac
+    varidac,
+    verbose
 }
 interface ParserCommands {
     options?:string[],
@@ -42,7 +63,7 @@ interface ParserCommands {
     defaults:any
     expression:RegExp
     parser:Function
-    value:OptionKind
+    kind:OptionKind
 }
 class Command {
     constructor(private command:string) {}
@@ -69,8 +90,9 @@ class Command {
             help += ` ${chalk.cyan('[options]')}`
         }
         let options = [];
-        let longest = 0;
-        let longest_arg = 0;
+        let desc_len = countmax();
+        let tags_len = countmax();
+        let val_len = countmax();
         if (this.description)
             help += `\n      ${this.description}`;
             for ( const [option, [arg, desciprtion, parser, expresion, defaults]] of this.options) {
@@ -82,24 +104,19 @@ class Command {
                 } else {
                     tag = `, ${tag}`;
                 }
+                let desc = desciprtion || '';
                 let rawvalue = info.rawvalue || '';
-                // let regexp = ' ' + ( (`${expresion}` || '').split('/')[1] || '').replace(/\^|\$/gi, '')
                 let len = short.length + tag.length;
-                let arg_len = rawvalue.length; // + regexp.length;
-                rawvalue = chalk.cyan(rawvalue); // + chalk.green(regexp);
-                
-                if(longest < len) longest = len;
-                if(longest_arg < arg_len) longest_arg = arg_len;
-                options.push( [`\n        ${chalk.cyan(short)}${chalk.gray(tag)}`, desciprtion || '', len, rawvalue, arg_len, defaults ]);
-                // help += `\n        ${chalk.cyan(short)}${chalk.gray(tag)}`;
+                let arg_len = rawvalue.length;
+                tags_len(short+tag);
+                desc_len(desc);
+                val_len(rawvalue);
+                rawvalue = chalk.cyan(rawvalue);
+                options.push( [`${chalk.cyan(short)}${chalk.gray(tag)}`, desc, len, rawvalue, arg_len, defaults ]);
             }
-            for (let [terminal, desc, len, val, arg_len, defaults] of options) {
-                let post = '';
-                let post_arg = '';
-                while(len < longest){post += ' ';len++}
-                while(arg_len < longest_arg){post_arg += ' ';arg_len++}
+            for (let [tags, desc, tagLen, val, valLen, defaults] of options) {
                 let def = defaults && defaults.length ? `[${chalk.red(defaults)}]` : '';
-                help += `${terminal}${post} ${val}${post_arg}  ${chalk.white(desc)}. ${def}`;
+                help += `\n        ${padding(tags, tags_len, tagLen)}  ${padding(val,val_len, valLen)}  ${chalk.white(padding(desc, desc_len))} ${def}`;
             }
         process.stdout.write(help+'\n\n');
     }
@@ -107,8 +124,8 @@ class Command {
         let argum:string[] = [];
         let options = {};
         for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
-            let {value} = this.mapTags(key, opt, parser, expression, defaults);
-            options[key] = value === OptionKind.boolean ?  false : defaults;
+            let {kind} = this.mapTags(key, opt, parser, expression, defaults);
+            options[key] = kind === OptionKind.boolean ?  false : defaults;
         }
         for(let i = 0; i<args.length; i ++) {
             let arg = args[i];
@@ -174,28 +191,30 @@ class Command {
     private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
         if(!this.validateValue(parsed.expression, args[i + 1]))
             throw new Error(`Argument '${args[i]}' does not match expression '${parsed.expression}'`);
-        if(parsed.value == OptionKind.required) {
-            i++;
-            if(!args[i] || args[i].includes('-'))throw new Error(`Missing value for argument ${args[i - 1]}`);
-            if(key === 'days') {
-                console.log(args[i], options[key], parsed.parser.toString());
+            switch(parsed.kind) {
+                case OptionKind.required:
+                    i++;
+                    if(!args[i] || args[i].includes('-'))throw new Error(`Missing value for argument ${args[i - 1]}`);
+                    options[key] = parsed.parser(args[i], options[key]);
+                    break;
+                case OptionKind.optional:
+                    if(args[i + 1] && !args[i + 1].includes('-')) {
+                        i++;
+                        options[key] = parsed.parser(args[i], options[key]);
+                    } else {
+                        options[key] = parsed.parser(true, options[key]);
+                    }
+                    break;
+                case OptionKind.boolean:
+                    options[key] = true;
+                    break;
+                case OptionKind.verbose:
+                    options[key] = parsed.parser(args[i], options[key]);
+                    break;
+                default:
+                    console.log(parsed);
+                    throw new Error('Case not implemented');
             }
-            options[key] = parsed.parser(args[i], options[key]);
-        } else if(parsed.value == OptionKind.optional) {
-            if(args[i + 1] && !args[i + 1].includes('-')) {
-                i++;
-                options[key] = parsed.parser(args[i], options[key]);
-            } else {
-                options[key] = parsed.parser(true, options[key]);
-            }
-        } else if(key === 'verbose') {
-            options[key] = parsed.parser(args[i], options[key]);
-        } else if (parsed.value === OptionKind.boolean) {
-            options[key] = true;
-        } else {
-            console.log(parsed);
-            throw new Error('Case not implemented');
-        }
         return i;
     }
     private repetableShort(argum:string[], options:any) {
@@ -245,7 +264,7 @@ class Command {
                 defaults,
                 parser: parser as any,
                 rawvalue: value,
-                value: !value ? ( Parser.truefalse === parser ?  OptionKind.boolean: OptionKind.no) : (value.includes("<") ? OptionKind.required : OptionKind.optional)
+                kind: !value ? ( Parser.truefalse === parser ?  OptionKind.boolean: ( Parser.increaseVerbosity === parser ? OptionKind.verbose : OptionKind.no)) : (value.includes("<") ? OptionKind.required : OptionKind.optional)
             };
             if(stagdesc) {
                 if(this.shortTags[stagdesc.replace('-', '')]) {
