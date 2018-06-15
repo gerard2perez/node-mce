@@ -112,7 +112,8 @@ class Command {
                 options.push( [`${chalk.cyan(short)}${chalk.gray(tag)}`, desc, len, rawvalue, arg_len, defaults ]);
             }
             for (let [tags, desc, tagLen, val, valLen, defaults] of options) {
-                let def = defaults && defaults.length ? `[${chalk.red(defaults)}]` : '';
+                console.log(defaults);
+                let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
                 help += `\n        ${padding(tags, tags_len, tagLen)}  ${padding(val,val_len, valLen)}  ${chalk.white(padding(desc, desc_len))} ${def}`;
             }
         process.stdout.write(help+'\n\n');
