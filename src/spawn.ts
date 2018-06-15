@@ -1,6 +1,8 @@
 import { spawn } from 'cross-spawn-async';
 import { SpawnOptions } from 'child_process';
-function exec (cmd:string, options:string[], config:SpawnOptions, truefalse:boolean=true) {
+import { spin } from './spinner';
+import { error } from './console';
+function exec (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean=true) {
     let buffer = '';
     let store = (chunck) => {buffer+=chunck.toString()};
     return new Promise((resolve, reject)=>{
@@ -23,5 +25,10 @@ function exec (cmd:string, options:string[], config:SpawnOptions, truefalse:bool
     });
     
 }
-
-export { exec as spawn };
+async function spinSpawn(message:string, cmd:string, options:any[], config:SpawnOptions={}, truefalse:boolean=true) {
+    await spin(message, async () =>{
+        await exec(cmd, options, config, false).catch(error);
+    });
+    
+}
+export { exec as spawn, spinSpawn };

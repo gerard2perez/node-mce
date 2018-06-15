@@ -7,6 +7,7 @@ class MCE {
 	name: string;
 	version: string;
 	constructor (private root:string) {
+		process.env.MCE_ROOT = root;
 		let {version, bin} = require(join(this.root.replace('src', ''), 'package.json'));
 		let [name] = Object.keys(bin);
 		this.name = name;

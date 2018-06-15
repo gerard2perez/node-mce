@@ -66,22 +66,19 @@ interface ParserCommands {
     kind:OptionKind
 }
 class Command {
+    private mappedTags: {[p:string]:ParserCommands} = {}
+    private shortTags:  {[p:string]:ParserCommands} = {}
     constructor(private command:string) {}
     description:string = ''
     options: {[p:string]:tOptions<any>}
-    mappedTags: {[p:string]:ParserCommands} = {}
-    shortTags:  {[p:string]:ParserCommands} = {}
     arguments:string = ''
+    action( ...data:any[]) {}
     call (argv:string[]) {
         if ( process.argv.includes('-h') || process.argv.includes('--help') ) {
             this.help()
         } else {
             this.execute(argv);
         }
-    }
-    drawArg(arg:string) {
-        return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
-            .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
     }
     help() {
         let help = chalk.yellow( `    ${this.command} `);
@@ -120,6 +117,10 @@ class Command {
             }
         process.stdout.write(help+'\n\n');
     }
+    private drawArg(arg:string) {
+        return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
+            .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
+    }
     private prepare(args:string[]) : [any,string[]] {
         let argum:string[] = [];
         let options = {};
@@ -143,7 +144,7 @@ class Command {
         argum = this.repetableShort(argum, options);
         return [options, argum];
     }
-    execute (args:string[]) {
+    private execute (args:string[]) {
         let [options, argum] = this.prepare(args);
         let final_args = [];
         let main_arguments = this.arguments.split(' ').filter(f => f);
@@ -275,6 +276,5 @@ class Command {
         }
         return this.mappedTags[key];
     }
-    action( ...data:any[]) {}
 }
 export { Command, Command as default } ;
