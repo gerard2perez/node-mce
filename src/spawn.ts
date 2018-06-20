@@ -12,7 +12,7 @@ function exec (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean
                 resolve(code === 0);
             } else {
                 if (code === 0) {
-                    resolve(true);
+                    resolve(buffer);
                 } else {
                     reject(`${cmd} ${options.join(' ')}\n` + buffer);
                 }

@@ -29,7 +29,7 @@ class MCE {
 			mce_sub_command  = (new mce_definition.default(command_name) as Command);
 		} else {
 			mce_sub_command = new Command(command_name);
-			mce_sub_command.arguments = mce_definition.arguments || '';
+			mce_sub_command.arguments = mce_definition.args || '';
 			mce_sub_command.options = mce_definition.options || [];
 			mce_sub_command.description = mce_definition.description || '';
 			mce_sub_command.action = mce_definition.action;
