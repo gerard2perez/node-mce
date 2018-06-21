@@ -192,7 +192,7 @@ class Command {
     }
     private extractValue(key:string, options:any, i:number, parsed: ParserCommands, args:string[]) {
         if(!this.validateValue(parsed.expression, args[i + 1]))
-            throw new Error(`Argument '${args[i]}' does not match expression '${parsed.expression}'`);
+            throw new Error(`Argument '${args[i]} ${args[i+1]}' does not match expression '${parsed.expression}'`);
             switch(parsed.kind) {
                 case OptionKind.required:
                     i++;
