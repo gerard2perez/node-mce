@@ -8,9 +8,10 @@ export function capitalize(text:string) {
 }
 
 function fFile(...path:string[]) {
-	path.splice(0,0,targetPath());
-	let last:string = path.pop();
-	return (join(...path, chalk.green(last)).replace(/\\/mg, '/'));
+	// path.splice(0,0,targetPath());
+    let last:string = path.pop();
+    let route = chalk.grey(join(...path).replace(/\\/mg, '/'));
+	return `${route}/${chalk.green(last)}`; // (join(...path, chalk.green(last)));
 }
 export function created (text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
