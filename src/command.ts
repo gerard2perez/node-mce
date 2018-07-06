@@ -20,34 +20,38 @@ function padding(text:string, len:Function, long?:number) {
     }
     return text;
 }
-declare global {
-	interface Object {
-		[Symbol.iterator]:() => Iterator<[string, any, number, number]>
-	}
+// declare global {
+// 	interface Object {
+// 		[Symbol.iterator]:() => Iterator<[string, any, number, number]>
+// 	}
+// }
+export function iter(obj:any) {
+    Object.defineProperty(obj, Symbol.iterator, {
+        value: function() {
+            let keys = Object.keys(this);
+            let data:any = this;
+            let total = keys.length;
+            return {
+                i: 0,
+                next() {
+                    let current = this.i;
+                    let key = keys[current];
+                    return {
+                        value: [
+                            key,
+                            data[key],
+                            current,
+                            total
+                        ],
+                        done: this.i++ === total
+                    };
+                }
+            };
+        }
+    });
+    return obj;
 }
-Object.defineProperty(Object.prototype, Symbol.iterator, {
-	value: function() {
-		let keys = Object.keys(this);
-		let data:any = this;
-		let total = keys.length;
-		return {
-			i: 0,
-			next() {
-				let current = this.i;
-				let key = keys[current];
-				return {
-					value: [
-						key,
-						data[key],
-						current,
-						total
-					],
-					done: this.i++ === total
-				};
-			}
-		};
-	}
-});
+
 enum OptionKind {
     no,
     required,
@@ -92,7 +96,7 @@ class Command {
         let val_len = countmax();
         if (this.description)
             help += `\n      ${this.description}`;
-            for ( const [option, [arg, desciprtion, parser, expresion, defaults]] of this.options) {
+            for ( const [option, [arg, desciprtion, parser, expresion, defaults]] of iter(this.options)) {
                 const info = this.mapTags(option, arg, parser,expresion, defaults);
                 let [tag, short] = info.tags;
                 if(!short) {
@@ -125,14 +129,14 @@ class Command {
     private prepare(args:string[]) : [any,string[]] {
         let argum:string[] = [];
         let options = {};
-        for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
+        for( const [key, [opt, description, parser, expression, defaults]] of iter(this.options)) {
             let {kind} = this.mapTags(key, opt, parser, expression, defaults);
             options[key] = kind === OptionKind.boolean ?  false : defaults;
         }
         for(let i = 0; i<args.length; i ++) {
             let arg = args[i];
             let matched = false;
-            for( const [key, [opt, description, parser, expression, defaults]] of this.options) {
+            for( const [key, [opt, description, parser, expression, defaults]] of iter(this.options)) {
                 let parsed = this.mapTags(key, opt, parser, expression, defaults);
                 if( parsed.tags.includes( arg )) {
                     matched = true;
@@ -227,7 +231,7 @@ class Command {
             if( arg.indexOf('-') === 0 ) {
                 arg = arg.replace('-', '');
                 for(const t of arg.split('')) {
-                    for(const [tag, parsed ] of this.shortTags) {
+                    for(const [tag, parsed ] of iter(this.shortTags)) {
                         if(t === tag) {
                             matched = true;
                             let key = parsed.tags[0].replace('--', '');
