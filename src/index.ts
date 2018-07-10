@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "fs";
 import { resolve, join } from "path";
 import { Command } from "./command";
-
+let ext = process.env.MCE_DEV ? 'ts' : 'js';
 class MCE {
 	help: boolean;   
 	name: string;
@@ -22,7 +22,7 @@ class MCE {
 		}
 	}
 	private getCommand (source:string, subcommand:string='') {
-		let command_name = `${this.name} ${subcommand.replace('.js', '')}`.trim();
+		let command_name = `${this.name} ${subcommand.replace(`.${ext}`, '')}`.trim();
 		let mce_sub_command:Command;
 		let mce_definition:any = require(source);
 		if(mce_definition.default) {
@@ -53,17 +53,13 @@ class MCE {
 	subcommand (args:string[]) {
 		let root = resolve(this.root, './commands');
 		let [subcommand] = args.splice(0,1);
-		let sub = resolve(root, `${subcommand}.js`);
+		let sub = resolve(root, `${subcommand}.${ext}`);
 		let exists = existsSync( sub );
-		if(!exists) {
-			sub = resolve(root, `${subcommand}.ts`);
-			exists = existsSync( sub );
-		}
 		if ( exists ) {
 			this.getCommand(sub, subcommand).call(args);
 		} else if (this.help) {
 			for(const subcommand of readdirSync(root)) {
-				if ( subcommand.search(/.*\.js|ts$/i) === 0 ) {
+				if ( subcommand.search(new RegExp(`.*\.${ext}$`, 'i')) === 0 ) {
 					this.getCommand(resolve(root, subcommand), subcommand).help();
 				}
 			}
