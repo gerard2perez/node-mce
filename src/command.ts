@@ -27,6 +27,7 @@ function padding(text:string, len:Function, long?:number) {
 // }
 export function iter(obj:any) {
     Object.defineProperty(obj, Symbol.iterator, {
+        configurable:true,
         value: function() {
             let keys = Object.keys(this);
             let data:any = this;
