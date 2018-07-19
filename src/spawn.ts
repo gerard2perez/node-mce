@@ -1,4 +1,4 @@
-import { spawn } from 'cross-spawn-async';
+import * as spawn from 'cross-spawn';
 import { SpawnOptions } from 'child_process';
 import { spin } from './spinner';
 import { error } from './console';
@@ -31,4 +31,4 @@ async function spinSpawn(message:string, cmd:string, options:any[], config:Spawn
     });
     
 }
-export { exec as spawn, spinSpawn };
+export { exec as spawn, spinSpawn, spawn as rawSpawn };

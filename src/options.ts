@@ -10,8 +10,8 @@ function _increaseVerbosity(v, total) {
     return total + 1;
 }
 export enum Parser {
-    float = <any>((n:string) => parseFloat(n)),
-    int = <any>((n:string) => parseInt(n)),
+    float = <any>((n:string, d:number) => parseFloat(n) || d),
+    int = <any>((n:string, d:number) => parseInt(n) || d),
     range = <any>_range,
     list = <any>_list,
     collect = <any>_collect,

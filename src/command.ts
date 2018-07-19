@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import { tOptions, Parser } from './options';
+import { targetPath } from './paths';
 function countmax ()  {
     let maxvalue=0;
     return (text:string = '') => {
@@ -82,7 +83,7 @@ class Command {
         if ( process.argv.includes('-h') || process.argv.includes('--help') ) {
             this.help()
         } else {
-            this.execute(argv);
+            this.execute(argv.join('=').split('=').filter(f=>f));
         }
     }
     help() {
@@ -117,7 +118,6 @@ class Command {
                 options.push( [`${chalk.cyan(short)}${chalk.gray(tag)}`, desc, len, rawvalue, arg_len, defaults ]);
             }
             for (let [tags, desc, tagLen, val, valLen, defaults] of options) {
-                console.log(defaults);
                 let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
                 help += `\n        ${padding(tags, tags_len, tagLen)}  ${padding(val,val_len, valLen)}  ${chalk.white(padding(desc, desc_len))} ${def}`;
             }
