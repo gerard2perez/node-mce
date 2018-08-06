@@ -37,9 +37,8 @@ class MCE {
 		return mce_sub_command;
 	}
 	command (args:string[]) {
-		let root = resolve(this.root);
+		let root = resolve(this.root, `index.${ext}`);
 		if (!this.help) {
-			let [subcommand] = args.splice(0,1);
 			let exists = existsSync( root );
 			if ( !exists ) {
 				console.log('Command does not exists');

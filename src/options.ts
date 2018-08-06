@@ -32,11 +32,10 @@ function preOptions<T>(parser:Parser, option:string, description:string, exp:Reg
         defaults = exp;
         exp = undefined;
     }
-    // if ( !(exp instanceof RegExp || exp instanceof Array) ) {
-    //     defaults = exp;
-    //     exp = undefined;
-    // }
     switch(parser) {
+        // case Parser.string:
+        //     defaults = defaults || '';
+        //     break;
         case Parser.increaseVerbosity:
             defaults = 0;
             break;
