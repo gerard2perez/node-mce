@@ -108,46 +108,48 @@ class Command {
             let arg_len = rawvalue.length;
 
             let split_desc = Math.ceil(desc.length / 2) > desc_limit;
-            let parts = split_desc && desc.length > desc_limit ? this.formatDescription(desc, desc_limit):[desc];
+            let parts = this.formatDescription(desc, desc_limit, parser, expresion);
             parts.map(p=>desc_len(p));
             tags_len(short + tag);
             val_len(rawvalue);
             rawvalue = chalk.cyan(rawvalue);
             options.push([`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, rawvalue, arg_len, defaults]);
         }
-        for (let [tags, desc, tagLen, val, valLen, defaults] of options) {
-            let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
-            let [main, ...overflow] = desc;
-            let argDescription = [`${padding(tags, tags_len, tagLen)}  ${padding(val, val_len, valLen)} ${chalk.white(padding(main, desc_len))} ${def}`];
-            overflow.map(d=>argDescription.push(`${padding('', tags_len)}  ${padding('', val_len)}    ${chalk.white(d)}`))
-            help += argDescription.map(arg=>`\n        ${arg}`).join('');
+        for (let option of options) {
+            help += this.formatOption(option, tags_len, val_len, desc_len);            
         }
         process.stdout.write(help + '\n\n');
     }
-    private formatDescription(desc: any, desc_limit: number) {
+    private formatOption(option:any, tags_len, val_len, desc_len) {
+        let [tags, desc, tagLen, val, valLen, defaults] = option;
+        let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
+        let [main, ...overflow] = desc;
+        let argDescription = [`${padding(tags, tags_len, tagLen)} ${padding(val, val_len, valLen)} ${chalk.white(padding(main, desc_len))} ${def}`];
+        overflow.map(d=>argDescription.push(`${padding('', tags_len)}  ${padding('', val_len)} ${chalk.white(d)}`))
+        return argDescription.map(arg=>`\n        ${arg}`).join('');
+    }
+    private formatDescription(desc: string, desc_limit: number, parser:Parser, expresion:string[]) {
         let parts:string[] = [];
-            let temp_desc = desc;
-            let pre_dash = false;
-            let pst_dash = false;
-            while (temp_desc.length) {
-                let part: string = temp_desc.substr(0, desc_limit);
-                let white_index = part.lastIndexOf(' ');
-                let clean = false;
-                if (Math.ceil((desc_limit - white_index) / 10) === 1) {
-                    part = temp_desc.substr(0, white_index);
-                    clean = true;
+        let count = 0;
+        let index = 0;
+        let lines = desc.replace(/ +/gm, ' ').split('\n').map(line=>{
+            return line.split(' ');
+        }).map(line => {
+            for(const word of line) {
+                parts[index] = parts[index] || '';
+                parts[index] += ` ${word}`;
+                if(parts[index].length > desc_limit) {
+                    index++;
                 }
-                else {
-                    pre_dash = pst_dash;
-                }
-                temp_desc = temp_desc.replace(part, '').trim();
-                pst_dash = temp_desc.length !== 0 && !clean;
-                part = `${pre_dash ? '_' : ''}${part}${pst_dash ? '_' : ''}`;
-                parts.push(part);
             }
+            index++;
+        });
+        if( parser === Parser.enum) {
+            parts.push(` Values: ${expresion.join(' | ')}`)
+        }
+        if(parts.length>1)parts.push('');
         return parts;
     }
-
     private drawArg(arg: string) {
         return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
             .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
