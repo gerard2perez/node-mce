@@ -271,8 +271,8 @@ class Command {
         }
         return res;
     }
-    private formatTags(key: string, option: string) {
-        let [short, value] = option.split(' ');
+    private formatTags(key: string, option: string, parser:Parser) {
+        let [short='', value=''] = option.split(' ');
         let stagdesc = short;
         if (!short.includes('-')) {
             value = short;
@@ -285,11 +285,35 @@ class Command {
             stagdesc = tag;
         }
         tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
+        if(!short)stagdesc=undefined;
+        if(!value) {
+            switch(parser) {
+                case Parser.list:
+                    value = `<a>,<b>..<n>`;
+                    break;
+                case Parser.string:
+                    // value = `<${key}>`;
+                    break;
+                case Parser.range:
+                    value = '<a>..<b>';
+                    break;
+                case Parser.collect:
+                    value = '<c>';
+                    break;
+                case Parser.int:
+                case Parser.float:
+                    value = '<n>';
+                    break;
+                case Parser.enum:
+                    value = '<e>';
+                    break;
+            }
+        }
         return { tag, short, value, stagdesc };
     }
     private mapTags(key: string, arg: string, parser: Parser, expression: RegExp, defaults: any) {
         if (!this.mappedTags[key]) {
-            let { tag, short, value, stagdesc } = this.formatTags(key, arg);
+            let { tag, short, value, stagdesc } = this.formatTags(key, arg, parser);
             this.mappedTags[key] = {
                 tags: [tag, short],
                 expression,
