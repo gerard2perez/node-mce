@@ -146,6 +146,8 @@ class Command {
         });
         if( parser === Parser.enum) {
             parts.push(` Values: ${expresion.join(' | ')}`)
+        } else if ( parser === Parser.collect) {
+            parts[0] = ` [Repeatable]${parts[0]}`;
         }
         if(parts.length>1)parts.push('');
         return parts;
