@@ -1,8 +1,10 @@
 import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from 'node-mce/options';
 import { ok, error, warn, info, ask, input } from 'node-mce/console';
 import { capitalize, created, updated } from 'node-mce/utils';
+import { targetPath, cliPath } from 'node-mce/paths';
 import { spin } from 'node-mce/spinner';
 import { Command } from "node-mce/command";
+
 export let description = 'A description for your command';
 export let args = '<arg1> [varidac...]';
 export let options = {
