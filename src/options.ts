@@ -49,8 +49,8 @@ function preOptions<T>(parser:Parser, option:string, description:string, exp:Reg
 }
 
 interface OptionBuilder<T> {
-    (option:string, description:string, exp:RegExp, defaults?:T) : tOptions<T>;
     (option:string, description:string, defaults?:T) : tOptions<T>;
+    (option:string, description:string, exp:RegExp, defaults?:T) : tOptions<T>;
 }
 export function enumeration (option:string, description:string, options:string[], defaults?:any) : tOptions<string> {
     return preOptions(Parser.enum, option, description, options, defaults);

@@ -248,6 +248,7 @@ class Command {
                 options[key] = parsed.parser(args[i], options[key]);
                 break;
             default:
+                console.log(parsed.kind.toString());
                 console.log(parsed);
                 throw new Error('Case not implemented');
         }
@@ -296,7 +297,7 @@ class Command {
                     value = `<a>,<b>..<n>`;
                     break;
                 case Parser.string:
-                    // value = `<${key}>`;
+                    value = ' '; //`<${key}>`;
                     break;
                 case Parser.range:
                     value = '<a>..<b>';
