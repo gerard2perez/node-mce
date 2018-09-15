@@ -56,9 +56,10 @@ class MCE {
 		} else if (this.help) {
 			for(const subcommand of readdirSync(root)) {
 				if ( subcommand.search(new RegExp(`.*\.${ext}$`, 'i')) === 0 ) {
-					return this.getCommand(resolve(root, subcommand), subcommand).help();
+					await this.getCommand(resolve(root, subcommand), subcommand).help();
 				}
 			}
+			return Promise.resolve();
 		} else {
 			console.log('Command does not exists');
 			return Promise.resolve();
