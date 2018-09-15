@@ -1,5 +1,8 @@
 {
   "files.exclude": {
+    "commands": true,
+    "spinner":true,
+    "wcwidth": true,
     "node_modules": true,
     "**/*.js": true,
     "**/*.map": true,

@@ -1,0 +1,8 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgerard2p%2Fnode-mce.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgerard2p%2Fnode-mce?ref=badge_shield)
+
+[![Build Status](https://img.shields.io/travis/gerard2p/node-mce/master.svg?style=flat-square)](https://travis-ci.org/gerard2p/node-mce)[![Dependency Status](https://david-dm.org/gerard2p/node-mce.svg?style=flat-square)](https://david-dm.org/gerard2p/node-mce)![PRs Welcome](https://img.shields.io/badge/PRs%20🔀-Welcome-brightgreen.svg?style=flat-square)
+
+[![Code Climate](https://codeclimate.com/github/gerard2p/node-mce/badges/gpa.svg?style=flat-square)](https://codeclimate.com/github/gerard2p/node-mce?style=flat-square) [![Test Coverage](https://codeclimate.com/github/gerard2p/node-mce/badges/coverage.svg?style=flat-square)](https://codeclimate.com/github/gerard2p/node-mce/coverage) [![Issue Count](https://codeclimate.com/github/gerard2p/node-mce/badges/issue_count.svg?style=flat-square)](https://codeclimate.com/github/gerard2p/node-mce)
+
+
+![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)[![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=101&style=flat-square)](https://github.com/ellerbrock/typescript-badges/)

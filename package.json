@@ -1,18 +1,35 @@
 {
   "name": "node-mce",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Make command executable easily",
   "main": "./index.js",
   "bin": {
     "mce": "./mce"
   },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
   "scripts": {
-    "test": "mocha test/index.spec.ts"
+    "test": "mocha test/index.spec.ts",
+    "cover": "nyc npm t"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gerard2p/node-mce.git"
   },
+  "files": [
+    "/*.js",
+    "/*.d.ts",
+    "/wcwidth/**/*.js",
+    "/wcwidth/**/*.d.ts",
+    "/commands/**/*.js",
+    "/commands/**/*.d.ts",
+    "/spinner/**/*.js",
+    "/spinner/**/*.d.ts",
+    "/mce",
+    "/README.md",
+    "/LICENSE.md"
+  ],
   "keywords": [
     "mce",
     "commander",
@@ -33,6 +50,7 @@
     "@types/node": "^10.1.3",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "nyc": "^13.0.1",
     "ts-node": "^6.1.0",
     "typescript": "^2.9.1"
   },
@@ -43,5 +61,27 @@
     "cross-spawn": "^6.0.5",
     "cross-spawn-async": "^2.2.5",
     "signal-exit": "^3.0.2"
-  }
+  },
+  "nyc": {
+		"lines": 99,
+		"statements": 99,
+		"functions": 99,
+		"branches": 99,
+		"reporter": [
+			"lcov",
+			"text"
+		],
+		"include": [
+			"src/*.ts"
+		],
+		"extension": [
+			".ts"
+		],
+		"sourceMap": true,
+		"instrument": true,
+		"cache": true,
+		"check-coverage": true,
+		"all": true,
+		"report-dir": "./coverage"
+	}
 }

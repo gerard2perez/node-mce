@@ -191,12 +191,16 @@ describe('Arguments Parsing', ()=>{
         await res.should.be.rejectedWith('Argument count missmatch');
     });
     it('throws argument type missmatch', async ()=>{
-        let res:any = NODE_MCE.subcommand('args4.test arg1 arg2'.split(' '));
+        let res:any = NODE_MCE.subcommand('args4.test arg1 true'.split(' '));
         await res.should.be.rejectedWith('Argument type missmatch');
     });
     it('throws argument type missmatch', async ()=>{
         let res:any = NODE_MCE.subcommand('args4.test 10 arg2'.split(' '));
         await res.should.be.rejectedWith('Argument type missmatch');
+    });
+    it('Varidac argument can only be in last place', async ()=>{
+        let res:any = NODE_MCE.subcommand('args5.test true 10 arg2'.split(' '));
+        await res.should.be.rejectedWith('Varidac argument can only be in last place');
     });
 });
 describe('Utils functions', ()=>{
