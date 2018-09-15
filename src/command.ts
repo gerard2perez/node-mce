@@ -70,12 +70,10 @@ class Command {
     private shortTags: { [p: string]: ParserCommands } = {}
     action:(...data:any[]) => Promise<void>
     constructor(private command: string, definition:any) {
-        if(definition) {
-            this.arguments = definition.args || '';
-            this.options = definition.options || [];
-            this.description = definition.description || '';
-            this.action = definition.action;
-        }
+        this.arguments = definition.args || '';
+        this.options = definition.options || [];
+        this.description = definition.description || '';
+        this.action = definition.action;
     }
     description: string = ''
     options: { [p: string]: tOptions<any> }

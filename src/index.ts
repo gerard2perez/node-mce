@@ -27,11 +27,7 @@ class MCE {
 		let command_name = `${this.name} ${subcommand.replace(`.${ext}`, '')}`.trim();
 		let mce_sub_command:Command;
 		let mce_definition:any = require(source);
-		if(mce_definition.default) {
-			mce_sub_command  = (new mce_definition.default(command_name) as Command);
-		} else {
-			mce_sub_command = new Command(command_name, mce_definition);
-		}
+		mce_sub_command = new Command(command_name, mce_definition);
 		return mce_sub_command;
 	}
 	async command (args:string[]) {
