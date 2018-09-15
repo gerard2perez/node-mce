@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { Parser } from './options';
+import { Parser, OptionKind } from './options';
 function padding(text: string, len: Function, long?: number) {
     if (long >= 0) {
         let after = '';
@@ -12,6 +12,15 @@ function padding(text: string, len: Function, long?: number) {
         while (text.length < len()) text += ' ';
     }
     return text;
+}
+export interface ParserCommands {
+    options?: string[],
+    rawvalue: string
+    tags: string[]
+    defaults: any
+    expression: RegExp
+    parser: Function
+    kind: OptionKind
 }
 export class HelpRenderer {
     static formatOption(option:any, tags_len, val_len, desc_len) {
@@ -87,5 +96,25 @@ export class HelpRenderer {
             }
         }
         return value;
+    }
+    static renderArguments(info: ParserCommands, desciprtion: any, desc_limit: number, parser: any, expresion: any, desc_len: (text?: string) => number, tags_len: (text?: string) => number, val_len: (text?: string) => number, options: any[], defaults: any) {
+        let [tag, short] = info.tags;
+        if (!short) {
+            short = tag;
+            tag = '';
+        }
+        else {
+            tag = `, ${tag}`;
+        }
+        let desc: string = desciprtion;
+        let rawvalue: string = info.rawvalue || '';
+        let len = short.length + tag.length;
+        let arg_len = rawvalue.length;
+        let parts = HelpRenderer.formatDescription(desc, desc_limit, parser, expresion);
+        parts.map(p => desc_len(p));
+        tags_len(short + tag);
+        val_len(rawvalue);
+        rawvalue = chalk.cyan(rawvalue);
+        options.push([`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, rawvalue, arg_len, defaults]);
     }
 }

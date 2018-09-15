@@ -1,5 +1,4 @@
 import { OptionKind } from "./options";
-
 export class Argument {
     kind:OptionKind = OptionKind.optional;
     parser:any

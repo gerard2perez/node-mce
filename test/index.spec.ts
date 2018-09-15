@@ -5,6 +5,7 @@ import { MCE } from '../src';
 import { describe, it} from 'mocha';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import { wait } from '../src/spinner';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -257,7 +258,9 @@ describe('Utils functions',async ()=>{
 describe('Self Test', async ()=>{
     it('create a new project', async()=>{
         SELF = MCE('./src');
-        await SELF.subcommand('new single_repo -f -s single'.split(' '));
+		await SELF.subcommand('new single_repo -f -s single'.split(' '));
+		wait(1).then(o=>process.stdin.push('n\n'));
+		await SELF.subcommand('new single_repo -s single'.split(' '));
     });
     it('create a new project multicommand', async()=>{
         await SELF.subcommand('new single_repo -f -s git'.split(' '));

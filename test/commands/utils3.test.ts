@@ -1,4 +1,4 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src/options';
+import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
 import { ok, error, warn, info, ask, input, pause, resume, updateTextSpin } from '../../src/console';
 import { created, updated } from '../../src/utils';
 import { targetPath, cliPath } from '../../src/paths';

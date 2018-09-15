@@ -28,6 +28,8 @@
     "/commands/**/*.d.ts",
     "/spinner/**/*.js",
     "/spinner/**/*.d.ts",
+    "/core/**/*.js",
+    "/core/**/*.d.ts",
     "/mce",
     "/README.md",
     "/LICENSE.md",

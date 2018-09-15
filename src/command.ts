@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { Argument } from './argument';
-import { HelpRenderer } from './help-renderer';
-import { OptionKind, Parser, tOptions } from './options';
+import { Argument } from './core/argument';
+import { HelpRenderer, ParserCommands } from './core/help-renderer';
+import { OptionKind, Parser, tOptions } from './core/options';
 import { iter } from './utils';
 function countmax() {
     let maxvalue = 0;
@@ -9,15 +9,6 @@ function countmax() {
         if (text.length > maxvalue) maxvalue = text.length;
         return maxvalue;
     };
-}
-interface ParserCommands {
-    options?: string[],
-    rawvalue: string
-    tags: string[]
-    defaults: any
-    expression: RegExp
-    parser: Function
-    kind: OptionKind
 }
 class Command {
     private mappedTags: { [p: string]: ParserCommands } = {}
@@ -56,30 +47,14 @@ class Command {
             help += `\n      ${this.description}`;
         for (const [option, [arg, desciprtion, parser, expresion, defaults]] of iter(this.options)) {
             const info = this.mapTags(option, arg, parser, expresion, defaults);
-            let [tag, short] = info.tags;
-            if (!short) {
-                short = tag;
-                tag = '';
-            } else {
-                tag = `, ${tag}`;
-            }
-            let desc:string = desciprtion;
-            let rawvalue:string = info.rawvalue || '';
-            let len = short.length + tag.length;
-            let arg_len = rawvalue.length;
-            let parts = HelpRenderer.formatDescription(desc, desc_limit, parser, expresion);
-            parts.map(p=>desc_len(p));
-            tags_len(short + tag);
-            val_len(rawvalue);
-            rawvalue = chalk.cyan(rawvalue);
-            options.push([`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, rawvalue, arg_len, defaults]);
+            HelpRenderer.renderArguments(info, desciprtion, desc_limit, parser, expresion, desc_len, tags_len, val_len, options, defaults);
         }
         for (let option of options) {
             help += HelpRenderer.formatOption(option, tags_len, val_len, desc_len);            
         }
         process.stdout.write(help + '\n\n');
     }
-    private prepare(args: string[]): [any, string[]] {
+    private prepareProgramArguments(args: string[]): [any, string[]] {
         let argum: string[] = [];
         let options = {};
         for (const [key, [opt, description, parser, expression, defaults]] of iter(this.options)) {
@@ -102,9 +77,7 @@ class Command {
         argum = this.repetableShort(argum, options);
         return [options, argum];
     }
-    private execute(args: string[]) {
-        let [options, argum] = this.prepare(args);
-        let final_args = [];
+    private verifyArguments () {
         let main_args = this.arguments.split(' ').filter(f => f).map(a=>new Argument(a));
         let no_optional = false;
         for(const argument of main_args) {
@@ -114,6 +87,10 @@ class Command {
                 throw new Error('All required arguments should go befere optional arguments');
             }
         }
+        return main_args;
+    }
+    private mapArgumentsToOptions(main_args:Argument[], argum:string[]) {
+        let final_args = [];
         for (let i = 0; i < main_args.length; i++) {
             switch (main_args[i].kind) {
                 case OptionKind.required:
@@ -134,6 +111,12 @@ class Command {
                     break;
             }
         }
+        return final_args;
+    }
+    private execute(args: string[]) {
+        let main_args = this.verifyArguments();
+        let [options, argum] = this.prepareProgramArguments(args);
+        let final_args = this.mapArgumentsToOptions(main_args, argum);
         let nargs = final_args.length + 1;
         if (nargs !== this.action.length)
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`);

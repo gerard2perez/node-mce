@@ -1,4 +1,4 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src/options';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
 import { cliPath, targetPath } from '../../src/paths';
 import { render } from '../../src/render';
 export let description = 'A description for your command';

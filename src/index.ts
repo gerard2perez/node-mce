@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from "fs";
-import { resolve, join } from "path";
+import { resolve } from "path";
 import { Command } from "./command";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 class MCE {
@@ -69,5 +69,5 @@ class MCE {
 function make (localdir?:string) {
 	return new MCE(localdir);
 }
-// let command = make().subcommand(process.argv);
-export {make as MCE};
+export { make as MCE };
+export { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from './core/options';

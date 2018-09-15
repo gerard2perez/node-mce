@@ -2,10 +2,16 @@ import chalk from "chalk";
 import { ok } from "./console";
 import { targetPath } from "./paths";
 import { join } from "path";
+import { mkdirSync } from "fs";
 export function fFile(...path:string[]) {
-    let last:string = path.pop();
-    let route = chalk.grey(join(...path).replace(/\\/mg, '/'));
-	return `${route}/${chalk.green(last)}`;
+	let last:string = path.pop();
+	if(path.length === 0) {
+		return `${chalk.green(last)}`;
+	} else {
+		let route = chalk.grey(join(...path).replace(/\\/mg, '/'));
+		return `${route}/${chalk.green(last)}`;
+	}
+    
 }
 function print (mode:String, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
@@ -39,4 +45,11 @@ export function iter(obj: any) {
         }
     });
     return obj;
+}
+
+export function makeDir(location:string) {
+	let tocreate = location;
+	let diff = location.replace(targetPath(), '').replace(/^\\/, '');
+	mkdirSync(tocreate);
+	ok(fFile(diff));
 }
