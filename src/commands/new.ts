@@ -13,7 +13,7 @@ const templateDir = join(__dirname, '../templates').replace('src/', '').replace(
 let _options = {
 	force: bool('-f', 'Overrides target directory'),
 	npm: bool('-n', 'Install npm dependencies'),
-	style: enumeration('-s <style>', 'Define the style of command you will use', ['git', 'single'],'single'),
+	style: enumeration('-s <style>', 'Define the style of command you will use. If you need more than one command use git.', ['git', 'single'],'single'),
 };
 let RelPathRoot;
 function cfFile(...path:string[]) {

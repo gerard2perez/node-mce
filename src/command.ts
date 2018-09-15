@@ -68,6 +68,7 @@ interface ParserCommands {
 class Command {
     private mappedTags: { [p: string]: ParserCommands } = {}
     private shortTags: { [p: string]: ParserCommands } = {}
+    action:(...data:any[]) => Promise<void>
     constructor(private command: string, definition:any) {
         if(definition) {
             this.arguments = definition.args || '';
@@ -79,7 +80,6 @@ class Command {
     description: string = ''
     options: { [p: string]: tOptions<any> }
     arguments: string = ''
-    action(...data: any[]) { return Promise.resolve(); }
     call(argv: string[]) {
         if (process.argv.includes('-h') || process.argv.includes('--help')) {
             return this.help()
@@ -90,6 +90,7 @@ class Command {
     async help() {
         let help = chalk.yellow(`    ${this.command} `);
         help += this.arguments.split(' ').map(this.drawArg).join(' ');
+        // istanbul ignore else
         if (this.options) {
             help += ` ${chalk.cyan('[options]')}`
         }
@@ -98,6 +99,7 @@ class Command {
         let tags_len = countmax();
         let val_len = countmax();
         let desc_limit = 50;
+        // istanbul ignore else
         if (this.description)
             help += `\n      ${this.description}`;
         for (const [option, [arg, desciprtion, parser, expresion, defaults]] of iter(this.options)) {
@@ -292,10 +294,6 @@ class Command {
             case OptionKind.verbose:
                 options[key] = parsed.parser(args[i], options[key]);
                 break;
-            default:
-                console.log(parsed.kind.toString());
-                console.log(parsed);
-                throw new Error('Case not implemented');
         }
         return i;
     }
@@ -322,7 +320,7 @@ class Command {
         return res;
     }
     private formatTags(key: string, option: string, parser:Parser) {
-        let [short='', value=''] = option.split(' ');
+        let [short, value=''] = option.split(' ');
         let stagdesc = short;
         if (!short.includes('-')) {
             value = short;
@@ -370,7 +368,7 @@ class Command {
                 defaults,
                 parser: parser as any,
                 rawvalue: value,
-                kind: !value ? (Parser.truefalse === parser ? OptionKind.boolean : (Parser.increaseVerbosity === parser ? OptionKind.verbose : OptionKind.no)) : (value.includes("<") ? OptionKind.required : OptionKind.optional)
+                kind: !value ? (Parser.truefalse === parser ? OptionKind.boolean : (Parser.increaseVerbosity === parser ? OptionKind.verbose :/* istanbul ignore next */ OptionKind.no)) : (value.includes("<") ? OptionKind.required : OptionKind.optional)
             };
             if (stagdesc) {
                 if (this.shortTags[stagdesc.replace('-', '')]) {

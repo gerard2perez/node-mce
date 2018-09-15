@@ -8,10 +8,10 @@ let _options = {
     floating: floating('-f <n>', 'A float number'),
     range: range('-r <a>..<b>', 'A Range of two numbers'),
     text: text('-t <n>', 'A string value'),
-    list: list('-l <n>', 'comma separed values'),
+    list: list('<n>', 'comma separed values'),
     collect: collect('-c <n>', 'A repetable value'),
     bool: bool('-b', 'A boolean value'),
-    verbose: verbose('Increase system verbosity'),
+    verbose: verbose(),
 }
 export default class Add extends Command {
     options = _options

@@ -199,6 +199,18 @@ describe('Arguments Parsing', ()=>{
         let res:any = NODE_MCE.subcommand('args4.test 10 arg2'.split(' '));
         await res.should.be.rejectedWith('Argument type missmatch');
     });
+    it('throws argument does not match expression', async ()=>{
+        let res:any = NODE_MCE.subcommand('args6.test -n 5 -t xlk'.split(' '));
+        await res.should.be.rejectedWith('does not match expression');
+    });
+    it('throws Missing value for argument', async ()=>{
+        let res:any = NODE_MCE.subcommand('args6.test -t lk -n -l'.split(' '));
+        await res.should.be.rejectedWith('Missing value for argument');
+    });
+    it('throws duplicated short tag', async ()=>{
+        let res:any = NODE_MCE.subcommand('args7.test -h'.split(' '));
+        await res.should.be.rejectedWith('duplicated short tag');
+    });
     it('Varidac argument can only be in last place', async ()=>{
         let res:any = NODE_MCE.subcommand('args5.test true 10 arg2 -n=r -f=a'.split(' '));
         await res.should.be.rejectedWith('Varidac argument can only be in last place');
@@ -236,5 +248,17 @@ describe('Self Test', async ()=>{
     });
     it('create a new project multicommand', async()=>{
         await SELF.subcommand('new single_repo -f -s git'.split(' '));
-    })
+    });
+    it('renders all help', async()=>{
+        SELF.help = true;
+        let help = await SELF.subcommand([]);
+        console.log(help);
+    });
+    it('renders command help', async()=>{
+        SELF.help = true;
+        process.argv.push('-h');
+        let help = await SELF.subcommand('new'.split(' '));
+        process.argv.pop();
+        console.log(help);
+    });
 });

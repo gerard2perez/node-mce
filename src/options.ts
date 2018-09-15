@@ -28,7 +28,7 @@ export interface DataGroup {
 export type Parsed<T extends DataGroup > = { readonly [P in keyof T]: T[P][5]; }
 export type tOptions<T> = [string, string, Parser, RegExp, any, T];
 function preOptions<T>(parser:Parser, option:string, description:string, exp:RegExp | any =undefined, defaults:any=undefined) {
-    if( arguments.length === 4) {
+    if( arguments.length === 4 && !(exp instanceof RegExp)) {
         defaults = exp;
         exp = undefined;
     }
