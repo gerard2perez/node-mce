@@ -46,10 +46,10 @@ export function iter(obj: any) {
     });
     return obj;
 }
-
 export function makeDir(location:string) {
 	let tocreate = location;
-	let diff = location.replace(targetPath(), '').replace(/^\\/, '');
+	let diff = location.replace(targetPath(), '')
+				.replace(/^\\/, '').replace(/\\/mg, '/').split('/');
 	mkdirSync(tocreate);
-	ok(fFile(diff));
+	ok(fFile(...diff));
 }

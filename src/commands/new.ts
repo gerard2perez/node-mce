@@ -28,22 +28,22 @@ function copy (file:string, target?:string) {
 	copyFileSync(join(templateDir, file), project(target));
 	cfFile(...target.split('\\'));
 }
-function nproy(...path:string[]) {
-	return targetPath(RelPathRoot, ...path);
-}
+// function nproy(...path:string[]) {
+// 	return targetPath(RelPathRoot, ...path);
+// }
 export const description = 'Creates a new MCE project.'
 export const args = '<application>';
 export  async function action(application:string, opt:Parsed<typeof options>) {
+	const nproy = targetPath.bind(null, application);
 	RelPathRoot = application;
 	if(!(await override('Directory already exist. Do you want to override it', application, opt.force)))
 		return;
 	await spin('Creating Files', async () => {
 		makeDir(nproy());
 		copy('app', application);
-		chmodSync(project(application), 744 );
+		chmodSync(nproy(), 744 );
 		copy('tsconfig.json');
-		mkdirSync(project('src'));
-		cfFile('src');
+		makeDir(nproy('src'));
 		let cli = `import { MCE } from "node-mce";`;
 		if (opt.style === 'git') {
 			cli += '\n\nMCE(__dirname).subcommand(process.argv);';
@@ -53,14 +53,12 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 		writeFileSync(project('src', 'cli.ts'), cli)
 		cfFile('src', 'cli.ts');
 		if(opt.style === 'git') {
-			mkdirSync(project('src','commands'));
-			cfFile('src', 'commands');
+			makeDir(nproy('src', 'commands'));
 			copy(join('src', 'index.ts.tmp'), join('src', 'commands', 'removeme.ts'));
 		} else {
 			copy(join('src', 'index.ts.tmp'), join('src', 'index.ts'));
 		}
-		mkdirSync(project('.vscode'));
-		cfFile('.vscode');
+		makeDir(nproy('.vscode'));
 		copy(join('.vscode', 'launch.json'));
 		copy(join('.vscode', 'settings.json'));
 		copy(join('.vscode', 'tasks.json'));
