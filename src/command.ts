@@ -220,7 +220,7 @@ class Command {
         }
         let nargs = final_args.length + 1;
         if (nargs !== this.action.length)
-            throw new Error(`Argument count Missmatch, your function should have only ${nargs}`);
+            throw new Error(`Argument count missmatch, your function should have only ${nargs}`);
         process.env.MCE_VERBOSE = options.verbose;
         return this.action(...final_args, options);
     }
