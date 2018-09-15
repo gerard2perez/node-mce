@@ -1,8 +1,8 @@
-import { join } from "path";
+import { resolve } from "path";
 
 export function cliPath (...path:string[]) {
-    return join(process.env.MCE_ROOT, ...path);
+    return resolve(process.env.MCE_ROOT, ...path);
 }
 export function targetPath (...path:string[]) {
-    return join(process.cwd(), ...path);
+    return resolve(process.cwd(), ...path);
 }
