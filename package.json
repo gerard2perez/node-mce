@@ -1,5 +1,5 @@
 {
-  "name": "node-mce",
+  "name": "@bitsun/mce",
   "version": "0.0.0",
   "description": "Make command executable easily",
   "main": "./index.js",
