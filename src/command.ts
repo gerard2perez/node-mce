@@ -189,6 +189,15 @@ class Command {
         let final_args = [];
         let main_arguments = this.arguments.split(' ').filter(f => f);
         let main_args = main_arguments.map(this.argInfo);
+        let no_optional = false;
+        for(const argument of main_args) {
+            if(argument === OptionKind.optional) {
+                no_optional = true;
+            } else if (no_optional && argument === OptionKind.required) {
+                throw new Error('All required arguments should go befere optional arguments');
+            }
+        }
+        
         for (let i = 0; i < main_args.length; i++) {
             switch (main_args[i]) {
                 case OptionKind.required:
