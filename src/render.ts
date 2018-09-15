@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "fs";
-import { iter } from "./command";
+import { iter } from "./utils";
 
 export function render(source:string, data:object, dest?:string ) {
     let info = readFileSync(source, 'utf-8');

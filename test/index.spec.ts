@@ -177,7 +177,7 @@ describe('Options Parsing', ()=>{
 describe('Arguments Parsing', ()=>{
     it('throws if not required arguments', async()=>{
         let res = NODE_MCE.subcommand(['args1.test']);
-        await res.should.be.rejectedWith('Missing argument <arg1>');
+        await res.should.be.rejectedWith('Missing argument arg1');
     });
     it('throws if optinal argument and variadac are together', async()=>{
         let res:any = NODE_MCE.subcommand('args1.test arg1 arg2'.split(' '));

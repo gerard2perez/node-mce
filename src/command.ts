@@ -1,53 +1,14 @@
 import chalk from 'chalk';
-import { tOptions, Parser, OptionKind } from './options';
-import { targetPath } from './paths';
 import { Argument } from './argument';
+import { HelpRenderer } from './help-renderer';
+import { OptionKind, Parser, tOptions } from './options';
+import { iter } from './utils';
 function countmax() {
     let maxvalue = 0;
     return (text: string = '') => {
         if (text.length > maxvalue) maxvalue = text.length;
         return maxvalue;
     };
-}
-function padding(text: string, len: Function, long?: number) {
-    if (long >= 0) {
-        let after = '';
-        while (long < len()) {
-            long++;
-            after += ' '
-        }
-        text += after;
-    } else {
-        while (text.length < len()) text += ' ';
-    }
-    return text;
-}
-export function iter(obj: any) {
-    Object.defineProperty(obj, Symbol.iterator, {
-        configurable: true,
-        value: function () {
-            let keys = Object.keys(this);
-            let data: any = this;
-            let total = keys.length;
-            return {
-                i: 0,
-                next() {
-                    let current = this.i;
-                    let key = keys[current];
-                    return {
-                        value: [
-                            key,
-                            data[key],
-                            current,
-                            total
-                        ],
-                        done: this.i++ === total
-                    };
-                }
-            };
-        }
-    });
-    return obj;
 }
 interface ParserCommands {
     options?: string[],
@@ -80,7 +41,7 @@ class Command {
     }
     async help() {
         let help = chalk.yellow(`    ${this.command} `);
-        help += this.arguments.split(' ').map(this.drawArg).join(' ');
+        help += this.arguments.split(' ').map(HelpRenderer.drawArg).join(' ');
         // istanbul ignore else
         if (this.options) {
             help += ` ${chalk.cyan('[options]')}`
@@ -106,7 +67,7 @@ class Command {
             let rawvalue:string = info.rawvalue || '';
             let len = short.length + tag.length;
             let arg_len = rawvalue.length;
-            let parts = this.formatDescription(desc, desc_limit, parser, expresion);
+            let parts = HelpRenderer.formatDescription(desc, desc_limit, parser, expresion);
             parts.map(p=>desc_len(p));
             tags_len(short + tag);
             val_len(rawvalue);
@@ -114,45 +75,9 @@ class Command {
             options.push([`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, rawvalue, arg_len, defaults]);
         }
         for (let option of options) {
-            help += this.formatOption(option, tags_len, val_len, desc_len);            
+            help += HelpRenderer.formatOption(option, tags_len, val_len, desc_len);            
         }
         process.stdout.write(help + '\n\n');
-    }
-    private formatOption(option:any, tags_len, val_len, desc_len) {
-        let [tags, desc, tagLen, val, valLen, defaults] = option;
-        let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
-        let [main, ...overflow] = desc;
-        let argDescription = [`${padding(tags, tags_len, tagLen)} ${padding(val, val_len, valLen)} ${chalk.white(padding(main, desc_len))} ${def}`];
-        overflow.map(d=>argDescription.push(`${padding('', tags_len)}  ${padding('', val_len)} ${chalk.white(d)}`))
-        return argDescription.map(arg=>`\n        ${arg}`).join('');
-    }
-    private formatDescription(desc: string, desc_limit: number, parser:Parser, expresion:string[]) {
-        let parts:string[] = [];
-        let count = 0;
-        let index = 0;
-        let lines = desc.replace(/ +/gm, ' ').split('\n').map(line=>{
-            return line.split(' ');
-        }).map(line => {
-            for(const word of line) {
-                parts[index] = parts[index] || '';
-                parts[index] += ` ${word}`;
-                if(parts[index].length > desc_limit) {
-                    index++;
-                }
-            }
-            index++;
-        });
-        if( parser === Parser.enum) {
-            parts.push(` Values: ${expresion.join(' | ')}`)
-        } else if ( parser === Parser.collect) {
-            parts[0] = ` [Repeatable]${parts[0]}`;
-        }
-        if(parts.length>1)parts.push('');
-        return parts;
-    }
-    private drawArg(arg: string) {
-        return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
-            .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
     }
     private prepare(args: string[]): [any, string[]] {
         let argum: string[] = [];
@@ -180,8 +105,7 @@ class Command {
     private execute(args: string[]) {
         let [options, argum] = this.prepare(args);
         let final_args = [];
-        let main_arguments = this.arguments.split(' ').filter(f => f);
-        let main_args = main_arguments.map(a=>new Argument(a));
+        let main_args = this.arguments.split(' ').filter(f => f).map(a=>new Argument(a));
         let no_optional = false;
         for(const argument of main_args) {
             if(argument.kind === OptionKind.optional) {
@@ -190,11 +114,10 @@ class Command {
                 throw new Error('All required arguments should go befere optional arguments');
             }
         }
-        
         for (let i = 0; i < main_args.length; i++) {
             switch (main_args[i].kind) {
                 case OptionKind.required:
-                    if (!argum[0]) throw new Error(`Missing argument ${main_arguments[i]}`);
+                    if (!argum[0]) throw new Error(`Missing argument ${main_args[i].name}`);
                     final_args.push(main_args[i].parser(argum[0]));
                     argum.splice(0, 1);
                     break;
@@ -252,71 +175,33 @@ class Command {
         }
         return i;
     }
-    private repetableShort(argum: string[], options: any) {
+    private repetableShort(user_arguments: string[], options: any) {
         let res: string[] = [];
-        for (let i = 0; i < argum.length; i++) {
-            let arg = argum[i];
+        for (let index = 0; index < user_arguments.length; index++) {
+            let current_argument = user_arguments[index];
             let matched = false;
-            if (arg.indexOf('-') === 0) {
-                arg = arg.replace('-', '');
-                for (const t of arg.split('')) {
-                    for (const [tag, parsed] of iter(this.shortTags)) {
-                        if (t === tag) {
-                            matched = true;
-                            let key = parsed.tags[0].replace('--', '');
-                            i = this.extractValue(key, options, i, parsed, argum);
-                            break;
-                        }
-                    }
+            if (current_argument.indexOf('-') === 0) {
+                current_argument = current_argument.replace('-', '');
+                for (const short_tag of current_argument.split('')) {
+                    ([index, matched] = this.findRepeateableArgument(short_tag, options, index, user_arguments));
                 }
             }
-            if (!matched) res.push(arg);
+            if (!matched) res.push(current_argument);
         }
         return res;
     }
-    private formatTags(key: string, option: string, parser:Parser) {
-        let [short, value=''] = option.split(' ');
-        let stagdesc = short;
-        if (!short.includes('-')) {
-            value = short;
-            short = undefined;
-        }
-        if (short && short.includes('--')) short = undefined;
-        let tag = `--${key}`;
-        if (key.length === 1) {
-            tag = `-${key}`;
-            stagdesc = tag;
-        }
-        tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
-        if(!short)stagdesc=undefined;
-        if(!value) {
-            switch(parser) {
-                case Parser.list:
-                    value = `<a>,<b>..<n>`;
-                    break;
-                case Parser.string:
-                    value = ' '; //`<${key}>`;
-                    break;
-                case Parser.range:
-                    value = '<a>..<b>';
-                    break;
-                case Parser.collect:
-                    value = '<c>';
-                    break;
-                case Parser.int:
-                case Parser.float:
-                    value = '<n>';
-                    break;
-                case Parser.enum:
-                    value = '<e>';
-                    break;
+    private findRepeateableArgument(short_tag:string, options:any, index:number, user_arguments:string[] ): [number, boolean] {
+        for (const [tag, parsed] of iter(this.shortTags)) {
+            if (short_tag === tag) {
+                let key = parsed.tags[0].replace('--', '');
+                return [this.extractValue(key, options, index, parsed, user_arguments), true];
             }
         }
-        return { tag, short, value, stagdesc };
+        return [index, false];
     }
     private mapTags(key: string, arg: string, parser: Parser, expression: RegExp, defaults: any) {
         if (!this.mappedTags[key]) {
-            let { tag, short, value, stagdesc } = this.formatTags(key, arg, parser);
+            let { tag, short, value, stagdesc } = HelpRenderer.formatTags(key, arg, parser);
             this.mappedTags[key] = {
                 tags: [tag, short],
                 expression,
