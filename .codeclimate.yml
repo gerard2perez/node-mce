@@ -5,7 +5,7 @@ checks:
             threshold: 6
     method-complexity:
         config:
-            threshold: 15
+            threshold: 25
 exclude_patterns:
     - ".nyc_output/"
     - node_modules/

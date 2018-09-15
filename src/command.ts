@@ -106,8 +106,6 @@ class Command {
             let rawvalue:string = info.rawvalue || '';
             let len = short.length + tag.length;
             let arg_len = rawvalue.length;
-
-            let split_desc = Math.ceil(desc.length / 2) > desc_limit;
             let parts = this.formatDescription(desc, desc_limit, parser, expresion);
             parts.map(p=>desc_len(p));
             tags_len(short + tag);

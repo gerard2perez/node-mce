@@ -1,14 +1,12 @@
 import { createInterface, cursorTo, moveCursor } from "readline";
 import { MainSpinner } from "./spinner";
 
-export const info = (text:string)=>{
-    if( parseInt(process.env.MCE_VERBOSE) >= 2)
-        MainSpinner.info(text);
+function verbose(lvl:number, fn:string, text:string) {
+    if( parseInt(process.env.MCE_VERBOSE) >= lvl)
+        MainSpinner[fn](text)
 }
-export const warn = (text:string)=>{
-    if( parseInt(process.env.MCE_VERBOSE) >= 1)
-        MainSpinner.warn(text);
-}
+export const info = verbose.bind(null,2,'info');
+export const warn = verbose.bind(null,1,'warn');
 export const error = (text:string)=>{
     MainSpinner.error(text);
 }
