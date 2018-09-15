@@ -18,8 +18,6 @@ let RelPathRoot;
 function cfFile(...path:string[]) {
 	path.splice(0,0,RelPathRoot);
 	ok(fFile(...path));
-	// let last:string = path.pop();
-	// ok(join(...path, chalk.green(last)).replace(/\\/mg, '/'));
 }
 function project (...path:string[]) {
 	return join(RelPathRoot, ...path);
