@@ -3,12 +3,12 @@ import { resolve, join } from "path";
 import { Command } from "./command";
 let ext = process.env.MCE_DEV ? 'ts' : 'js';
 class MCE {
-	help: boolean;   
+	help: boolean = false;
 	name: string;
 	version: string;
 	constructor (private root:string) {
 		process.env.MCE_ROOT = root;
-		let {version, bin} = require(join(this.root.replace('src', ''), 'package.json'));
+		let {version, bin} = require(resolve(root.replace('src', ''), 'package.json'));
 		let [name] = Object.keys(bin);
 		this.name = name;
 		this.version = version;
@@ -28,42 +28,40 @@ class MCE {
 		if(mce_definition.default) {
 			mce_sub_command  = (new mce_definition.default(command_name) as Command);
 		} else {
-			mce_sub_command = new Command(command_name);
-			mce_sub_command.arguments = mce_definition.args || '';
-			mce_sub_command.options = mce_definition.options || [];
-			mce_sub_command.description = mce_definition.description || '';
-			mce_sub_command.action = mce_definition.action;
+			mce_sub_command = new Command(command_name, mce_definition);
 		}
 		return mce_sub_command;
 	}
-	command (args:string[]) {
+	async command (args:string[]) {
 		let root = resolve(this.root, `index.${ext}`);
 		if (!this.help) {
 			let exists = existsSync( root );
 			if ( !exists ) {
 				console.log('Command does not exists');
+				return Promise.resolve();
 			} else {
 				return this.getCommand(root).call(args);
 			}
 		} else {
-			this.getCommand(root).help();
+			return this.getCommand(root).help();
 		}
 	}
-	subcommand (args:string[]) {
+	async subcommand (args:string[]):Promise<void> {
 		let root = resolve(this.root, './commands');
 		let [subcommand] = args.splice(0,1);
 		let sub = resolve(root, `${subcommand}.${ext}`);
 		let exists = existsSync( sub );
 		if ( exists ) {
-			this.getCommand(sub, subcommand).call(args);
+			return this.getCommand(sub, subcommand).call(args);
 		} else if (this.help) {
 			for(const subcommand of readdirSync(root)) {
 				if ( subcommand.search(new RegExp(`.*\.${ext}$`, 'i')) === 0 ) {
-					this.getCommand(resolve(root, subcommand), subcommand).help();
+					return this.getCommand(resolve(root, subcommand), subcommand).help();
 				}
 			}
 		} else {
 			console.log('Command does not exists');
+			return Promise.resolve();
 		}
 	}
 }
