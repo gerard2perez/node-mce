@@ -5,7 +5,6 @@
 *.tgz
 node_modules
 coverage
-.travis.yml
 .nyc_output
 single_repo
 test/demo.txt

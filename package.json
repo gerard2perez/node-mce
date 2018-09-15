@@ -1,6 +1,6 @@
 {
   "name": "@bitsun/mce",
-  "version": "0.0.0",
+  "version": "0.0.0-development",
   "description": "Make command executable easily",
   "main": "./index.js",
   "bin": {
@@ -11,11 +11,12 @@
   },
   "scripts": {
     "test": "mocha test/index.spec.ts",
-    "cover": "nyc npm t"
+    "cover": "nyc npm t",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gerard2p/node-mce.git"
+    "url": "https://github.com/gerard2p/node-mce.git"
   },
   "files": [
     "/*.js",
@@ -31,7 +32,6 @@
     "/README.md",
     "/LICENSE.md",
     "/templates/**/*"
-
   ],
   "keywords": [
     "mce",
@@ -55,7 +55,8 @@
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.0.3",
+    "semantic-release": "^15.9.15"
   },
   "dependencies": {
     "@types/chai-as-promised": "^7.1.0",
