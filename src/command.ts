@@ -287,7 +287,7 @@ class Command {
                 }
                 break;
             case OptionKind.boolean:
-                options[key] = true;
+                options[key] = parsed.parser(true);
                 break;
             case OptionKind.verbose:
                 options[key] = parsed.parser(args[i], options[key]);

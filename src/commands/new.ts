@@ -7,18 +7,20 @@ import { remove } from "../remove";
 import { join } from "path";
 import chalk from "chalk";
 import { spawn } from "../spawn";
+import { fFile } from '../utils';
 
-const templateDir = join(__dirname, '../templates');
+const templateDir = join(__dirname, '../templates').replace('src/', '').replace('src\\', '');
 let _options = {
 	force: bool('-f', 'Overrides target directory'),
 	npm: bool('-n', 'Install npm dependencies'),
 	style: enumeration('-s <style>', 'Define the style of command you will use', ['git', 'single'],'single'),
 };
 let RelPathRoot;
-function fFile(...path:string[]) {
+function cfFile(...path:string[]) {
 	path.splice(0,0,RelPathRoot);
-	let last:string = path.pop();
-	ok(join(...path, chalk.green(last)).replace(/\\/mg, '/'));
+	ok(fFile(...path));
+	// let last:string = path.pop();
+	// ok(join(...path, chalk.green(last)).replace(/\\/mg, '/'));
 }
 function project (...path:string[]) {
 	return join(RelPathRoot, ...path);
@@ -26,7 +28,7 @@ function project (...path:string[]) {
 function copy (file:string, target?:string) {
 	target =target || file;
 	copyFileSync(join(templateDir, file), project(target));
-	fFile(...target.split('\\'));
+	cfFile(...target.split('\\'));
 }
 export default class New extends Command {
 	description = 'Creates a new MCE project.'
@@ -35,12 +37,14 @@ export default class New extends Command {
     async action(application:string, options:Parsed<typeof _options>) {
 		RelPathRoot = application;
 		let clean_dir = options.force;
+		// istanbul ignore next
 		if( existsSync(application) && !options.force ) {
 			clean_dir = true;
 			if ( !await ask('Directory already exist. Do you want to override it') ) {
 				return;
 			}
 		}
+		// istanbul ignore else
 		if ( clean_dir ) {
 			await spin('Cleanig path', async () => {
 				remove(application);
@@ -48,14 +52,14 @@ export default class New extends Command {
 		}
 		await spin('Creating Files', async () => {
 			mkdirSync(application);
-			fFile();
+			cfFile();
 			copy('app', application);
 			chmodSync(project(application), 744 );
 			// fFile(application);
 		});
 		copy('tsconfig.json');
 		mkdirSync(project('src'));
-		fFile('src');
+		cfFile('src');
 		let cli = `import { MCE } from "node-mce";`;
 		if (options.style === 'git') {
 			cli += '\n\nMCE(__dirname).subcommand(process.argv);';
@@ -63,11 +67,11 @@ export default class New extends Command {
 			cli += '\n\nMCE(__dirname).command(process.argv);'
 		}
 		writeFileSync(project('src', 'cli.ts'), cli)
-		fFile('src', 'cli.ts');
+		cfFile('src', 'cli.ts');
 
 		if(options.style === 'git') {
 			mkdirSync(project('src','commands'));
-			fFile('src', 'commands');
+			cfFile('src', 'commands');
 			copy(join('src', 'index.ts.tmp'), join('src', 'commands', 'removeme.ts'));
 		} else {
 			copy(join('src', 'index.ts.tmp'), join('src', 'index.ts'));
@@ -75,7 +79,7 @@ export default class New extends Command {
 		
 
 		mkdirSync(project('.vscode'));
-		fFile('.vscode');
+		cfFile('.vscode');
 		copy(join('.vscode', 'launch.json'));
 		copy(join('.vscode', 'settings.json'));
 		copy(join('.vscode', 'tasks.json'));
@@ -105,10 +109,9 @@ export default class New extends Command {
 				"signal-exit": "^3.0.2"
 			}
 		};
-		if(!process.env.MCE_DEV) {
-			_package.dependencies["node-mce"] = "*";
-		}
+		_package.dependencies["node-mce"] = "^1.0.0";
 		writeFileSync(project("package.json"), JSON.stringify(_package, null,2));
+		// istanbul ignore next
 		if(options.npm) {
 			await spin('Initializing npm', async() => {
 				if ( !await spawn('npm', ['install', '-S'], {cwd: project()}).catch(()=>false) ) {
@@ -120,6 +123,7 @@ export default class New extends Command {
 			});
 		}
 		await spin('Initializing git', async()=>{
+			// istanbul ignore next
 			if ( !await spawn('git', ['init'], {cwd: project()}).catch(()=>false) ) {
 				error('git init')
 			}

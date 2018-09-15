@@ -72,7 +72,7 @@
 			"text"
 		],
 		"include": [
-			"src/*.ts"
+			"src/**/*.ts"
 		],
 		"extension": [
 			".ts"

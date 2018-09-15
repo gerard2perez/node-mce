@@ -7,7 +7,7 @@ export function capitalize(text:string) {
     return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function fFile(...path:string[]) {
+export function fFile(...path:string[]) {
 	// path.splice(0,0,targetPath());
     let last:string = path.pop();
     let route = chalk.grey(join(...path).replace(/\\/mg, '/'));

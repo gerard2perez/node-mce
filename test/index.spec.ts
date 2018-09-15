@@ -4,6 +4,7 @@ import chaiAsPromised = require("chai-as-promised");
 import { MCE } from '../src';
 import { describe, it} from 'mocha';
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -199,16 +200,38 @@ describe('Arguments Parsing', ()=>{
         await res.should.be.rejectedWith('Argument type missmatch');
     });
     it('Varidac argument can only be in last place', async ()=>{
-        let res:any = NODE_MCE.subcommand('args5.test true 10 arg2'.split(' '));
+        let res:any = NODE_MCE.subcommand('args5.test true 10 arg2 -n=r -f=a'.split(' '));
         await res.should.be.rejectedWith('Varidac argument can only be in last place');
     });
 });
-describe('Utils functions', ()=>{
+let SELF;
+describe('Utils functions',async ()=>{
     it('gets correct paths', async ()=>{
         let res:any = await NODE_MCE.subcommand('utils.test'.split(' '));
         res.should.be.deep.equal({
             cli: resolve('./test'),
             target: resolve('./'),
-        })
+        });
+        SELF = MCE('./src')
     });
+    it('test verbosity', async () =>{
+        let res:any = await NODE_MCE.subcommand('utils1.test'.split(' '));
+    });
+    it('test override util', async () =>{
+        let res:any = await NODE_MCE.subcommand('utils1.test -vvv'.split(' '));
+        res.should.include({res:'true'});
+    });
+    it('renders a file', async () =>{
+        await NODE_MCE.subcommand('utils2.test -vvv'.split(' '));
+        let file = readFileSync('./test/demo.txt', 'utf-8');
+        file.should.be.equal('works');
+    });
+});
+describe('Self Test', async ()=>{
+    it('create a new project', async()=>{
+        await SELF.subcommand('new single_repo -f -s single'.split(' '));
+    });
+    it('create a new project multicommand', async()=>{
+        await SELF.subcommand('new single_repo -f -s git'.split(' '));
+    })
 });

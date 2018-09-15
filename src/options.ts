@@ -17,7 +17,7 @@ export enum Parser {
     collect = <any>_collect,
     increaseVerbosity = <any>_increaseVerbosity,
     string = <any>(s => s.toString()),
-    truefalse = <any> (s=> s==="false" ? false : !!s),
+    truefalse = <any> (s=>s),
     enum = <any>(s => s.toString()),
 }
 export type range = [number, number];
