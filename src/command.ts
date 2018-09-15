@@ -68,19 +68,24 @@ interface ParserCommands {
 class Command {
     private mappedTags: { [p: string]: ParserCommands } = {}
     private shortTags: { [p: string]: ParserCommands } = {}
-    constructor(private command: string) { }
+    constructor(private command: string, definition:any) {
+        this.arguments = definition.args || '';
+        this.options = definition.options || [];
+        this.description = definition.description || '';
+        this.action = definition.action;
+    }
     description: string = ''
     options: { [p: string]: tOptions<any> }
     arguments: string = ''
-    action(...data: any[]) { }
+    action(...data: any[]) { return Promise.resolve(); }
     call(argv: string[]) {
         if (process.argv.includes('-h') || process.argv.includes('--help')) {
-            this.help()
+            return this.help()
         } else {
-            this.execute(argv.join('=').split('=').filter(f => f));
+            return this.execute(argv.join('=').split('=').filter(f => f));
         }
     }
-    help() {
+    async help() {
         let help = chalk.yellow(`    ${this.command} `);
         help += this.arguments.split(' ').map(this.drawArg).join(' ');
         if (this.options) {
@@ -194,7 +199,7 @@ class Command {
                 case OptionKind.varidac:
                     if (i !== main_args.length - 1) throw new Error(`Varidac argument can only be in last place`);
                     if (main_args[i - 1] === OptionKind.optional) {
-                        throw new Error(`Optional argument and Varidac cannot be next to each other`);
+                        throw new Error(`Optional Argument and Varidac cannot be next to each other`);
                     }
                     final_args.push(argum);
                     break;
@@ -208,7 +213,7 @@ class Command {
         if (nargs !== this.action.length)
             throw new Error(`Argument count Missmatch, your function should have only ${nargs}`);
         process.env.MCE_VERBOSE = options.verbose;
-        this.action(...final_args, options);
+        return this.action(...final_args, options);
     }
     private argInfo(arg: string): OptionKind {
         if (arg.includes('<')) return OptionKind.required;
