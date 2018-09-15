@@ -1,6 +1,7 @@
 import chalk from 'chalk';
-import { tOptions, Parser } from './options';
+import { tOptions, Parser, OptionKind } from './options';
 import { targetPath } from './paths';
+import { Argument } from './argument';
 function countmax() {
     let maxvalue = 0;
     return (text: string = '') => {
@@ -47,14 +48,6 @@ export function iter(obj: any) {
         }
     });
     return obj;
-}
-enum OptionKind {
-    no,
-    required,
-    optional,
-    boolean,
-    varidac,
-    verbose
 }
 interface ParserCommands {
     options?: string[],
@@ -190,7 +183,7 @@ class Command {
         let [options, argum] = this.prepare(args);
         let final_args = [];
         let main_arguments = this.arguments.split(' ').filter(f => f);
-        let main_args = main_arguments.map(this.argInfo);
+        let main_args = main_arguments.map(a=>new Argument(a));
         let no_optional = false;
         for(const argument of main_args) {
             if(argument.kind === OptionKind.optional) {
@@ -225,40 +218,6 @@ class Command {
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`);
         process.env.MCE_VERBOSE = options.verbose;
         return this.action(...final_args, options);
-    }
-    private argInfo(arg: string) {
-        let argInfo = {
-            kind: OptionKind.optional,
-            parser: undefined,
-            type:undefined,
-            name: undefined
-        }
-        let parser = {
-            string: o=>o,
-            number: function  (o) {
-                let res = parseFloat(o);
-                if(isNaN(res)) {
-                    throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);
-                }
-                return res;
-            },
-            bool: function  (o) {
-                let res = o === 'true' || o === 'false';
-                if(!res) {
-                    throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);
-                }
-                return o === 'true';
-            }
-        }
-        
-        if (arg.includes('<')) argInfo.kind = OptionKind.required;
-        if (arg.includes('...')) argInfo.kind = OptionKind.varidac;
-        let name = arg.replace(/[<>.\[\]]/g, '');
-        argInfo.type = name.split(':')[1] || 'string';
-        name = name.split(':')[0];
-        argInfo.name = name;
-        argInfo.parser = parser[argInfo.type];
-        return argInfo;
     }
     private validateValue(expression: RegExp | Array<string>, val: string) {
         let matched = true;

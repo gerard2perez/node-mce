@@ -9,6 +9,7 @@ checks:
 exclude_patterns:
     - ".nyc_output/"
     - node_modules/
+    - src/spinner/animations.ts
     - coverage/
     - .vscode/
     - single_repo/

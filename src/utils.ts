@@ -7,12 +7,10 @@ export function fFile(...path:string[]) {
     let route = chalk.grey(join(...path).replace(/\\/mg, '/'));
 	return `${route}/${chalk.green(last)}`;
 }
-export function created (text:string) {
+function print (mode:String, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
     ok(`\t${chalk.cyan('created')}: ${fFile(...fpath)}`);
 }
 
-export function updated (text:string) {
-    let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
-    ok(`\t${chalk.cyan('updated')}: ${fFile(...fpath)}`);
-}
+export const created = print.bind(null, 'created');
+export const updated = print.bind(null, 'updated');

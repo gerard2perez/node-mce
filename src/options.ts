@@ -64,3 +64,12 @@ export const list: OptionBuilder<list> = preOptions.bind(null, Parser.list)
 export const collect: OptionBuilder<list> = preOptions.bind(null, Parser.collect)
 export const bool: (short:string, description:string) => tOptions<boolean> = preOptions.bind(null, Parser.truefalse)
 export const verbose: (desciprtion?:string)=>tOptions<number> = preOptions.bind(null, Parser.increaseVerbosity, '-v')
+
+export enum OptionKind {
+    no,
+    required,
+    optional,
+    boolean,
+    varidac,
+    verbose
+}
