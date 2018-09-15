@@ -212,23 +212,26 @@ describe('Utils functions',async ()=>{
             cli: resolve('./test'),
             target: resolve('./'),
         });
-        SELF = MCE('./src')
     });
     it('test verbosity', async () =>{
         let res:any = await NODE_MCE.subcommand('utils1.test'.split(' '));
     });
-    it('test override util', async () =>{
+    it('test verbosuty 3', async () =>{
         let res:any = await NODE_MCE.subcommand('utils1.test -vvv'.split(' '));
-        res.should.include({res:'true'});
     });
     it('renders a file', async () =>{
         await NODE_MCE.subcommand('utils2.test -vvv'.split(' '));
         let file = readFileSync('./test/demo.txt', 'utf-8');
         file.should.be.equal('works');
     });
+    it('test override util', async () =>{
+        let res:any = await NODE_MCE.subcommand('utils3.test -vvv'.split(' '));
+        res.should.include({res:'true'});
+    });
 });
 describe('Self Test', async ()=>{
     it('create a new project', async()=>{
+        SELF = MCE('./src');
         await SELF.subcommand('new single_repo -f -s single'.split(' '));
     });
     it('create a new project multicommand', async()=>{

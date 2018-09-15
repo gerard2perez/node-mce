@@ -21,29 +21,16 @@ export let options = {
 };
 
 export async function action(opt:Parsed<typeof options>) {
-    let res = await spin('test', async () =>{
+    await spin('test', async () =>{
         pause();
         ok('');
         error('');
         warn('');
         info('');
         resume();
-        let testDir = cliPath('removible');
-        try { mkdirSync(testDir); } catch(ex) {}
-        await override('get somethind', testDir, true);
-        setTimeout(()=>{
-            process.stdin.push('n\n', 'utf-8');
-        },1);
-        await override('get somethind', testDir, false);
-        setTimeout(()=>{
-            process.stdin.push('y\n', 'utf-8');
-        },1);
-        return override('get somethind', testDir, false).then(r=>r.toString());
     });
-    
 	return {
         cli: cliPath(),
-        target: targetPath(),
-        res
+        target: targetPath()
 	};
 }
