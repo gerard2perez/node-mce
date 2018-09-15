@@ -1,0 +1,7 @@
+{
+    "name": "demoapp",
+    "version": "0.0.1",
+    "bin": {
+        "demo": "./demo"
+    }
+}

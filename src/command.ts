@@ -69,10 +69,12 @@ class Command {
     private mappedTags: { [p: string]: ParserCommands } = {}
     private shortTags: { [p: string]: ParserCommands } = {}
     constructor(private command: string, definition:any) {
-        this.arguments = definition.args || '';
-        this.options = definition.options || [];
-        this.description = definition.description || '';
-        this.action = definition.action;
+        if(definition) {
+            this.arguments = definition.args || '';
+            this.options = definition.options || [];
+            this.description = definition.description || '';
+            this.action = definition.action;
+        }
     }
     description: string = ''
     options: { [p: string]: tOptions<any> }
@@ -191,29 +193,29 @@ class Command {
         let main_args = main_arguments.map(this.argInfo);
         let no_optional = false;
         for(const argument of main_args) {
-            if(argument === OptionKind.optional) {
+            if(argument.kind === OptionKind.optional) {
                 no_optional = true;
-            } else if (no_optional && argument === OptionKind.required) {
+            } else if (no_optional && argument.kind === OptionKind.required) {
                 throw new Error('All required arguments should go befere optional arguments');
             }
         }
         
         for (let i = 0; i < main_args.length; i++) {
-            switch (main_args[i]) {
+            switch (main_args[i].kind) {
                 case OptionKind.required:
                     if (!argum[0]) throw new Error(`Missing argument ${main_arguments[i]}`);
-                    final_args.push(argum[0]);
+                    final_args.push(main_args[i].parser(argum[0]));
                     argum.splice(0, 1);
                     break;
                 case OptionKind.varidac:
                     if (i !== main_args.length - 1) throw new Error(`Varidac argument can only be in last place`);
-                    if (main_args[i - 1] === OptionKind.optional) {
+                    if (main_args[i - 1].kind === OptionKind.optional) {
                         throw new Error(`Optional Argument and Varidac cannot be next to each other`);
                     }
-                    final_args.push(argum);
+                    final_args.push(main_args[i].parser(argum));
                     break;
                 case OptionKind.optional:
-                    final_args.push(argum[0])
+                    final_args.push(main_args[i].parser(argum[0]))
                     argum.splice(0, 1);
                     break;
             }
@@ -224,10 +226,39 @@ class Command {
         process.env.MCE_VERBOSE = options.verbose;
         return this.action(...final_args, options);
     }
-    private argInfo(arg: string): OptionKind {
-        if (arg.includes('<')) return OptionKind.required;
-        if (arg.includes('...')) return OptionKind.varidac;
-        return OptionKind.optional;
+    private argInfo(arg: string) {
+        let argInfo = {
+            kind: OptionKind.optional,
+            parser: undefined,
+            type:undefined,
+            name: undefined
+        }
+        let parser = {
+            string: o=>o,
+            number: function  (o) {
+                let res = parseFloat(o);
+                if(isNaN(res)) {
+                    throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);
+                }
+                return res;
+            },
+            bool: function  (o) {
+                let res = o === 'true' || o === 'false';
+                if(!res) {
+                    throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);
+                }
+                return o === 'true';
+            }
+        }
+        
+        if (arg.includes('<')) argInfo.kind = OptionKind.required;
+        if (arg.includes('...')) argInfo.kind = OptionKind.varidac;
+        let name = arg.replace(/[<>.\[\]]/g, '');
+        argInfo.type = name.split(':')[1] || 'string';
+        name = name.split(':')[0];
+        argInfo.name = name;
+        argInfo.parser = parser[argInfo.type];
+        return argInfo;
     }
     private validateValue(expression: RegExp | Array<string>, val: string) {
         let matched = true;
