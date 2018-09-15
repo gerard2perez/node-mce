@@ -1,10 +1,10 @@
 function _range (str) { 
-    return str.split('..').map(n => parseInt(n, 10));
+    return str.split('..').map(n => parseInt(n, 10)).splice(0);
  }
 function _list (str) { return str.split(','); }
 function _collect(val, memo) {
     memo.push(val);
-    return memo;
+    return memo.splice(0);
 }
 function _increaseVerbosity(v, total) {
     return total + 1;
