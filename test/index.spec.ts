@@ -3,8 +3,7 @@ import chai = require('chai');
 import chaiAsPromised = require("chai-as-promised");
 import { MCE } from '../src';
 import { describe, it} from 'mocha';
-import * as assert from 'assert';
-import { isRegExp } from 'util';
+import { resolve } from 'path';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -149,6 +148,30 @@ describe('Options Parsing', ()=>{
             })
         });
     });
+    it('parses options mixed formats', async () =>{
+        const res:any = await NODE_MCE.subcommand(
+            'options.test file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
+            .split(' '));
+        res.should.deep.equal({
+            arg1: 'file.js',
+            varidac: [
+                'var2'
+            ],
+            opt: {
+                enumeration: 'single',
+                number: 5,
+                floating: 12.58,
+                range: [2, 55],
+                text:'demo',
+                bool: true,
+                list:[ 'h10', 'h21'],
+                collect:[
+                    'h30', 'h3', 'h6'
+                ],
+                verbose: 0
+            }
+        });
+    });
 });
 describe('Arguments Parsing', ()=>{
     it('throws if not required arguments', async()=>{
@@ -174,5 +197,14 @@ describe('Arguments Parsing', ()=>{
     it('throws argument type missmatch', async ()=>{
         let res:any = NODE_MCE.subcommand('args4.test 10 arg2'.split(' '));
         await res.should.be.rejectedWith('Argument type missmatch');
+    });
+});
+describe('Utils functions', ()=>{
+    it('gets correct paths', async ()=>{
+        let res:any = await NODE_MCE.subcommand('utils.test'.split(' '));
+        res.should.be.deep.equal({
+            cli: resolve('./test'),
+            target: resolve('./'),
+        })
     });
 });
