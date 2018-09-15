@@ -1,7 +1,7 @@
 import { existsSync, readdirSync } from "fs";
 import { resolve, join } from "path";
 import { Command } from "./command";
-let ext = process.env.MCE_DEV ? 'ts' : 'js';
+let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 class MCE {
 	help: boolean = false;
 	name: string;
@@ -13,15 +13,17 @@ class MCE {
 		this.name = name;
 		this.version = version;
 		process.argv.splice(0, 2);
+		/*istanbul ignore next*/
 		if(!process.argv.length || (process.argv.includes('-h') || process.argv.includes('--help')) )
 		{
 			this.help = true;
 		}
+		/*istanbul ignore next*/
 		if(this.help) {
 			console.log(`${this.name} - version: ${this.version}`);
 		}
 	}
-	private getCommand (source:string, subcommand:string='') {
+	private getCommand (source:string, /*istanbul ignore else */subcommand:string='') {
 		let command_name = `${this.name} ${subcommand.replace(`.${ext}`, '')}`.trim();
 		let mce_sub_command:Command;
 		let mce_definition:any = require(source);
@@ -36,6 +38,7 @@ class MCE {
 		let root = resolve(this.root, `index.${ext}`);
 		if (!this.help) {
 			let exists = existsSync( root );
+			/*istanbul ignore if */
 			if ( !exists ) {
 				console.log('Command does not exists');
 				return Promise.resolve();
@@ -55,6 +58,7 @@ class MCE {
 			return this.getCommand(sub, subcommand).call(args);
 		} else if (this.help) {
 			for(const subcommand of readdirSync(root)) {
+				/*istanbul ignore else*/
 				if ( subcommand.search(new RegExp(`.*\.${ext}$`, 'i')) === 0 ) {
 					await this.getCommand(resolve(root, subcommand), subcommand).help();
 				}

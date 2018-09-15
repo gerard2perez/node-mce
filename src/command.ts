@@ -111,7 +111,7 @@ class Command {
             } else {
                 tag = `, ${tag}`;
             }
-            let desc:string = desciprtion || '';
+            let desc:string = desciprtion;
             let rawvalue:string = info.rawvalue || '';
             let len = short.length + tag.length;
             let arg_len = rawvalue.length;

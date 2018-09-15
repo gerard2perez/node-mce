@@ -1,11 +1,11 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src/options';
-import { ok, error, warn, info, ask, input } from '../../src/console';
-import { created, updated } from '../../src/utils';
-import { targetPath, cliPath } from '../../src/paths';
-import { spin } from '../../src/spinner';
+import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../src/options';
+import { ok, error, warn, info, ask, input } from '../src/console';
+import { created, updated } from '../src/utils';
+import { targetPath, cliPath } from '../src/paths';
+import { spin } from '../src/spinner';
 import * as assert from 'assert';
 export let description = 'A description for your command';
-export let args = '[arg2] <arg1>';
+export let args = '';
 export let options = {
     enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
     number: numeric('-n <n>', 'A number'),
@@ -17,10 +17,6 @@ export let options = {
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 };
-export async function action(arg1:string, arg2:string, opt:Parsed<typeof options>) {
-	return {
-        arg1,
-        arg2,
-		opt
-	};
+export async function action(opt:Parsed<typeof options>) {
+	
 }

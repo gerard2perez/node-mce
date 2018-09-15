@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 
 export function remove (path) {
+    // istanbul ignore else
     if (fs.existsSync(path)) {
         fs.readdirSync(path).forEach(function(file, index){
             var curPath = path + "/" + file;

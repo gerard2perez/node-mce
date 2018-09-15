@@ -211,6 +211,11 @@ describe('Arguments Parsing', ()=>{
         let res:any = NODE_MCE.subcommand('args7.test -h'.split(' '));
         await res.should.be.rejectedWith('duplicated short tag');
     });
+    it('render help', async ()=>{
+        process.argv.push('-h');
+        let help = await NODE_MCE.subcommand('args6.test'.split(' '));
+        process.argv.pop();
+    });
     it('Varidac argument can only be in last place', async ()=>{
         let res:any = NODE_MCE.subcommand('args5.test true 10 arg2 -n=r -f=a'.split(' '));
         await res.should.be.rejectedWith('Varidac argument can only be in last place');
@@ -232,9 +237,17 @@ describe('Utils functions',async ()=>{
         let res:any = await NODE_MCE.subcommand('utils1.test -vvv'.split(' '));
     });
     it('renders a file', async () =>{
-        await NODE_MCE.subcommand('utils2.test -vvv'.split(' '));
+        await NODE_MCE.subcommand('utils2.test -vvv -r'.split(' '));
         let file = readFileSync('./test/demo.txt', 'utf-8');
         file.should.be.equal('works');
+        let renered = await NODE_MCE.subcommand('utils2.test -vvv'.split(' '));
+        console.log(renered);
+    });
+    it('executes a single command', async () =>{
+        await NODE_MCE.command('-v'.split(' '));
+        NODE_MCE.help = true;
+        await NODE_MCE.command('-h'.split(' '));
+        NODE_MCE.help = false;
     });
     it('test override util', async () =>{
         let res:any = await NODE_MCE.subcommand('utils3.test -vvv'.split(' '));
@@ -248,6 +261,9 @@ describe('Self Test', async ()=>{
     });
     it('create a new project multicommand', async()=>{
         await SELF.subcommand('new single_repo -f -s git'.split(' '));
+    });
+    it('command does not exist', async()=>{
+        await SELF.subcommand('trim'.split(' '));
     });
     it('renders all help', async()=>{
         SELF.help = true;

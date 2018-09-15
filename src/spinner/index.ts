@@ -10,7 +10,9 @@ export class Cursor {
     static hidden:boolean = false;
     static showOnExit:boolean = false;
     static show (stream:any) {
-        const s = stream || process.stderr;
+
+		const s = stream || /*istanbul ignore next*/ process.stderr;
+		/*istanbul ignore next*/
         if (!s.isTTY) {
             return;
         }
@@ -18,29 +20,20 @@ export class Cursor {
         s.write('\u001b[?25h');
     }
     static hide(stream:any) {
-        const s = stream || process.stderr;
+		const s = stream || /*istanbul ignore next*/process.stderr;
+		/*istanbul ignore next*/
         if (!s.isTTY) {
             return;
         }
         if(!Cursor.showOnExit) {
-            Cursor.showOnExit = true;
+			Cursor.showOnExit = true;
+			/*istanbul ignore next*/
             signalExit(() => {
                 process.stderr.write('\u001b[?25h');
             }, {alwaysLast: true});
         }
         Cursor.hidden = true;
         s.write('\u001b[?25l');
-    };
-    
-    static toggle (force, stream) {
-        if (force !== undefined) {
-            Cursor.hidden = force;
-        }
-        if (Cursor.hidden) {
-            Cursor.show(stream);
-        } else {
-            Cursor.hide(stream);
-        }
     };
 }
 export interface  ISpinnerOptions {
@@ -74,12 +67,13 @@ export class Spinner {
 	}
 	set text(value) {
 		this[TEXT] = value;
-		const columns = this.stream.columns || 80;
+		const columns = this.stream.columns || /*istanbul ignore next*/80;
 		this.lineCount = stripAnsi('--' + value).split('\n').reduce((count, line) => {
 			return count + Math.max(1, Math.ceil(wcwidth(line) / columns));
 		}, 0);
 	}
     constructor(options) {
+		/*istanbul ignore else*/
 		if (typeof options === 'string') {
 			options = {
 				text: options
@@ -93,7 +87,8 @@ export class Spinner {
 
 		const sp = this.options.spinner;
         // this.spinner = typeof sp === 'object' ? sp : (process.platform === 'win32' ? spinners.dots : (spinners[sp] || spinners.dots)); // eslint-disable-line no-nested-ternary
-        this.changeSpinner('dots');
+		this.changeSpinner('dots');
+		/*istanbul ignore next*/
 		if (animations[this.spinner].frames === undefined) {
 			throw new Error('Spinner must define `frames`');
 		}
@@ -103,13 +98,14 @@ export class Spinner {
 		this.stream = this.options.stream;
 		this.id = null;
 		this.frameIndex = 0;
-		this.enabled = typeof this.options.enabled === 'boolean' ? this.options.enabled : ((this.stream && this.stream.isTTY) && !process.env.CI);
+		this.enabled = typeof this.options.enabled === 'boolean' ? /*istanbul ignore next*/this.options.enabled : ((this.stream && this.stream.isTTY) && !process.env.CI);
 
 		// Set *after* `this.stream`
 		this.text = this.options.text;
 		this.linesToClear = 0;
 	}
 	changeSpinner(spinner:string) {
+		/*istanbul ignore next*/
 		if (supported || process.env.ANSICON) {
 			
 		} else if (['line', 'line2', 'pipe', 'simpleDots','simpleDotsScrolling','star2','flip','balloon', 'balloon2', 'noise','boxBounce2','toggle3','toggle4','toggle13','arrow','bouncingBar','shark','layer'].includes(spinner)) {
@@ -123,6 +119,7 @@ export class Spinner {
 	frame() {
         const frames = animations[this.spinner].frames;
 		let frame = frames[this.frameIndex];
+		/*istanbul ignore else*/
 		if (this.color) {
 			frame = chalk[this.color](frame);
 		}
@@ -131,11 +128,13 @@ export class Spinner {
 	}
 
 	clear() {
+		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
 		}
 
 		for (let i = 0; i < this.linesToClear; i++) {
+			/*istanbul ignore next*/
 			if (i > 0) {
 				this.stream.moveCursor(0, -1);
 			}
@@ -156,12 +155,14 @@ export class Spinner {
 	}
 
 	start(text?:string) {
+		/*istanbul ignore next*/
 		if (text) {
 			this.text = text;
 		}
 		if (!this.enabled || this.isSpinning) {
 			return this;
 		}
+		/*istanbul ignore else*/
 		if (this.hideCursor) {
 			Cursor.hide(this.stream);
 		}
@@ -171,6 +172,7 @@ export class Spinner {
 	}
 
 	stop() {
+		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
 		}
@@ -179,6 +181,7 @@ export class Spinner {
 		this.id = null;
 		this.frameIndex = 0;
 		this.clear();
+		/*istanbul ignore else*/
 		if (this.hideCursor) {
 			Cursor.show(this.stream);
 		}
@@ -191,7 +194,7 @@ export class Spinner {
 	succeed(text?:string) {
 		return this.stopAndPersist({symbol: LogSymbols.success, text});
 	}
-
+	/*istanbul ignore next*/
 	fail(text?:string) {
 		return this.stopAndPersist({symbol: LogSymbols.error, text});
 	}
@@ -206,24 +209,26 @@ export class Spinner {
 		return this.persist({symbol: LogSymbols.info, text}, newline ? '\n':'');
 	}
 	private persist(options:{ symbol:LogSymbols,text:string }, newline:string='\n') {
+		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
 		}
 		this.clear();
-		this.stream.write(`${options.symbol || ' '} ${options.text || this.text}${newline}`);
+		this.stream.write(`${options.symbol || /*istanbul ignore next*/' '} ${options.text || this.text}${newline}`);
 		return this;
 	}
 	private stopAndPersist(options:{ symbol:LogSymbols,text:string }) {
+		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
 		}
 		this.stop();
-		this.stream.write(`${options.symbol || ' '} ${options.text || this.text}\n`);
+		this.stream.write(`${options.symbol || /*istanbul ignore next*/ ' '} ${options.text || /*istanbul ignore next*/this.text}\n`);
 
 		return this;
 	}
 }
-
+/*istanbul ignore next*/
 function cliSpinner (options:ISpinnerOptions | string) {
     return new Spinner(options);
 }
@@ -243,7 +248,7 @@ export async function spin(display:string | ISpinnerOptions, fn:() => Promise<st
 		} else {
 			MainSpinner.stop();
 		}
-	}).catch(err=>{
+	}).catch( /*istanbul ignore next*/ err=>{
 		MainSpinner.fail(`${MainSpinner.text}: ${err.message}`);
 		console.error(err.stack);
 		return undefined;

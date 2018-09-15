@@ -1,6 +1,6 @@
 import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src/options';
 import { ok, error, warn, info, ask, input } from '../../src/console';
-import { capitalize, created, updated } from '../../src/utils';
+import { created, updated } from '../../src/utils';
 import { targetPath, cliPath } from '../../src/paths';
 import { spin } from '../../src/spinner';
 import * as assert from 'assert';

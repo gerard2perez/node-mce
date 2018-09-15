@@ -8,6 +8,7 @@ export async function override(text:string, testdir:string,  state:boolean) {
         state = true;
         if ( !await ask(text) ) return false;
     }
+    /*istanbul ignore else*/
     if ( state ) {
         await spin('Cleanig path', async () => {
             remove(testdir);

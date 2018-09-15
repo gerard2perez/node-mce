@@ -7,6 +7,7 @@ function exec (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean
     let store = (chunck) => {buffer+=chunck.toString()};
     return new Promise((resolve, reject)=>{
         const child = spawn(cmd, options, config);
+        // istanbul ignore next
         child.on('close', code => {
             if(truefalse) {
                 resolve(code === 0);
@@ -25,10 +26,10 @@ function exec (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean
     });
     
 }
-async function spinSpawn(message:string, cmd:string, options:any[], config:SpawnOptions={}, truefalse:boolean=true) {
-    await spin(message, async () =>{
-        await exec(cmd, options, config, false).catch(error);
+// istanbul ignore next
+function spinSpawn(message:string, cmd:string, options:any[], config:SpawnOptions={}, truefalse:boolean=true) {
+    return spin(message, async () =>{
+        await exec(cmd, options, config, false).catch(error=>error);
     });
-    
 }
 export { exec as spawn, spinSpawn, spawn as rawSpawn };

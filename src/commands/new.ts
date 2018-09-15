@@ -1,12 +1,11 @@
-import { text, bool, Parsed, enumeration} from '../options';
-import { Command } from "../command";
-import { ok, error, ask } from "../console";
-import { spin } from "../spinner";
-import { existsSync, mkdirSync, copyFileSync, chmodSync, writeFileSync } from "fs";
-import { remove } from "../remove";
+import { chmodSync, copyFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
-import chalk from "chalk";
+import { Command } from "../command";
+import { ask, error, ok } from "../console";
+import { bool, enumeration, Parsed } from '../options';
+import { remove } from "../remove";
 import { spawn } from "../spawn";
+import { spin } from "../spinner";
 import { fFile } from '../utils';
 
 const templateDir = join(__dirname, '../templates').replace('src/', '').replace('src\\', '');

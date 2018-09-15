@@ -7,14 +7,14 @@ export let options = {
     enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
     number: numeric('-n <n>', 'A number'),
     floating: floating('-f <n>', 'A float number'),
-    range: range('-r <a>..<b>', 'A Range of two numbers'),
     text: text('-t <n>', 'A string value'),
     list: list('-l <n>', 'comma separed values'),
     collect: collect('-c <n>', 'A repetable value'),
-    bool: bool('-b', 'A boolean value'),
+    render: bool('-r', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 };
 
 export async function action(opt:Parsed<typeof options>) {
-    render(cliPath('../test/file.txt'), {demo: 'works'}, cliPath('../test/demo.txt'));
+    let target = opt.render ? cliPath('../test/demo.txt'): undefined;
+    return render(cliPath('../test/file.txt'), {demo: 'works'}, target);
 }
