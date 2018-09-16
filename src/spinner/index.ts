@@ -250,10 +250,9 @@ export async function spin(display:string | ISpinnerOptions, fn:() => Promise<st
 		}
 	}).catch( /*istanbul ignore next*/ err=>{
 		MainSpinner.fail(`${MainSpinner.text}: ${err.message}`);
-		console.error(err.stack);
-		return undefined;
+		// console.error(err.stack);
+		throw err;
 	});
-
 }
 
 export { cliSpinner }
