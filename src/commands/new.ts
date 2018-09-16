@@ -28,20 +28,16 @@ function copy (file:string, target?:string) {
 	copyFileSync(join(templateDir, file), project(target));
 	cfFile(...target.split('\\'));
 }
-// function nproy(...path:string[]) {
-// 	return targetPath(RelPathRoot, ...path);
-// }
 export const description = 'Creates a new MCE project.'
 export const args = '<application>';
 export  async function action(application:string, opt:Parsed<typeof options>) {
 	const nproy = targetPath.bind(null, application);
 	RelPathRoot = application;
-	if(!(await override('Directory already exist. Do you want to override it', application, opt.force)))
+	if(!(await override('Directory already exist. Do you want to override it', nproy(), opt.force)))
 		return;
 	await spin('Creating Files', async () => {
 		makeDir(nproy());
 		copy('app', application);
-		chmodSync(nproy(), 744 );
 		copy('tsconfig.json');
 		makeDir(nproy('src'));
 		let cli = `import { MCE } from "node-mce";`;
