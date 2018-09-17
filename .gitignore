@@ -8,3 +8,4 @@ coverage
 .nyc_output
 single_repo
 test/demo.txt
+.DS_Store

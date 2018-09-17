@@ -1,8 +1,7 @@
-import { chmodSync, copyFileSync, existsSync, mkdirSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { join } from "path";
-import { ask, error, ok } from "../console";
+import { error, ok } from "../console";
 import { bool, enumeration, Parsed } from '../core/options';
-import { remove } from "../remove";
 import { spawn } from "../spawn";
 import { spin } from "../spinner";
 import { fFile, makeDir, cp } from '../utils';
@@ -20,44 +19,14 @@ export const options = {
 	npm: bool('-n', 'Install npm dependencies'),
 	style: enumeration('-s <style>', 'Define the style of command you will use. If you need more than one command use git.', Styles, Styles.single),
 };
-let RelPathRoot;
-function cfFile(...path:string[]) {
-	path.splice(0,0,RelPathRoot);
-	ok(fFile(...path));
-}
 let nproy;
 export const description = 'Creates a new MCE project.'
 export const args = '<application>';
 export  async function action(application:string, opt:Parsed<typeof options>) {
 	nproy = targetPath.bind(null, application);
-	RelPathRoot = application;
 	if(!(await override('Directory already exist. Do you want to override it', nproy(), opt.force)))
 		return;
-	await spin('Creating Files', async () => {
-		makeDir(nproy());
-		copy('app', application);
-		copy('tsconfig.json');
-		makeDir(nproy('src'));
-		let cli = `import { MCE } from "node-mce";`;
-		if (opt.style === Styles.git) {
-			cli += '\n\nMCE(__dirname).subcommand(process.argv);';
-		} else {
-			cli += '\n\nMCE(__dirname).command(process.argv);'
-		}
-		writeFileSync(nproy('src', 'cli.ts'), cli)
-		cfFile('src', 'cli.ts');
-		if(opt.style === Styles.git) {
-			makeDir(nproy('src', 'commands'));
-			copy(join('src', 'index.ts.tmp'), join('src', 'commands', 'removeme.ts'));
-		} else {
-			copy(join('src', 'index.ts.tmp'), join('src', 'index.ts'));
-		}
-		makeDir(nproy('.vscode'));
-		copy(join('.vscode', 'launch.json'));
-		copy(join('.vscode', 'settings.json'));
-		copy(join('.vscode', 'tasks.json'));
-		makePakage(application);
-	});
+	await createProjectExtructure(application, opt.style);
 	// istanbul ignore next
 	opt.npm && await spin('Initializing npm', async() => {
 		if ( !await spawn('npm', ['install', '-S'], {cwd: nproy()}).catch(()=>false) ) {
@@ -72,9 +41,33 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 		if ( !await spawn('git', ['init'], {cwd: nproy()}).catch(()=>false) ) {
 			error('git init')
 		}
+		copy('.gitignore');
 	});
-	copy('.gitignore');
 }
+async function createProjectExtructure(application: string, style:Styles) {
+	await spin('Creating Files', async () => {
+		makeDir(nproy());
+		copy('app', application);
+		copy('tsconfig.json');
+		makeDir(nproy('src'));
+		let cli = `import { MCE } from "node-mce";\n\nMCE(__dirname).${style === Styles.git ? 'subcommand':'command'}(process.argv);`;
+		writeFileSync(nproy('src', 'cli.ts'), cli);
+		fFile(nproy('src', 'cli.ts'));
+		if (style === Styles.git) {
+			makeDir(nproy('src', 'commands'));
+			copy(join('src', 'index.ts.tmp'), join('src', 'commands', 'removeme.ts'));
+		}
+		else {
+			copy(join('src', 'index.ts.tmp'), join('src', 'index.ts'));
+		}
+		makeDir(nproy('.vscode'));
+		copy(join('.vscode', 'launch.json'));
+		copy(join('.vscode', 'settings.json'));
+		copy(join('.vscode', 'tasks.json'));
+		makePakage(application);
+	});
+}
+
 function makePakage(application:string) {
 	let _package = {
 		name: application,

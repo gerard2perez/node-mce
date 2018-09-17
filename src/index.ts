@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
-import { Command } from "./command";
+import { Command } from "./core/command";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 class MCE {
 	help: boolean = false;

@@ -7,7 +7,12 @@
     "**/*.js": true,
     "**/*.map": true,
     "**/*.d.ts": true,
-    "package-lock.json": true
+    "package-lock.json": true,
+    ".nyc_output":true,
+    "coverage": true
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "codemetrics.basics.ComplexityLevelExtreme": 25,
+  "codemetrics.basics.ComplexityLevelHigh": 20,
+  "codemetrics.basics.ComplexityLevelNormal": 15,
+  "codemetrics.basics.CodeLensHiddenUnder": 14
 }

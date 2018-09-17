@@ -6,14 +6,14 @@ export class Argument {
     name:string
     static parser = {
         string: o=>o,
-        number: function  (o) {
+        number( o ) {
             let res = parseFloat(o);
             if(isNaN(res)) {
                 throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);
             }
             return res;
         },
-        bool: function  (o) {
+        bool( o ) {
             let res = o === 'true' || o === 'false';
             if(!res) {
                 throw new Error(`Argument type missmatch. argument '${this.name}' is not a ${this.type}`);

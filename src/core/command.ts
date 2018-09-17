@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import { Argument } from './core/argument';
-import { HelpRenderer, ParserCommands } from './core/help-renderer';
-import { OptionKind, Parser, tOptions } from './core/options';
-import { iter } from './utils';
+import { Argument } from './argument';
+import { HelpRenderer, ParserCommands } from './help-renderer';
+import { OptionKind, Parser, tOptions } from './options';
+import { iter } from '../utils';
 function countmax() {
     let maxvalue = 0;
     return (text: string = '') => {

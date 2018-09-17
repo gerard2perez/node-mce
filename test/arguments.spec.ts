@@ -24,6 +24,24 @@ describe('Arguments Parsing', ()=>{
     it('throws argument type missmatch', async ()=>{
         let res = subcommand('args4.test 10 arg2');
         await res.should.be.rejectedWith('Argument type missmatch');
+	});
+	it('parses arguments correctly', async ()=>{
+        let res = await subcommand('args4.test 10 false');
+        res.should.be.deep.equal({
+			arg1: 10,
+			arg2: false,
+			opt: {
+                enumeration: undefined,
+                number: undefined,
+                floating: undefined,
+                range: [],
+                text:undefined,
+                bool: false,
+                list:[],
+                collect:[],
+                verbose: 0
+            }
+		})
     });
     it('throws argument does not match expression', async ()=>{
         let res = subcommand('args6.test -n 5 -t xlk');
