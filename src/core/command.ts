@@ -3,6 +3,7 @@ import { Argument } from './argument';
 import { HelpRenderer, ParserCommands } from './help-renderer';
 import { OptionKind, Parser, tOptions } from './options';
 import { iter } from '../utils';
+import { MainSpinner } from '../spinner';
 function countmax() {
     let maxvalue = 0;
     return (text: string = '') => {
@@ -52,7 +53,7 @@ class Command {
         for (let option of options) {
             help += HelpRenderer.formatOption(option, tags_len, val_len, desc_len);            
         }
-        process.stdout.write(help + '\n\n');
+        MainSpinner.stream.write(help + '\n\n');
     }
     private prepareProgramArguments(args: string[]): [any, string[]] {
         let argum: string[] = [];

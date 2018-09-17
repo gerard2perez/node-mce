@@ -11,8 +11,7 @@
   },
   "scripts": {
     "test": "mocha test/index.spec.ts",
-    "cover": "nyc npm t",
-    "semantic-release": "semantic-release"
+    "cover": "nyc npm t"
   },
   "repository": {
     "type": "git",
@@ -52,20 +51,19 @@
     "@types/chai": "^4.1.4",
     "@types/cross-spawn": "^6.0.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^10.9.4",
+    "@types/node": "^10.10.1",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3",
+    "@types/chai-as-promised": "^7.1.0",
+    "chai-as-promised": "^7.1.1",
     "semantic-release": "^15.9.15"
   },
   "dependencies": {
-    "@types/chai-as-promised": "^7.1.0",
-    "chai-as-promised": "^7.1.1",
     "chalk": "^2.4.1",
     "cross-spawn": "^6.0.5",
-    "cross-spawn-async": "^2.2.5",
     "signal-exit": "^3.0.2"
   },
   "nyc": {

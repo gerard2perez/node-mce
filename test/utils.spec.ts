@@ -20,8 +20,8 @@ describe('Utils functions',async ()=>{
         await subcommand('utils2.test -vvv -r');
         let file = readFileSync('./test/demo.txt', 'utf-8');
         file.should.be.equal('works');
-        let renered = await subcommand('utils2.test -vvv');
-        console.log(renered);
+		let renered = await subcommand('utils2.test -vvv');
+		renered.should.be.equal('works');
     });
     it('executes a single command', async () =>{
         await command('-v');

@@ -9,3 +9,4 @@ coverage
 single_repo
 test/demo.txt
 .DS_Store
+/log.txt

@@ -1,6 +1,7 @@
 import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
 import { Command } from "./core/command";
+import { MainSpinner } from "./spinner";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 class MCE {
 	help: boolean = false;
@@ -20,7 +21,7 @@ class MCE {
 		}
 		/*istanbul ignore next*/
 		if(this.help) {
-			console.log(`${this.name} - version: ${this.version}`);
+			MainSpinner.stream.write(`${this.name} - version: ${this.version}\n`);
 		}
 	}
 	private getCommand (source:string, /*istanbul ignore else */subcommand:string='') {
@@ -61,7 +62,7 @@ class MCE {
 			}
 			return Promise.resolve();
 		} else {
-			console.log('Command does not exists');
+			MainSpinner.stream.write('Command does not exists\n');
 			return Promise.resolve();
 		}
 	}

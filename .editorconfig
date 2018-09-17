@@ -1,3 +1,6 @@
 [*.ts]
 indent_size = 4
 indent_style = tab
+[*.help.log]
+indent_size = 2
+indent_style = space

@@ -28,7 +28,7 @@ export function updateTextSpin(text:string) {
 export function input (display:string) : Promise<string> {
     const rl = createInterface({
         input: process.stdin,
-        output: process.stdout,
+        output: MainSpinner.stream,
         terminal: false
     });
     let SpinnerWorking = MainSpinner.isSpinning;
@@ -37,7 +37,7 @@ export function input (display:string) : Promise<string> {
         MainSpinner.info(`${MainSpinner.text} - `, false);
     }
     return new Promise(resolve => rl.question(`${display} `, (awser)=>{
-        moveCursor(process.stdout, 0, -1);
+        moveCursor(MainSpinner.stream, 0, -1);
         MainSpinner.clear();
         if ( SpinnerWorking ) {
             MainSpinner.start();

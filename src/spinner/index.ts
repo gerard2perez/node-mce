@@ -37,15 +37,15 @@ export class Cursor {
     };
 }
 export interface  ISpinnerOptions {
-    color:string
+    color?:string
     text:string
-    stream: any
-    interval:number
-    hideCursor:boolean
-    enabled:boolean
-    frameIndex:number
-    linesToClear:number
-    spinner:any
+    stream?: any
+    interval?:number
+    hideCursor?:boolean
+    enabled?:boolean
+    frameIndex?:number
+    linesToClear?:number
+    spinner?:any
 }
 export class Spinner {
     id:number
@@ -72,13 +72,7 @@ export class Spinner {
 			return count + Math.max(1, Math.ceil(wcwidth(line) / columns));
 		}, 0);
 	}
-    constructor(options) {
-		/*istanbul ignore else*/
-		if (typeof options === 'string') {
-			options = {
-				text: options
-			};
-		}
+    constructor(options:ISpinnerOptions) {
 		this.options = Object.assign({
 			text: '',
 			color: 'cyan',
@@ -86,7 +80,6 @@ export class Spinner {
 		}, options);
 
 		const sp = this.options.spinner;
-        // this.spinner = typeof sp === 'object' ? sp : (process.platform === 'win32' ? spinners.dots : (spinners[sp] || spinners.dots)); // eslint-disable-line no-nested-ternary
 		this.changeSpinner('dots');
 		/*istanbul ignore next*/
 		if (animations[this.spinner].frames === undefined) {
@@ -98,7 +91,7 @@ export class Spinner {
 		this.stream = this.options.stream;
 		this.id = null;
 		this.frameIndex = 0;
-		this.enabled = typeof this.options.enabled === 'boolean' ? /*istanbul ignore next*/this.options.enabled : ((this.stream && this.stream.isTTY) && !process.env.CI);
+		this.enabled = typeof this.options.enabled === 'boolean' ? /*istanbul ignore next*/this.options.enabled : ((this.stream && this.stream.isTTY));
 
 		// Set *after* `this.stream`
 		this.text = this.options.text;
@@ -228,16 +221,14 @@ export class Spinner {
 		return this;
 	}
 }
-/*istanbul ignore next*/
-function cliSpinner (options:ISpinnerOptions | string) {
-    return new Spinner(options);
+function cliSpinner (options:ISpinnerOptions) {
+    MainSpinner = new Spinner(options);
 }
 export function wait(time:number=1000) {
 	return new Promise((resolve)=>{
 		setTimeout(resolve, time);
 	});
 }
-export const MainSpinner = new Spinner('');
 export async function spin(display:string | ISpinnerOptions, fn:() => Promise<string|void>) : Promise<string> {
 	MainSpinner.text = display;
 	MainSpinner.start();
@@ -254,5 +245,5 @@ export async function spin(display:string | ISpinnerOptions, fn:() => Promise<st
 		throw err;
 	});
 }
-
+export let MainSpinner = new Spinner({text:''});
 export { cliSpinner }
