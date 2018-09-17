@@ -5,15 +5,15 @@ import { join } from "path";
 import { mkdirSync, copyFileSync } from "fs";
 function print (mode:String, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
-    ok(`\t${chalk.cyan('created')}: ${fFile(...fpath)}`);
+    ok(`\t${chalk.cyan('created')}: ${printRelativePath(...fpath)}`);
 }
 export function getRelativePath(location:string[], relativeTo:string = targetPath()) {
 	return location.join('/')
 		.replace(/\\/mg, '/')
-		.replace(relativeTo, '')
+		.replace(relativeTo.replace(/\\/mg, '/'), '')
 		.replace(/^[\\\/]/, '');
 }
-export function fFile(...path:string[]) {
+export function printRelativePath(...path:string[]) {
 	let relative = getRelativePath(path).split('/');
 	let last:string = relative.pop();
 	if(relative.length === 0) {
@@ -55,9 +55,9 @@ export function iter(obj: any) {
 }
 export function makeDir(location:string) {
 	mkdirSync(location);
-	ok(fFile(location));
+	ok(printRelativePath(location));
 }
 export function cp(source:string, target:string) {
 	copyFileSync(source, target);
-	ok(fFile(target));
+	ok(printRelativePath(target));
 }

@@ -15,6 +15,9 @@ chai.use(chaiAsPromised);
 chai.should();
 const stream = new FakeStream('log.txt');
 cliSpinner({text: '',stream, enabled:true});
+function loadContent(path:string) {
+	return readFileSync(path, 'utf-8').replace(/\r/g, '');
+}
 
 describe('Self Test', async ()=>{
     it('create a new project', async()=>{
@@ -22,13 +25,13 @@ describe('Self Test', async ()=>{
 		stream.clear();
 		await subcommand('new single_repo -f -s single');
 		wait(1).then(o=>process.stdin.push('n\n'));
-		stream.content.should.be.equal(readFileSync('./test/logs/new.output.log', 'utf-8'));
+		stream.content.should.be.equal(loadContent('./test/logs/new.output.log'));
 		await subcommand('new single_repo -s single');
     });
     it('create a new project multicommand', async()=>{
 		stream.clear();
 		await subcommand('new single_repo -f -s git');
-		stream.content.should.be.equal(readFileSync('./test/logs/new-git.output.log', 'utf-8'));
+		stream.content.should.be.equal(loadContent('./test/logs/new-git.output.log'));
     });
     it('command does not exist', async()=>{
 		stream.clear();
@@ -39,7 +42,7 @@ describe('Self Test', async ()=>{
 		stream.clear();
         toggleHelp();
 		await subcommand('');
-		stream.content.should.be.equal(readFileSync('./test/logs/all.help.log', 'utf-8'));
+		stream.content.should.be.equal(loadContent('./test/logs/all.help.log'));
 		toggleHelp();
     });
     it('renders command help', async()=>{
@@ -47,6 +50,6 @@ describe('Self Test', async ()=>{
         process.argv.push('-h');
         let help = await subcommand('new');
         process.argv.pop();
-		stream.content.should.be.equal(readFileSync('./test/logs/new.help.log', 'utf-8'));
+		stream.content.should.be.equal(loadContent('./test/logs/new.help.log'));
     });
 });
