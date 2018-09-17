@@ -2,20 +2,27 @@ import chalk from "chalk";
 import { ok } from "./console";
 import { targetPath } from "./paths";
 import { join } from "path";
-import { mkdirSync } from "fs";
-export function fFile(...path:string[]) {
-	let last:string = path.pop();
-	if(path.length === 0) {
-		return `${chalk.green(last)}`;
-	} else {
-		let route = chalk.grey(join(...path).replace(/\\/mg, '/'));
-		return `${route}/${chalk.green(last)}`;
-	}
-    
-}
+import { mkdirSync, copyFileSync } from "fs";
 function print (mode:String, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
     ok(`\t${chalk.cyan('created')}: ${fFile(...fpath)}`);
+}
+export function getRelativePath(location:string[], relativeTo:string = targetPath()) {
+	return location.join('/')
+		.replace(/\\/mg, '/')
+		.replace(relativeTo, '')
+		.replace(/^[\\\/]/, '');
+}
+export function fFile(...path:string[]) {
+	let relative = getRelativePath(path).split('/');
+	let last:string = relative.pop();
+	if(relative.length === 0) {
+		return `${chalk.green(last)}`;
+	} else {
+		let root = chalk.grey(join(...relative).replace(/\\/mg, '/'));
+		return `${root}/${chalk.green(last)}`;
+	}
+    
 }
 export const created = print.bind(null, 'created');
 export const updated = print.bind(null, 'updated');
@@ -47,9 +54,10 @@ export function iter(obj: any) {
     return obj;
 }
 export function makeDir(location:string) {
-	let tocreate = location;
-	let diff = location.replace(targetPath(), '')
-				.replace(/^\\/, '').replace(/\\/mg, '/').split('/');
-	mkdirSync(tocreate);
-	ok(fFile(...diff));
+	mkdirSync(location);
+	ok(fFile(location));
+}
+export function cp(source:string, target:string) {
+	copyFileSync(source, target);
+	ok(fFile(target));
 }
