@@ -52,9 +52,15 @@ interface OptionBuilder<T> {
     (option:string, description:string, defaults?:T) : tOptions<T>;
     (option:string, description:string, exp:RegExp, defaults?:T) : tOptions<T>;
 }
-export function enumeration (option:string, description:string, options:string[], defaults?:any) : tOptions<string> {
+function enumeration<T extends string[]>(option:string, description:string, options:T, defaults?:T[number]) : tOptions<T[number]>;
+function enumeration<L>(option:string, description:string, options:any, defaults?:L) : tOptions<L>;
+function enumeration(option:string, description:string, options:any, defaults?:any) {
+	if(!(options instanceof Array)) {
+		options = Object.keys(options).map(k=>options[k]) as any;
+	}
     return preOptions(Parser.enum, option, description, options, defaults);
 }
+export { enumeration };
 // export const enumeration2: OptionBuilder<string> = preOptions.bind(null, Parser.enum)
 export const numeric: OptionBuilder<number> = preOptions.bind(null, Parser.int)
 export const floating: OptionBuilder<number> = preOptions.bind(null, Parser.float)
