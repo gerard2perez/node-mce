@@ -22,7 +22,7 @@ export class FakeStream extends Stream.Writable {
 	constructor(public path:string) {
 		super({	
 		});
-		unlinkSync(path);
+		try{unlinkSync(path);}catch(ex){}
 	}
 	write(chunck:any, cb:any) {
 		let text:string = chunck.toString().replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');

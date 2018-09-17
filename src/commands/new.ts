@@ -7,6 +7,7 @@ import { spin } from "../spinner";
 import { fFile, makeDir, cp } from '../utils';
 import { override } from "../override";
 import { targetPath, cliPath } from "../paths";
+import { render } from "../render";
 
 const templates = cliPath.bind(null, '../templates');
 const copy = (file:string, target:string = file) => cp(templates(file), nproy(target));
@@ -64,38 +65,7 @@ async function createProjectExtructure(application: string, style:Styles) {
 		copy(join('.vscode', 'launch.json'));
 		copy(join('.vscode', 'settings.json'));
 		copy(join('.vscode', 'tasks.json'));
-		makePakage(application);
+		render(templates('package.json'), {application}, nproy('package.json'));
+		ok(fFile(nproy('package.json')));
 	});
-}
-
-function makePakage(application:string) {
-	let _package = {
-		name: application,
-		version: '1.0.0',
-		description: '',
-		main: `./${application}`,
-		bin: {
-			[application]: `./${application}`
-		},
-		scripts: {
-			test: "mocha test/**/*.test.ts"
-		},
-		repository: {},
-		keywords:['mce', 'cmd'],
-		author:'',
-		license:'MIT',
-		devDependencies: {
-			"@types/node": "^10.3.2",
-			"mocha": "^5.2.0",
-			"ts-node": "^6.1.1",
-			"typescript": "^2.9.1"
-		},
-		dependencies: {
-			"chalk": "^2.4.1",
-			"signal-exit": "^3.0.2",
-			"node-mce": "^1.0.0"
-		}
-	};
-	writeFileSync(nproy("package.json"), JSON.stringify(_package, null,2));
-	ok(fFile(nproy("package.json")));
 }
