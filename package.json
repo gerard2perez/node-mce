@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "Make command executable easily",
   "main": "./index.js",
+  "private": false,
   "bin": {
     "mce": "./mce"
   },
