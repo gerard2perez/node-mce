@@ -3,9 +3,8 @@
  */
 import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
-import { Command } from "./core/command";
+import { Command, Option, Parser } from "./core";
 import { MainSpinner } from "./spinner";
-import { Option, Parser } from "./core/option";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 
 export class MCEProgram {

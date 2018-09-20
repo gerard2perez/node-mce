@@ -3,6 +3,7 @@
     "commands": true,
     "spinner":true,
     "wcwidth": true,
+    "core": true,
     "node_modules": true,
     "**/*.js": true,
     "**/*.map": true,

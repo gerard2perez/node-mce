@@ -1,7 +1,7 @@
 import { writeFileSync } from "fs";
 import { join } from "path";
 import { error, ok } from "../console";
-import { bool, enumeration, Parsed } from '../core/options';
+import { bool, enumeration, Parsed } from '../';
 import { spawn } from "../spawn";
 import { spin } from "../spinner";
 import { printRelativePath, makeDir, cp } from '../utils';

@@ -11,7 +11,7 @@ export let options = {
     number: numeric('-n <n>', 'A number'),
     floating: floating('-f <n>', 'A float number'),
     range: range('-r <a>..<b>', 'A Range of two numbers'),
-    text: text('-t <n>', 'A string value'),
+    text: text('-t --text <n>', 'A string value'),
     list: list('-l <n>', 'comma separed values'),
     collect: collect('-c <n>', 'A repetable value'),
     bool: bool('-b', 'A boolean value'),

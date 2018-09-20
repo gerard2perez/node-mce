@@ -4,3 +4,6 @@ indent_style = tab
 [*.log]
 indent_size = 2
 indent_style = space
+[*.md]
+indent_size = 1
+indent_style = space

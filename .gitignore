@@ -11,3 +11,4 @@ test/demo.txt
 .DS_Store
 /log.txt
 /docs
+/core
