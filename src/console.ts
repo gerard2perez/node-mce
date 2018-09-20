@@ -1,12 +1,15 @@
-import { createInterface, cursorTo, moveCursor } from "readline";
+/**
+ * @module @bitsun/mce/console
+ */
+import { createInterface, moveCursor } from "readline";
 import { MainSpinner } from "./spinner";
 
 function verbose(lvl:number, fn:string, text:string) {
     if( parseInt(process.env.MCE_VERBOSE) >= lvl)
         MainSpinner[fn](text)
 }
-export const info = verbose.bind(null,2,'info');
-export const warn = verbose.bind(null,1,'warn');
+export const info:(text:string)=>void = (text)=>verbose(2,'info', text);
+export const warn:(text:string)=>void = (text)=>verbose(1,'warn', text);
 export const error = (text:string)=>{
     MainSpinner.error(text);
 }

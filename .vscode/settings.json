@@ -14,5 +14,6 @@
   "codemetrics.basics.ComplexityLevelExtreme": 25,
   "codemetrics.basics.ComplexityLevelHigh": 20,
   "codemetrics.basics.ComplexityLevelNormal": 15,
-  "codemetrics.basics.CodeLensHiddenUnder": 14
+  "codemetrics.basics.CodeLensHiddenUnder": 14,
+  "linter_codeclimate.enabled": true
 }

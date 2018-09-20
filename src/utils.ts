@@ -1,11 +1,14 @@
+/**
+ * @module @bitsun/mce/utils
+ */
 import chalk from "chalk";
 import { ok } from "./console";
 import { targetPath } from "./paths";
 import { join } from "path";
 import { mkdirSync, copyFileSync } from "fs";
-function print (mode:String, text:string) {
+function print (mode:string, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
-    ok(`\t${chalk.cyan('created')}: ${printRelativePath(...fpath)}`);
+    ok(`\t${chalk.cyan(mode)}: ${printRelativePath(...fpath)}`);
 }
 export function getRelativePath(location:string[], relativeTo:string = targetPath()) {
 	return location.join('/')
@@ -24,8 +27,9 @@ export function printRelativePath(...path:string[]) {
 	}
     
 }
-export const created = print.bind(null, 'created');
-export const updated = print.bind(null, 'updated');
+export const created:(text:string)=>void = (text)=>print('created', text);
+export const updated:(text:string)=>void = (text)=>print('updated', text);
+/** @ignore */
 export function iter<T=any>(obj: any) {
 	obj[Symbol.iterator] = function () {
 		let keys = Object.keys(this);
@@ -61,3 +65,7 @@ export function cp(source:string, target:string) {
 	copyFileSync(source, target);
 	ok(printRelativePath(target));
 }
+export { override } from './override';
+export { remove } from './remove';
+export { render } from './render';
+export { spawn, spinSpawn, rawSpawn } from './spawn';

@@ -1,28 +1,34 @@
+/**
+ * @module @bitsun/mce/core
+ */
 import chalk from 'chalk';
 import { Argument } from './argument';
-import { HelpRenderer, ParserCommands } from './help-renderer';
-import { OptionKind, Parser, tOptions, MCEOption } from './options';
-import { iter } from '../utils';
+import { HelpRenderer } from './help-renderer';
 import { MainSpinner } from '../spinner';
-function countmax() {
-    let maxvalue = 0;
+import { Option, OptionKind } from './option';
+/**
+ * Rendering help need some fixed spaces between tags, short tags, descriptions
+ * This function helps to keep track of the maximun length for those sections
+ */
+function countMaxLength() {
+    let maxvalue:number = 0;
     return (text: string = '') => {
         if (text.length > maxvalue) maxvalue = text.length;
         return maxvalue;
     };
 }
 interface ICommand {
-	options?:{ [p: string]: MCEOption<any> }
+	options?:{ [p: string]: Option<any> }
 	args?:string
 	description?:string
 	action:any
 }
-class Command {
+export class Command {
 	showHelp:boolean = false
 
 	verbose:boolean
     action:(...data:any[]) => Promise<void>
-    constructor(public program:string, public name: string, definition:ICommand) {
+    constructor(private program:string, public name: string, definition:ICommand) {
 		definition = Object.assign({}, {
 			description: '',
 			args: '',
@@ -35,7 +41,7 @@ class Command {
 		this.verbose = !!definition.options.verbose;
     }
     description: string = ''
-    options: MCEOption<any>[]
+    options: Option<any>[]
 	arguments: Argument[]
 	unic_shorts:string[] = []
     call(argv: string[]) {
@@ -53,9 +59,9 @@ class Command {
             help += ` ${chalk.cyan('[options]')}`
         }
         let options = [];
-        let desc_len = countmax();
-        let tags_len = countmax();
-        let val_len = countmax();
+        let desc_len = countMaxLength();
+        let tags_len = countMaxLength();
+        let val_len = countMaxLength();
         let desc_limit = 50;
         // istanbul ignore else
         if (this.description)
@@ -99,4 +105,3 @@ class Command {
         return this.action(...final_args, _opt_);
     }
 }
-export { Command, Command as default };

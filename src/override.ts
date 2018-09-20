@@ -1,3 +1,6 @@
+/**
+ * @module @bitsun/mce/utils
+ */
 import { existsSync } from "fs";
 import { remove } from "./remove";
 import { spin } from "./spinner";

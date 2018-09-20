@@ -1,41 +1,16 @@
+/**
+ * @module @bitsun/mce/spinner
+ */
 import { animations } from './animations';
 import chalk from 'chalk';
 import { LogSymbols, supported } from './symbols';
 import { stripAnsi } from './strip-ansi';
 import { wcwidth } from './wcwidth';
-import * as signalExit from 'signal-exit';
+import { Cursor } from './cursor';
 
-const TEXT = Symbol('text');
-export class Cursor {
-    static hidden:boolean = false;
-    static showOnExit:boolean = false;
-    static show (stream:any) {
 
-		const s = stream || /*istanbul ignore next*/ process.stderr;
-		/*istanbul ignore next*/
-        if (!s.isTTY) {
-            return;
-        }
-        Cursor.hidden = false;
-        s.write('\u001b[?25h');
-    }
-    static hide(stream:any) {
-		const s = stream || /*istanbul ignore next*/process.stderr;
-		/*istanbul ignore next*/
-        if (!s.isTTY) {
-            return;
-        }
-        if(!Cursor.showOnExit) {
-			Cursor.showOnExit = true;
-			/*istanbul ignore next*/
-            signalExit(() => {
-                process.stderr.write('\u001b[?25h');
-            }, {alwaysLast: true});
-        }
-        Cursor.hidden = true;
-        s.write('\u001b[?25l');
-    };
-}
+const TEXT = Symbol('mce_spinner');
+
 export interface  ISpinnerOptions {
     color?:string
     text:string
@@ -78,8 +53,6 @@ export class Spinner {
 			color: 'cyan',
 			stream: process.stderr
 		}, options);
-
-		const sp = this.options.spinner;
 		this.changeSpinner('dots');
 		/*istanbul ignore next*/
 		if (animations[this.spinner].frames === undefined) {
@@ -221,7 +194,9 @@ export class Spinner {
 		return this;
 	}
 }
-function cliSpinner (options:ISpinnerOptions) {
+/** @ignore */
+export let MainSpinner = new Spinner({text:''});
+export function cliSpinner (options:ISpinnerOptions) {
     MainSpinner = new Spinner(options);
 }
 export function wait(time:number=1000) {
@@ -229,7 +204,7 @@ export function wait(time:number=1000) {
 		setTimeout(resolve, time);
 	});
 }
-export async function spin(display:string | ISpinnerOptions, fn:() => Promise<string|void>) : Promise<string> {
+export async function spin(display:string | ISpinnerOptions, fn:() => Promise<string|void>) : Promise<string|void> {
 	MainSpinner.text = display;
 	MainSpinner.start();
 	return fn().then(success => {
@@ -245,5 +220,3 @@ export async function spin(display:string | ISpinnerOptions, fn:() => Promise<st
 		throw err;
 	});
 }
-export let MainSpinner = new Spinner({text:''});
-export { cliSpinner }

@@ -1,3 +1,6 @@
+/**
+ * @module @bitsun/mce/utils
+ */
 import { resolve } from "path";
 
 export function cliPath (...path:string[]) {

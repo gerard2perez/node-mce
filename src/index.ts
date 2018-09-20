@@ -1,33 +1,37 @@
+/**
+ * @module @bitsun/mce
+ */
 import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";
 import { Command } from "./core/command";
 import { MainSpinner } from "./spinner";
-import { bool, MCEOption, Parser, verbose } from "./core/options";
+import { Option, Parser } from "./core/option";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 
-class MCE {
-	showHelp: boolean = false;
-	showVersion: boolean = false;
+export class MCEProgram {
+	private showHelp: boolean = false;
+	private showVersion: boolean = false;
 	name: string;
-	__version: string;
-	common:{[p:string]:MCEOption<any>} = {}
+	version: string;
+	common:{[p:string]:Option<any>} = {}
 	unic_shorts:string[] = []
 	verbose:number
-	_version(option:string = '') {
-		let [short, tag='--version'] = option.split(' ');
-		this.common.version = new MCEOption<boolean>(short,'', Parser.truefalse,undefined,false);
-		this.common.version.makeTag(tag.replace(/-/g, ''), this);
+	private createBoolVar(option:string) {
+		let [short, tag] = option.split(' ');
+		let name = (tag||short).replace(/-/g, '');
+		this.common[name] = new Option<boolean>(short,'', Parser.truefalse,undefined,false);
+		this.common[name].makeTag(name, this);
 		return this;
 	}
-	_help(option:string = '-h') {
-		let [short, tag='--help'] = option.split(' ');
-		this.common.help = new MCEOption<boolean>(short,'', Parser.truefalse,undefined,false);
-		this.common.help.makeTag(tag.replace(/-/g, ''),this);
-		return this;
+	_version(option:string = '--version') {
+		return this.createBoolVar(option);
+	}
+	_help(option:string = '-h --help') {
+		return this.createBoolVar(option);
 	}
 	_verbose(option:string = '-v') {
 		let [short, tag='--verbose'] = option.split(' ');
-		this.common.verbose = new MCEOption<number>(short,'', Parser.increaseVerbosity,undefined,0);
+		this.common.verbose = new Option<number>(short,'', Parser.increaseVerbosity,undefined,0);
 		this.common.verbose.makeTag(tag.replace(/-/g, ''),this);
 		return this;
 	}
@@ -36,7 +40,7 @@ class MCE {
 		let { version, bin } = require(resolve(root.replace('src', ''), 'package.json'));
 		let [name] = Object.keys(bin);
 		this.name = name;
-		this.__version = version;
+		this.version = version;
 		process.argv.splice(0, 2);
 		this._verbose()._help()._version();
 	}
@@ -50,7 +54,6 @@ class MCE {
 		return mce_sub_command;
 	}
 	private findCompressed(args:string[]){
-		let _opt_={};
 		let composed = [];
 		for(let pos=0; pos<args.length; pos++) {
 			let arg = args[pos];
@@ -79,7 +82,7 @@ class MCE {
 		// istanbul ignore else
 		if(!this.showHelp)this.showHelp = this.common.help.find(args) && args.length <= 1;
 		process.env.MCE_VERBOSE = this.common.verbose.find(args);
-		if(this.showVersion)MainSpinner.stream.write(this.__version);
+		if(this.showVersion)MainSpinner.stream.write(this.version);
 		return this.showVersion;
 	}
 	async command (args:string[]) {
@@ -117,8 +120,7 @@ class MCE {
 		}
 	}
 }
-function make (localdir?:string) {
-	return new MCE(localdir);
+export function MCE (localdir?:string) {
+	return new MCEProgram(localdir);
 }
-export { make as MCE };
 export { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from './core/options';

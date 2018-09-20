@@ -1,4 +1,7 @@
-import { OptionKind } from "./options";
+/**
+ * @module @bitsun/mce/core
+ */
+import { OptionKind } from "./option";
 export class Argument {
     kind:OptionKind = OptionKind.optional;
     parser:any

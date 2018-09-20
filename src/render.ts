@@ -1,3 +1,6 @@
+/**
+ * @module @bitsun/mce/utils
+ */
 import { readFileSync, writeFileSync } from "fs";
 import { iter } from "./utils";
 

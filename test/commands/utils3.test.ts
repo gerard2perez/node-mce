@@ -6,7 +6,7 @@ import { spin, wait } from '../../src/spinner';
 import * as assert from 'assert';
 import { override } from '../../src/override';
 import { mkdirSync } from 'fs';
-import { spinSpawn } from '../../spawn';
+import { spinSpawn } from '../../src/spawn';
 export async function action(opt:any) {
     let res = await spin('test', async () =>{
         

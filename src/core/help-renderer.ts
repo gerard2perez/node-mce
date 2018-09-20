@@ -1,5 +1,8 @@
+/**
+ * @module @bitsun/mce/core
+ */
 import chalk from 'chalk';
-import { Parser, OptionKind, MCEOption } from './options';
+import { Parser, OptionKind, Option } from './option';
 import { Argument } from './argument';
 function padding(text: string, len: Function, long?: number) {
     if (long >= 0) {
@@ -13,15 +16,6 @@ function padding(text: string, len: Function, long?: number) {
         while (text.length < len()) text += ' ';
     }
     return text;
-}
-export interface ParserCommands {
-    options?: string[],
-    rawvalue: string
-    tags: string[]
-    defaults: any
-    expression: RegExp
-    parser: Function
-    kind: OptionKind
 }
 export class HelpRenderer {
     static formatOption(option:any, tags_len, val_len, desc_len) {
@@ -53,14 +47,13 @@ export class HelpRenderer {
         if(parts.length>1)parts.push('');
         return parts;
     }
-    static drawArg(arg: Argument) {
+    static drawArg(arg: Argument):string {
 		return {
 			[OptionKind.required]: `<${chalk.green(arg.name)}>`,
 			[OptionKind.optional]: `[${chalk.blueBright(arg.name)}]`,
 		}[arg.kind];
     }
-	static renderOptions(option:MCEOption<any>, desc_limit: number, desc_len: (text?: string) => number, tags_len: (text?: string) => number, val_len: (text?: string) => number) {
-		let data = ``;
+	static renderOptions(option:Option<any>, desc_limit: number, desc_len: (text?: string) => number, tags_len: (text?: string) => number, val_len: (text?: string) => number) {
 		let parts = HelpRenderer.formatDescription(option.description, desc_limit, option.parser, option.validation);
 		parts.map(p => desc_len(p));
 		let {short, tag} = option;
