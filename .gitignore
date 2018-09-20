@@ -1,5 +1,6 @@
 **/*.d.ts
-**/*.js
+/*.js
+/commands
 **/*.map
 !**/.gitkeep
 *.tgz
