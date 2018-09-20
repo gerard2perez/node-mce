@@ -50,9 +50,7 @@ describe('Self Test', async ()=>{
     });
     it('renders command help', async()=>{
 		stream.clear();
-        process.argv.push('-h');
         let help = await subcommand('new -h');
-        process.argv.pop();
 		stream.content.should.be.equal(loadContent('./test/logs/new.help.log'));
     });
 });

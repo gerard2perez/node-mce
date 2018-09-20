@@ -56,9 +56,7 @@ describe('Arguments Parsing', ()=>{
         await res.should.be.rejectedWith('duplicated short tag');
     });
     it('render help', async ()=>{
-        process.argv.push('-h');
-        let help = await subcommand('args6.test');
-        process.argv.pop();
+        let help = await subcommand('args6.test -h');
     });
     it('Varidac argument can only be in last place', async ()=>{
         let res = subcommand('args5.test true 10 arg2 -n=r -f=a');

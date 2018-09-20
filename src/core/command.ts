@@ -18,6 +18,8 @@ interface ICommand {
 	action:any
 }
 class Command {
+	showHelp:boolean = false
+
 	verbose:boolean
     action:(...data:any[]) => Promise<void>
     constructor(public program:string, public name: string, definition:ICommand) {
@@ -37,8 +39,8 @@ class Command {
 	arguments: Argument[]
 	unic_shorts:string[] = []
     call(argv: string[]) {
-        if (process.argv.includes('-h') || process.argv.includes('--help')) {
-            return this.help()
+        if (this.showHelp) {
+            return this.help();
         } else {
             return this.execute(argv.join('=').split('=').filter(f => f));
         }

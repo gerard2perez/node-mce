@@ -45,6 +45,7 @@ class MCE {
 		let mce_sub_command:Command;
 		let mce_definition:any = require(source);
 		mce_sub_command = new Command(this.name, command_name, mce_definition);
+		mce_sub_command.showHelp = this.showHelp;
 		
 		return mce_sub_command;
 	}
