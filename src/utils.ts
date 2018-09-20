@@ -26,32 +26,32 @@ export function printRelativePath(...path:string[]) {
 }
 export const created = print.bind(null, 'created');
 export const updated = print.bind(null, 'updated');
-export function iter(obj: any) {
-    Object.defineProperty(obj, Symbol.iterator, {
-        configurable: true,
-        value: function () {
-            let keys = Object.keys(this);
-            let data: any = this;
-            let total = keys.length;
-            return {
-                i: 0,
-                next() {
-                    let current = this.i;
-                    let key = keys[current];
-                    return {
-                        value: [
-                            key,
-                            data[key],
-                            current,
-                            total
-                        ],
-                        done: this.i++ === total
-                    };
-                }
-            };
-        }
-    });
-    return obj;
+export function iter<T=any>(obj: any) {
+	obj[Symbol.iterator] = function () {
+		let keys = Object.keys(this);
+		let data:{[p:string]:T} = this;
+		let total = keys.length;
+		return { i: 0,
+			next() {
+				let current = this.i;
+				let key = keys[current];
+				return {
+					value: [
+						key,
+						data[key],
+						current,
+						total
+					],
+					done: this.i++ === total
+				};
+			}
+		};
+	}
+    return obj as {
+		[Symbol.iterator]():{
+			next(): IteratorResult<[string, T, number, number]>
+		}
+	 };
 }
 export function makeDir(location:string) {
 	mkdirSync(location);

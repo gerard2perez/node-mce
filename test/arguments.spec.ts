@@ -2,7 +2,7 @@ import { subcommand } from './loader';
 
 describe('Arguments Parsing', ()=>{
     it('throws if not required arguments', async()=>{
-        let res = subcommand('args1.test');
+        let res = subcommand('args8.test');
         await res.should.be.rejectedWith('Missing argument arg1');
     });
     it('throws if optinal argument and variadac are together', async()=>{

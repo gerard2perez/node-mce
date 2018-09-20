@@ -4,7 +4,7 @@ import chai = require('chai');
 import chaiAsPromised = require("chai-as-promised");
 import { describe, it} from 'mocha';
 import { wait, cliSpinner } from '../src/spinner';
-import { subcommand, loader, toggleHelp } from './loader';
+import { subcommand, loader } from './loader';
 import './options.spec';
 import './arguments.spec';
 import './utils.spec';
@@ -20,6 +20,11 @@ function loadContent(path:string) {
 }
 
 describe('Self Test', async ()=>{
+	it('renders help', async()=>{
+		stream.clear();
+        await subcommand('new --version');
+		stream.content.should.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
+    });
     it('create a new project', async()=>{
 		loader('./src');
 		stream.clear();
@@ -40,15 +45,13 @@ describe('Self Test', async ()=>{
     });
     it('renders all help', async()=>{
 		stream.clear();
-        toggleHelp();
-		await subcommand('');
+		await subcommand('-h');
 		stream.content.should.be.equal(loadContent('./test/logs/all.help.log'));
-		toggleHelp();
     });
     it('renders command help', async()=>{
 		stream.clear();
         process.argv.push('-h');
-        let help = await subcommand('new');
+        let help = await subcommand('new -h');
         process.argv.pop();
 		stream.content.should.be.equal(loadContent('./test/logs/new.help.log'));
     });

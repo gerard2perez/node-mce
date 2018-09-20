@@ -10,6 +10,3 @@ export function command(command:string): Promise<{}> {
 export function loader(path:string){
 	NODE_MCE = MCE(path);
 }
-export function toggleHelp() {
-	NODE_MCE.help = !NODE_MCE.help;
-}

@@ -1,4 +1,4 @@
-import { subcommand, command, toggleHelp } from "./loader";
+import { subcommand, command } from "./loader";
 import { resolve } from "path";
 import { readFileSync } from "fs";
 
@@ -25,9 +25,8 @@ describe('Utils functions',async ()=>{
     });
     it('executes a single command', async () =>{
         await command('-v');
-        toggleHelp();
-        await command('-h');
-        toggleHelp();
+		await command('-h');
+		await command('--version');
     });
     it('test override util', async () =>{
         let res = await subcommand('utils3.test -vvv');

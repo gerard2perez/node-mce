@@ -1,5 +1,6 @@
 import chalk from 'chalk';
-import { Parser, OptionKind } from './options';
+import { Parser, OptionKind, MCEOption } from './options';
+import { Argument } from './argument';
 function padding(text: string, len: Function, long?: number) {
     if (long >= 0) {
         let after = '';
@@ -33,11 +34,8 @@ export class HelpRenderer {
     }
     static formatDescription(desc: string, desc_limit: number, parser:Parser, expresion:string[]) {
         let parts:string[] = [];
-        let count = 0;
         let index = 0;
-        let lines = desc.replace(/ +/gm, ' ').split('\n').map(line=>{
-            return line.split(' ');
-        }).map(line => {
+        desc.replace(/ +/gm, ' ').split('\n').map(line => line.split(' ')).map(line => {
             for(const word of line) {
                 parts[index] = parts[index] || '';
                 parts[index] += ` ${word}`;
@@ -55,66 +53,28 @@ export class HelpRenderer {
         if(parts.length>1)parts.push('');
         return parts;
     }
-    static drawArg(arg: string) {
-        return arg.replace(/<(.*)>/, `<${chalk.green("$1")}>`)
-            .replace(/\[(.*)\]/, `[${chalk.blueBright("$1")}]`);
+    static drawArg(arg: Argument) {
+		return {
+			[OptionKind.required]: `<${chalk.green(arg.name)}>`,
+			[OptionKind.optional]: `[${chalk.blueBright(arg.name)}]`,
+		}[arg.kind];
     }
-    static formatTags(key: string, option: string, parser:Parser) {
-        let [short, value=''] = option.split(' ');
-        let stagdesc = short;
-        if (!short.includes('-')) {
-            value = short;
-            short = undefined;
-        }
-        if (short && short.includes('--')) short = undefined;
-        let tag = `--${key}`;
-        if (key.length === 1) {
-            tag = `-${key}`;
-            stagdesc = tag;
-        }
-        tag = tag.replace(/([A-Z])/gm, "-$1").toLowerCase();
-        if(!short)stagdesc=undefined;
-        value = HelpRenderer.getDefaultValueFor(parser, value);
-        return { tag, short, value, stagdesc };
-    }
-    static getDefaultValueFor(parser:Parser, value:string) {
-        if(!value) {
-            switch(parser) {
-                case Parser.list:
-                    return `<a>,<b>..<n>`;
-                case Parser.string:
-                    return value = ' ';
-                case Parser.range:
-                    return value = '<a>..<b>';
-                case Parser.collect:
-                    return value = '<c>';
-                case Parser.int:
-                case Parser.float:
-                    return value = '<n>';
-                case Parser.enum:
-                    return value = '<e>';
-            }
-        }
-        return value;
-    }
-    static renderArguments(info: ParserCommands, desciprtion: any, desc_limit: number, parser: any, expresion: any, desc_len: (text?: string) => number, tags_len: (text?: string) => number, val_len: (text?: string) => number, options: any[], defaults: any) {
-        let [tag, short] = info.tags;
-        if (!short) {
-            short = tag;
-            tag = '';
-        }
-        else {
-            tag = `, ${tag}`;
-        }
-        let desc: string = desciprtion;
-        let rawvalue: string = info.rawvalue || '';
-        let len = short.length + tag.length;
-        let arg_len = rawvalue.length;
-        let parts = HelpRenderer.formatDescription(desc, desc_limit, parser, expresion);
-        parts.map(p => desc_len(p));
-        tags_len(short + tag);
-        val_len(rawvalue);
-        rawvalue = chalk.cyan(rawvalue);
-        options.push([`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, rawvalue, arg_len, defaults]);
-    }
+	static renderOptions(option:MCEOption<any>, desc_limit: number, desc_len: (text?: string) => number, tags_len: (text?: string) => number, val_len: (text?: string) => number) {
+		let data = ``;
+		let parts = HelpRenderer.formatDescription(option.description, desc_limit, option.parser, option.validation);
+		parts.map(p => desc_len(p));
+		let {short, tag} = option;
+		let arg_len = option.tag_desc.length;
+		if (!short) {
+			short = tag;
+			tag = '';
+		} else {
+			tag = `, ${tag}`;
+		}
+		let len = short.length + tag.length;
+		tags_len(short + tag);
+		val_len(option.tag_desc);
+		return [`${chalk.cyan(short)}${chalk.gray(tag)}`, parts, len, option.tag_desc, arg_len, option.defaults];
+		
+	}
 }

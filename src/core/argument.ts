@@ -29,5 +29,16 @@ export class Argument {
         name = name.split(':')[0];
         this.name = name;
         this.parser = Argument.parser[this.type];
-    }
+	}
+	find(args:string[]) {
+		switch (this.kind) {
+			case OptionKind.required:
+				if (!args[0]) throw new Error(`Missing argument ${this.name}`);
+				return this.parser(args.splice(0, 1)[0]);
+			case OptionKind.varidac:
+				return this.parser(args.splice(0));
+			case OptionKind.optional:
+				return this.parser(args.splice(0, 1)[0]);
+		}
+	}
 }
