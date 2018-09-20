@@ -86,15 +86,15 @@ export async function action(arg1:string, varidac:string[], opt:Parsed<typeof op
 You must export a options variable with the options that you want to use.
 As you can see you can defined a lot of types for your options most of the options cant take a '' as first parameter and mce will generate the tags for you.
 
-The name in the you use to define the property is used as main tag, if you pass '' as the first argument it will fill with a automatic value_desc and no sort tag will be generated.
-On the other hand if you pass a string like '-e --env <env>' mce will use those values as the short tag, tag and tag value.
+The name in the you use to define the property is used as main tag, if you pass '' as the first argument it will fill with a automatic tag_desc and no sort tag will be generated.
+On the other hand if you pass a string like `-e --env <env>` mce will use those values as the short tag, tag and tag value.
 
-option|help generated
--|-
-enumeration:enumeration('', 'description', ['a','b'])| --enumeration \<e>  description Values a \| b
-enumeration:enumeration('-l', 'description', ['a','b'])| -l, --enumeration \<e>  description Values a \| b
-enumeration:enumeration('-l --list', 'description', ['a','b'])| -l, --list \<e>  description Values a \| b
-enumeration:enumeration('-l --list \<l>', 'description', ['a','b'])| -l, --list \<l>  description Values a \| b
+option|short|tag|tag_desc|desc
+-|-|-|-|-
+`enumeration:enumeration('', 'description', ['a','b'])`| | --enumeration|`<e>`|description Values a \| b
+`enumeration:enumeration('-l', 'description', ['a','b'])`|-l|--enumeration|`<e>`|description Values a \| b
+`enumeration:enumeration('-l --list', 'description', ['a','b'])`|-l|--list|`<e>`|description Values a \| b
+`enumeration:enumeration('-l --list <l>', 'description', ['a','b'])`|-l|--list|`<l>`|description Values a \| b
 
 No mather the case the actual property that is created in the *opt* is always *enumeration* for this case.
 
@@ -156,8 +156,8 @@ You need to export a ```args:string``` property with you arguments definition
 ### Coecion
 
 Argument can be coerced by default they are treated as string but if you use:
-- \<arg:**number**> will be coerce to number.
-- \<arg:**boolean**> will be coerce to boolean.
+- `<arg:`**number**`>` will be coerce to number.
+- `<arg:`**boolean**`>` will be coerce to boolean.
 
 ## Help Generation
 By default mce will trace the ```-h --help``` options and will automatically render help
