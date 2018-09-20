@@ -74,8 +74,10 @@ class MCE {
 	}
 	prepare(args:string[]) {
 		args.splice(-1,0, ...this.findCompressed(args));
+		this.showHelp = args.length ===0;
 		this.showVersion = this.common.version.find(args) && args.length <= 1;
-		this.showHelp = this.common.help.find(args) && args.length <= 1;
+		// istanbul ignore else
+		if(!this.showHelp)this.showHelp = this.common.help.find(args) && args.length <= 1;
 		process.env.MCE_VERBOSE = this.common.verbose.find(args);
 		if(this.showVersion)MainSpinner.stream.write(this.__version);
 		return this.showVersion;

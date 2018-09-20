@@ -26,6 +26,7 @@ describe('Utils functions',async ()=>{
     it('executes a single command', async () =>{
         await command('-v');
 		await command('-h');
+		await command('');
 		await command('--version');
     });
     it('test override util', async () =>{
