@@ -7,7 +7,8 @@ checks:
         config:
             threshold: 25
 exclude_patterns:
-    - ".nyc_output/"
+    - docs/
+    - .nyc_output/
     - node_modules/
     - src/spinner/animations.ts
     - coverage/
@@ -19,3 +20,4 @@ exclude_patterns:
     - "./**.json"
     - "./*.js"
     - "**/*.d.ts"
+    - "**.md"

@@ -42,7 +42,7 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 		if ( !await spawn('git', ['init'], {cwd: nproy()}).catch(()=>false) ) {
 			error('git init')
 		}
-		copy('.gitignore');
+		copy('gitignore','.gitignore');
 	});
 }
 async function createProjectExtructure(application: string, style:Styles) {
