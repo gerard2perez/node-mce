@@ -99,7 +99,7 @@ export class Command {
 			_opt_.verbose = parseInt(process.env.MCE_VERBOSE);
 		}
 		let final_args = this.arguments.map(a=>a.find(args));
-        let nargs = final_args.length + 1;
+        let nargs = final_args.length + this.options.length ? 1:0;
         if (nargs !== this.action.length)
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`);
         return this.action(...final_args, _opt_);
