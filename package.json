@@ -14,7 +14,7 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "doc": "typedoc --options .typedoc.json --navigation-label-externals 'Internal API'",
+    "doc": "typedoc --options .typedoc.json --navigation-label-externals \"Internal API\"",
     "test": "mocha test/index.spec.ts",
     "cover": "nyc npm t"
   },

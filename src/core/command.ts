@@ -55,7 +55,7 @@ export class Command {
         let help = chalk.yellow(`    ${this.program} ${this.name} `);
 		help += this.arguments.map(a=>HelpRenderer.drawArg(a));
         // istanbul ignore else
-        if (this.options) {
+        if (this.options.length) {
             help += ` ${chalk.cyan('[options]')}`
         }
         let options = [];
