@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import { override } from '../../src/override';
 import { mkdirSync } from 'fs';
 import { spinSpawn } from '../../src/spawn';
-export async function action(opt:any) {
+export async function action() {
     let res = await spin('test', async () =>{
         
         wait(1).then(o=>process.stdin.push('10\n', 'utf-8'));
