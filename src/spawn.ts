@@ -8,6 +8,7 @@ import { spin } from './spinner';
 export function spawn (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean=true) {
     let buffer = '';
 	let store = (chunck) => {buffer+=chunck.toString()};
+	/* istanbul ignore next */
     return new Promise((resolve, reject)=>{
 		const child = cspawn(cmd, options, config);
         child.on('close', code => {
