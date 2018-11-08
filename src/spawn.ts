@@ -4,14 +4,12 @@
 import * as cspawn from 'cross-spawn';
 import { SpawnOptions } from 'child_process';
 import { spin } from './spinner';
-// istanbul ignore next
+/* istanbul ignore next */
 export function spawn (cmd:string, options:any[], config:SpawnOptions, truefalse:boolean=true) {
     let buffer = '';
 	let store = (chunck) => {buffer+=chunck.toString()};
-	
     return new Promise((resolve, reject)=>{
 		const child = cspawn(cmd, options, config);
-		// istanbul ignore next
         child.on('close', code => {
             if(truefalse) {
                 resolve(code === 0);
