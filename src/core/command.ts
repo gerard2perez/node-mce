@@ -84,7 +84,7 @@ export class Command {
 			} else if (argument.kind === OptionKind.varidac) {
 				if (i !== main_args.length - 1)
 					throw new Error(`Varidac argument can only be in last place`);
-				if (main_args[i - 1].kind === OptionKind.optional)
+				if (main_args[i - 1] && main_args[i - 1].kind === OptionKind.optional)
 					throw new Error(`Optional Argument and Varidac cannot be next to each other`);
             } else if (no_optional && argument.kind === OptionKind.required) {
                 throw new Error('All required arguments should go befere optional arguments');
