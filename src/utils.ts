@@ -63,9 +63,10 @@ export function makeDir(location:string) {
 		ok(printRelativePath(location));
 	}
 }
-export function cp(source:string, target:string) {
+export function cp(source:string, target:string, print:boolean = true) {
 	if(existsSync(source)) {
 		copyFileSync(source, target);
+		if(print)
 		ok(printRelativePath(target));
 	}
 }

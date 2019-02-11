@@ -23,7 +23,7 @@ export interface  ISpinnerOptions {
     spinner?:any
 }
 export class Spinner {
-    id:number
+    id:NodeJS.Timeout
     lineCount: number;
     hideCursor:boolean
     options:ISpinnerOptions
