@@ -51,7 +51,7 @@ async function createProjectExtructure(application: string, style:Styles) {
 		copy('app', application);
 		copy('tsconfig.json');
 		makeDir(nproy('src'));
-		let cli = `import { MCE } from "@bitsun/mce";\n\nMCE(__dirname).${style === Styles.git ? 'subcommand':'command'}(process.argv);`;
+		let cli = `import { MCE } from "@gerard2p/mce";\n\nMCE(__dirname).${style === Styles.git ? 'subcommand':'command'}(process.argv);`;
 		writeFileSync(nproy('src', 'cli.ts'), cli);
 		printRelativePath(nproy('src', 'cli.ts'));
 		if (style === Styles.git) {

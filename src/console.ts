@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/console
+ * @module @gerard2p/mce/console
  */
 import { createInterface, moveCursor } from "readline";
 import { MainSpinner } from "./spinner";

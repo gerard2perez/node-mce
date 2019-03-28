@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/core
+ * @module @gerard2p/mce/core
  */
 import { MCEProgram } from "..";
 import { Command } from "./command";

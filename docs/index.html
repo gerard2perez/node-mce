@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>@bitsun/mce</title>
+	<title>@gerard2p/mce</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">@bitsun/mce</a>
+					<a href="index.html" class="title">@gerard2p/mce</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,7 +54,7 @@
 					<a href="index.html">Globals</a>
 				</li>
 			</ul>
-			<h1> @bitsun/mce</h1>
+			<h1> @gerard2p/mce</h1>
 		</div>
 	</div>
 </header>
@@ -103,10 +103,10 @@
 						</blockquote>
 					</li>
 				</ul>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} <span class="hljs-keyword">from</span> <span class="hljs-string">'@bitsun/mce'</span>;
-<span class="hljs-keyword">import</span> { ok, error, warn, info, ask, input } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bitsun/mce/console'</span>;
-<span class="hljs-keyword">import</span> { created, updated, makeDir, cp, printRelativePath, targetPath, cliPath } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bitsun/mce/utils'</span>;
-<span class="hljs-keyword">import</span> { spin } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bitsun/mce/spinner'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;
+<span class="hljs-keyword">import</span> { ok, error, warn, info, ask, input } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce/console'</span>;
+<span class="hljs-keyword">import</span> { created, updated, makeDir, cp, printRelativePath, targetPath, cliPath } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce/utils'</span>;
+<span class="hljs-keyword">import</span> { spin } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce/spinner'</span>;
 <span class="hljs-keyword">enum</span> Styles { 
     git = <span class="hljs-string">'git'</span>,
     single = <span class="hljs-string">'single'</span> 
@@ -174,19 +174,19 @@
 				<p>No mather the case the actual property that is created in the <em>opt</em> is always <em>enumeration</em> for this case.</p>
 				<h3 id="coercion">Coercion</h3>
 				<p>As you can see mce come with some handy functios to coerce and validate the user input.</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { numeric, floating, range, text, list, collect, bool, verbose, enumeration } <span class="hljs-keyword">from</span> <span class="hljs-string">'@bitsun/mce'</span>;</code></pre>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { numeric, floating, range, text, list, collect, bool, verbose, enumeration } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;</code></pre>
 				<h3 id="validation">Validation</h3>
 				<p>If you need to validate the information of any of your arguments you can pass a RegExp as the third arguments of the option_functions</p>
-				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">text</span> } from <span class="hljs-string">'@bitsun/mce'</span>;
+				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-type">text</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;
 
-<span class="hljs-keyword">export</span> let options = {
- <span class="hljs-built_in">size</span>: <span class="hljs-built_in">text</span>(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(large|medium|small)$/);
+export let <span class="hljs-keyword">options</span> = {
+ size: text(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(<span class="hljs-keyword">large</span>|medium|small)$/);
 }</code></pre><h3 id="defaults">Defaults</h3>
 				<p>The last argument you pass will always be the default value.</p>
-				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-built_in">text</span> } from <span class="hljs-string">'@bitsun/mce'</span>;
+				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-type">text</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;
 
-<span class="hljs-keyword">export</span> let options = {
- <span class="hljs-built_in">size</span>: <span class="hljs-built_in">text</span>(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(large|medium|small)$/, <span class="hljs-string">'medium'</span>);
+export let <span class="hljs-keyword">options</span> = {
+ size: text(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(<span class="hljs-keyword">large</span>|medium|small)$/, <span class="hljs-string">'medium'</span>);
 }</code></pre><h3 id="version-option">Version option</h3>
 				<p>By default mce will trace the --version tag and will respond with the version in your package.json.</p>
 				<h3 id="verbose-option">Verbose option</h3>
@@ -213,11 +213,11 @@
 				<h1 id="final-notes">Final Notes</h1>
 				<p>The executable file that is generated only call your ./cli file.</p>
 				<p>When in git-style cli.ts will look like:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { MCE } <span class="hljs-keyword">from</span> <span class="hljs-string">"@bitsun/mce"</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { MCE } <span class="hljs-keyword">from</span> <span class="hljs-string">"@gerard2p/mce"</span>;
 
 MCE(__dirname).subcommand(process.argv);</code></pre>
 				<p>And in single-style:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { MCE } <span class="hljs-keyword">from</span> <span class="hljs-string">"@bitsun/mce"</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { MCE } <span class="hljs-keyword">from</span> <span class="hljs-string">"@gerard2p/mce"</span>;
 
 MCE(__dirname).command(process.argv);</code></pre>
 				<blockquote>
@@ -231,41 +231,20 @@ MCE(__dirname).command(process.argv);</code></pre>
 					<li class="globals current ">
 						<a href="index.html"><em>Subsystems</em></a>
 					</li>
-					<li class="label tsd-is-external">
-						<span>Public API</span>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_gerard2p_mce.html">@gerard2p/mce</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_bitsun_mce.html">@bitsun/mce</a>
+						<a href="modules/_gerard2p_mce_console.html">@gerard2p/mce/console</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_bitsun_mce_console.html">@bitsun/mce/console</a>
+						<a href="modules/_gerard2p_mce_core.html">@gerard2p/mce/core</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_bitsun_mce_spinner.html">@bitsun/mce/spinner</a>
+						<a href="modules/_gerard2p_mce_spinner.html">@gerard2p/mce/spinner</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_bitsun_mce_utils.html">@bitsun/mce/utils</a>
-					</li>
-					<li class="label tsd-is-external">
-						<span>Internal API</span>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_spinner_animations_.html">"spinner/animations"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_spinner_strip_ansi_.html">"spinner/strip-<wbr>ansi"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_spinner_symbols_.html">"spinner/symbols"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_spinner_wcwidth_combining_.html">"spinner/wcwidth/combining"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_spinner_wcwidth_index_.html">"spinner/wcwidth/index"</a>
-					</li>
-					<li class=" tsd-kind-external-module tsd-is-external">
-						<a href="modules/_bitsun_mce_core.html">@bitsun/mce/core</a>
+						<a href="modules/_gerard2p_mce_utils.html">@gerard2p/mce/utils</a>
 					</li>
 				</ul>
 			</nav>

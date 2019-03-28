@@ -56,10 +56,10 @@ project_name::
 > In any of both cases a command is defined in the same way.
 
 ```typescript
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '@bitsun/mce';
-import { ok, error, warn, info, ask, input } from '@bitsun/mce/console';
-import { created, updated, makeDir, cp, printRelativePath, targetPath, cliPath } from '@bitsun/mce/utils';
-import { spin } from '@bitsun/mce/spinner';
+import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '@gerard2p/mce';
+import { ok, error, warn, info, ask, input } from '@gerard2p/mce/console';
+import { created, updated, makeDir, cp, printRelativePath, targetPath, cliPath } from '@gerard2p/mce/utils';
+import { spin } from '@gerard2p/mce/spinner';
 enum Styles { 
     git = 'git',
     single = 'single' 
@@ -103,14 +103,14 @@ No mather the case the actual property that is created in the *opt* is always *e
 As you can see mce come with some handy functios to coerce and validate the user input.
 
 ```typescript
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration } from '@bitsun/mce';
+import { numeric, floating, range, text, list, collect, bool, verbose, enumeration } from '@gerard2p/mce';
 ```
 
 ### Validation
 
 If you need to validate the information of any of your arguments you can pass a RegExp as the third arguments of the option_functions
 ```
-import { text } from '@bitsun/mce';
+import { text } from '@gerard2p/mce';
 
 export let options = {
  size: text('-s --size <size>', 'Pizza size', /^(large|medium|small)$/);
@@ -121,7 +121,7 @@ export let options = {
 
 The last argument you pass will always be the default value.
 ```
-import { text } from '@bitsun/mce';
+import { text } from '@gerard2p/mce';
 
 export let options = {
  size: text('-s --size <size>', 'Pizza size', /^(large|medium|small)$/, 'medium');
@@ -168,14 +168,14 @@ The executable file that is generated only call your ./cli file.
 
 When in git-style cli.ts will look like:
 ```typescript
-import { MCE } from "@bitsun/mce";
+import { MCE } from "@gerard2p/mce";
 
 MCE(__dirname).subcommand(process.argv);
 ```
 
 And in single-style:
 ```typescript
-import { MCE } from "@bitsun/mce";
+import { MCE } from "@gerard2p/mce";
 
 MCE(__dirname).command(process.argv);
 ```

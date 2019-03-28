@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce
+ * @module @gerard2p/mce
  */
 import { existsSync, readdirSync } from "fs";
 import { resolve } from "path";

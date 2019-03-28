@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/utils
+ * @module @gerard2p/mce/utils
  */
 import { existsSync } from "fs";
 import { remove } from "./remove";

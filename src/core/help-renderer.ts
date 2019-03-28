@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/core
+ * @module @gerard2p/mce/core
  */
 import chalk from 'chalk';
 import { Parser, OptionKind, Option } from './option';

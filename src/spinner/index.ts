@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/spinner
+ * @module @gerard2p/mce/spinner
  */
 import { animations } from './animations';
 import chalk from 'chalk';

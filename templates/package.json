@@ -22,6 +22,6 @@
         "typescript": "^3.0.3"
     },
     "dependencies": {
-        "@bitsun/mce": "^1.1.2"
+        "@gerard2p/mce": "^1.1.2"
     }
 }

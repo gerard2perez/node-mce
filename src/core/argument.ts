@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/core
+ * @module @gerard2p/mce/core
  */
 import { OptionKind } from "./option";
 export class Argument {

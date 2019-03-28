@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce/spinner
+ * @module @gerard2p/mce/spinner
  */
 import * as signalExit from 'signal-exit';
 export class Cursor {

@@ -1,5 +1,5 @@
 /**
- * @module @bitsun/mce
+ * @module @gerard2p/mce
  */
 import { Option, Parser, Range, List } from "./option";
 interface DataGroup { 
