@@ -162,6 +162,14 @@ Argument can be coerced by default they are treated as string but if you use:
 ## Help Generation
 By default mce will trace the ```-h --help``` options and will automatically render help
 
+# Add a new command to project
+
+Just run:
+```sh
+mce add <command>Adds a new command to the git project.
+```
+Inside of your git-style project
+
 # Final Notes
 
 The executable file that is generated only call your ./cli file.
