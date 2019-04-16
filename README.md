@@ -12,7 +12,7 @@
 ## Installation
 
 ```sh
-npm i -g node-mce
+npm i -g @gerard2p/mce
 ```
 
 ## Usage
