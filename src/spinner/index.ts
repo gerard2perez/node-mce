@@ -116,10 +116,8 @@ export class Spinner {
 		this.clear();
 		this.stream.write(this.frame());
 		this.linesToClear = this.lineCount;
-
 		return this;
 	}
-
 	start(text?:string) {
 		/*istanbul ignore next*/
 		if (text) {

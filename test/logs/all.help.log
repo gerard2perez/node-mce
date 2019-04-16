@@ -1,3 +1,6 @@
+    mce add <command>
+      Adds a new command to the git project.
+
     mce new <application> [options]
       Creates a new MCE project.
         -f, --force          Overrides target directory                            
