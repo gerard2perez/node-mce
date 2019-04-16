@@ -1,12 +1,13 @@
 import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
 import { ok, error, warn, info, ask, input, pause, resume, updateTextSpin } from '../../src/console';
-import { created, updated } from '../../src/utils';
+import { created, updated, cp } from '../../src/utils';
 import { targetPath, cliPath } from '../../src/paths';
 import { spin, wait } from '../../src/spinner';
 import * as assert from 'assert';
 import { override } from '../../src/override';
 import { mkdirSync } from 'fs';
 import { spinSpawn } from '../../src/spawn';
+import { resolve } from 'path';
 export async function action() {
     let res = await spin('test', async () =>{
         
@@ -20,7 +21,7 @@ export async function action() {
         await override('get something', testDir, false);
         try { mkdirSync(testDir); } catch(ex) {}
         wait().then(o=>process.stdin.push('y\n', 'utf-8'));
-        updateTextSpin('almost gone');
+		updateTextSpin('almost gone');
         return override('get something', testDir, false).then(r=>r.toString());
     });
     

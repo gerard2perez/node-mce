@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "./",
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es2018",
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",

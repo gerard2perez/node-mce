@@ -1,6 +1,6 @@
-import { subcommand, command } from "./loader";
-import { resolve } from "path";
 import { readFileSync } from "fs";
+import { resolve } from "path";
+import { command, subcommand } from "./loader";
 
 describe('Utils functions',async ()=>{
     it('gets correct paths', async ()=>{
@@ -32,5 +32,5 @@ describe('Utils functions',async ()=>{
     it('test override util', async () =>{
         let res = await subcommand('utils3.test -vvv');
         res.should.include({res:'true'});
-    });
+	});
 });

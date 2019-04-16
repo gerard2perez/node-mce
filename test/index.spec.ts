@@ -2,14 +2,14 @@
 process.env.TEST = 'test';
 import chai = require('chai');
 import chaiAsPromised = require("chai-as-promised");
-import { describe, it} from 'mocha';
-import { wait, cliSpinner } from '../src/spinner';
-import { subcommand, loader } from './loader';
-import './options.spec';
-import './arguments.spec';
-import './utils.spec';
-import { FakeStream } from './fake-output';
 import { readFileSync } from 'fs';
+import { describe, it } from 'mocha';
+import { cliSpinner, wait } from '../src/spinner';
+import './arguments.spec';
+import { FakeStream } from './fake-output';
+import { loader, subcommand } from './loader';
+import './options.spec';
+import './utils.spec';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -42,7 +42,7 @@ describe('Self Test', async ()=>{
 		stream.clear();
 		await subcommand('trim');
 		stream.content.should.be.equal('Command does not exists\n');
-    });
+	});
     it('renders all help', async()=>{
 		stream.clear();
 		await subcommand('-h');
@@ -52,5 +52,26 @@ describe('Self Test', async ()=>{
 		stream.clear();
         let help = await subcommand('new -h');
 		stream.content.should.be.equal(loadContent('./test/logs/new.help.log'));
-    });
+	});
+	it('renders help for add command', async () => {
+		stream.clear();
+		await subcommand('add -h');
+		stream.content.should.be.equal(loadContent('./test/logs/add.help.log'));
+	});
+	it('adds a dummy command fails', async () => {
+		loader('./src');
+		process.chdir('./single_repo/src/');
+		stream.clear();
+		await subcommand('add dummy');
+		process.chdir('../../');
+		stream.content.should.be.equal(loadContent('./test/logs/add.fail.log'));
+	});
+	it('adds a dummy command', async () => {
+		loader('./src');
+		process.chdir('./single_repo');
+		stream.clear();
+		await subcommand('add dummy');
+		process.chdir('..');
+		stream.content.should.be.equal(loadContent('./test/logs/add.log'));
+	});
 });

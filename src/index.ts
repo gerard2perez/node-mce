@@ -2,7 +2,7 @@
  * @module @gerard2p/mce
  */
 import { existsSync, readdirSync } from "fs";
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { Command, Option, Parser } from "./core";
 import { MainSpinner } from "./spinner";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
@@ -99,7 +99,7 @@ export class MCEProgram {
 	}
 	async subcommand (args:string[]):Promise<void> {
 		if(this.prepare(args))return;
-		let root = resolve(this.root, './commands');
+		let root = join(this.root, './commands');
 		let [subcommand] = args.splice(0,1);
 		let sub = resolve(root, `${subcommand}.${ext}`);
 		let exists = existsSync( sub );
@@ -122,4 +122,5 @@ export class MCEProgram {
 export function MCE (localdir?:string) {
 	return new MCEProgram(localdir);
 }
-export { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from './core/options';
+export { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options';
+

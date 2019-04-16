@@ -1,0 +1,3 @@
+    mce add <command>
+      Adds a new command to the git project.
+

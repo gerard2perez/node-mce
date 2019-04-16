@@ -2,10 +2,10 @@
  * @module @gerard2p/mce/utils
  */
 import chalk from "chalk";
+import { copyFileSync, existsSync, mkdirSync } from "fs";
+import { join } from "path";
 import { ok } from "./console";
 import { targetPath } from "./paths";
-import { join } from "path";
-import { mkdirSync, copyFileSync, existsSync } from "fs";
 function print (mode:string, text:string) {
     let fpath = text.replace(targetPath(), '').replace(/\\/gm, '/').split('/');
     ok(`\t${chalk.cyan(mode)}: ${printRelativePath(...fpath)}`);
@@ -66,12 +66,13 @@ export function makeDir(location:string) {
 export function cp(source:string, target:string, print:boolean = true) {
 	if(existsSync(source)) {
 		copyFileSync(source, target);
-		if(print)
-		ok(printRelativePath(target));
+		if(print) {
+			ok(printRelativePath(target));
+		}
 	}
 }
 export { override } from './override';
+export * from './paths';
 export { remove } from './remove';
 export { render } from './render';
-export { spawn, spinSpawn, rawSpawn } from './spawn';
-export * from './paths';
+export { rawSpawn, spawn, spinSpawn } from './spawn';
