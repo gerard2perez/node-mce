@@ -31,7 +31,7 @@ export function spawn (cmd:string, options:any[], config:SpawnOptions, truefalse
 // istanbul ignore next
 export function spinSpawn(message:string, cmd:string, options:any[], config:SpawnOptions={}) {
     return spin(message, async () =>{
-        return await spawn(cmd, options, config, true).catch(error=>error);
+        await spawn(cmd, options, config, true).catch(error=>error);
     });
 }
 export { cspawn as rawSpawn };
