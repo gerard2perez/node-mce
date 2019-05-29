@@ -123,4 +123,3 @@ export function MCE (localdir?:string) {
 	return new MCEProgram(localdir);
 }
 export { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options';
-
