@@ -49,7 +49,6 @@ export class MCEProgram {
 		let mce_definition:any = require(source);
 		mce_sub_command = new Command(this.name, command_name, mce_definition);
 		mce_sub_command.showHelp = this.showHelp;
-		
 		return mce_sub_command;
 	}
 	private findCompressed(args:string[]){
@@ -73,6 +72,16 @@ export class MCEProgram {
 			}
 		}
 		return composed.filter(c=>c);
+	}
+	private findCommands(){
+		let commands = Object.assign({}, this.submodule_configuration, {})
+		let root = join(this.root, './commands');
+		let raw_routes = readdirSync(root).filter(route=>route.search(new RegExp(`.*\.${ext}$`, 'i')) === 0);
+		for(let route of raw_routes) {
+			let [command] = route.split('.');
+			commands[command] = join(root, route);
+		}
+		return commands as {[command:string]:string};
 	}
 	prepare(args:string[]) {
 		args.splice(-1,0, ...this.findCompressed(args));
@@ -99,24 +108,32 @@ export class MCEProgram {
 	}
 	async subcommand (args:string[]):Promise<void> {
 		if(this.prepare(args))return;
-		let root = join(this.root, './commands');
+		let commands = this.findCommands();
 		let [subcommand] = args.splice(0,1);
-		let sub = resolve(root, `${subcommand}.${ext}`);
-		let exists = existsSync( sub );
-		if ( exists ) {
-			return this.getCommand(sub, subcommand).call(args);
+		let source = commands[subcommand];
+		if(source) {
+			this.getCommand(source, subcommand).call(args);
 		} else if (this.showHelp) {
-			for(const subcommand of readdirSync(root)) {
-				// istanbul ignore else
-				if ( subcommand.search(new RegExp(`.*\.${ext}$`, 'i')) === 0 ) {
-					await this.getCommand(resolve(root, subcommand), subcommand).help();
-				}
+			for(const command of Object.keys(commands)) {
+				await this.getCommand(commands[command], command).help();
 			}
-			return Promise.resolve();
 		} else {
 			MainSpinner.stream.write('Command does not exists\n');
-			return Promise.resolve();
+			return Promise.resolve();	
 		}
+		return Promise.resolve();
+	}
+	submodule_configuration:any
+	public submodules(config_file:string) {
+		let configuration = join(process.cwd(), config_file);
+		this.submodule_configuration = {};
+		if(existsSync(configuration)) {
+			let config = require(configuration).commands;
+			for(const command of Object.keys(config)) {
+				this.submodule_configuration[command] = join(process.cwd(), 'node_modules', config[command]);
+			}	
+		}
+		return this;
 	}
 }
 export function MCE (localdir?:string) {
