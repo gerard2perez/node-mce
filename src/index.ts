@@ -81,7 +81,9 @@ export class MCEProgram {
 			let [command] = route.split('.');
 			commands[command] = join(root, route);
 		}
-		return commands as {[command:string]:string};
+		let sorted = {};
+		Object.keys(commands).sort().map(c=>(sorted[c] = commands[c]));
+		return sorted as {[command:string]:string};
 	}
 	prepare(args:string[]) {
 		args.splice(-1,0, ...this.findCompressed(args));
@@ -112,16 +114,16 @@ export class MCEProgram {
 		let [subcommand] = args.splice(0,1);
 		let source = commands[subcommand];
 		if(source) {
-			this.getCommand(source, subcommand).call(args);
-		} else if (this.showHelp) {
+			return this.getCommand(source, subcommand).call(args);
+		} else if (!subcommand && this.showHelp) {
 			for(const command of Object.keys(commands)) {
 				await this.getCommand(commands[command], command).help();
 			}
+			return Promise.resolve();	
 		} else {
 			MainSpinner.stream.write('Command does not exists\n');
 			return Promise.resolve();	
 		}
-		return Promise.resolve();
 	}
 	submodule_configuration:any
 	public submodules(config_file:string) {
