@@ -18,12 +18,14 @@ function countMaxLength() {
     };
 }
 interface ICommand {
+	ignore:boolean
 	options?:{ [p: string]: Option<any> }
 	args?:string
 	description?:string
 	action:any
 }
 export class Command {
+	ignoreFromHelp:boolean = false
 	showHelp:boolean = false
 
 	verbose:boolean
@@ -32,13 +34,15 @@ export class Command {
 		definition = Object.assign({}, {
 			description: '',
 			args: '',
-			options:{}
+			options:{},
+			ignore:false
 		}, definition);
         this.arguments = this.buildArguments(definition.args);
 		this.options = Object.keys(definition.options).map(tag=>definition.options[tag].makeTag(tag, this));
         this.description = definition.description;
 		this.action = definition.action;
 		this.verbose = !!definition.options.verbose;
+		this.ignoreFromHelp = definition.ignore;
     }
     description: string = ''
     options: Option<any>[]
@@ -52,6 +56,7 @@ export class Command {
         }
     }
     async help() {
+		if(this.ignoreFromHelp)return;
         let help = chalk.yellow(`    ${this.program} ${this.name} `);
 		help += this.arguments.map(a=>HelpRenderer.drawArg(a)).join(' ');
         // istanbul ignore else
