@@ -47,8 +47,7 @@ export class MCEProgram {
 		let command_name = `${subcommand.replace(`.${ext}`, '')}`.trim();
 		let mce_sub_command:Command;
 		let mce_definition:any = require(source);
-		mce_sub_command = new Command(this.name, command_name, mce_definition);
-		mce_sub_command.showHelp = this.showHelp;
+		mce_sub_command = new Command(this.name, command_name, mce_definition, this.showHelp);
 		return mce_sub_command;
 	}
 	private findCompressed(args:string[]){
@@ -85,18 +84,18 @@ export class MCEProgram {
 		Object.keys(commands).sort().map(c=>(sorted[c] = commands[c]));
 		return sorted as {[command:string]:string};
 	}
-	prepare(args:string[]) {
+	prepare(args:string[], single:boolean=false) {
 		args.splice(-1,0, ...this.findCompressed(args));
-		this.showHelp = args.length ===0;
+		let force_help = !single && args.length ===0;
 		this.showVersion = this.common.version.find(args) && args.length <= 1;
 		// istanbul ignore else
-		if(!this.showHelp)this.showHelp = this.common.help.find(args) && args.length <= 1;
+		this.showHelp = force_help || (this.common.help.find(args) && args.length <= 1);// && !single;
 		process.env.MCE_VERBOSE = this.common.verbose.find(args);
 		if(this.showVersion)MainSpinner.stream.write(this.version);
 		return this.showVersion;
 	}
 	async command (args:string[]) {
-		if(this.prepare(args))return;
+		if(this.prepare(args, true))return;
 		let root = resolve(this.root, `index.${ext}`);
 		let exists = existsSync( root );
 		// istanbul ignore if

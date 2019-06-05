@@ -30,7 +30,7 @@ export class Command {
 
 	verbose:boolean
     action:(...data:any[]) => Promise<void>
-    constructor(private program:string, public name: string, definition:ICommand) {
+    constructor(private program:string, public name: string, definition:ICommand, show_help:boolean=false) {
 		definition = Object.assign({}, {
 			description: '',
 			args: '',
@@ -43,6 +43,7 @@ export class Command {
 		this.action = definition.action;
 		this.verbose = !!definition.options.verbose;
 		this.ignoreFromHelp = definition.ignore;
+		this.showHelp = show_help;
     }
     description: string = ''
     options: Option<any>[]
