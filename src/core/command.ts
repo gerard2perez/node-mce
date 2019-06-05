@@ -30,7 +30,7 @@ export class Command {
 
 	verbose:boolean
     action:(...data:any[]) => Promise<void>
-    constructor(private program:string, public name: string, definition:ICommand, show_help:boolean=false) {
+    constructor(private program:string, public name: string, definition:ICommand, show_help:boolean) {
 		definition = Object.assign({}, {
 			description: '',
 			args: '',
@@ -57,6 +57,7 @@ export class Command {
         }
     }
     async help() {
+		// istanbul ignore next
 		if(this.ignoreFromHelp)return;
         let help = chalk.yellow(`    ${this.program} ${this.name} `);
 		help += this.arguments.map(a=>HelpRenderer.drawArg(a)).join(' ');

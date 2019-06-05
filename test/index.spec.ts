@@ -7,9 +7,10 @@ import { describe, it } from 'mocha';
 import { cliSpinner, wait } from '../src/spinner';
 import './arguments.spec';
 import { FakeStream } from './fake-output';
-import { loader, subcommand } from './loader';
+import { loader, subcommand, subCommandWithModule } from './loader';
 import './options.spec';
 import './utils.spec';
+import { resolve } from 'path';
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -74,4 +75,15 @@ describe('Self Test', async ()=>{
 		process.chdir('..');
 		stream.content.should.be.equal(loadContent('./test/logs/add.log'));
 	});
+	it('loads submodules', async()=>{
+		process.chdir('test');
+		let res = await subCommandWithModule('test.json', 'submodule.test');
+	});
+	// it('ignores help', async()=>{
+	// 	process.chdir('test');
+	// 	console.log(resolve('.'))
+	// 	loader('.');
+	// 	let res = await subcommand('-h');
+	// 	// console.log(stream.content);
+	// });
 });

@@ -8,7 +8,7 @@ function templates (...path:string[]) {
 	return cliPath('templates', ...path).replace('src/templates/', 'templates/').replace('src\\templates\\', 'templates\\');
 }
 let nproy;
-const copy = (file:string, target:string = file) => cp(templates(file), nproy(target));
+const copy = (file:string, target:string) => cp(templates(file), nproy(target));
 export const description = 'Adds a new command to the git project.'
 export const args = '<command>';
 export  async function action(command:string/*, opt:Parsed<typeof options>*/) {

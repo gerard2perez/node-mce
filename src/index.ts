@@ -5,6 +5,7 @@ import { existsSync, readdirSync } from "fs";
 import { join, resolve } from "path";
 import { Command, Option, Parser } from "./core";
 import { MainSpinner } from "./spinner";
+import { targetPath } from "./paths";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 
 export class MCEProgram {
@@ -77,8 +78,8 @@ export class MCEProgram {
 		let root = join(this.root, './commands');
 		let raw_routes = readdirSync(root).filter(route=>route.search(new RegExp(`.*\.${ext}$`, 'i')) === 0);
 		for(let route of raw_routes) {
-			let [command] = route.split('.');
-			commands[command] = join(root, route);
+			let command = route.replace(/\.[t|j]s/m, '');
+			commands[command] = resolve(root, route);
 		}
 		let sorted = {};
 		Object.keys(commands).sort().map(c=>(sorted[c] = commands[c]));
@@ -126,12 +127,19 @@ export class MCEProgram {
 	}
 	submodule_configuration:any
 	public submodules(config_file:string) {
-		let configuration = join(process.cwd(), config_file);
+		let configuration = targetPath(config_file);
 		this.submodule_configuration = {};
 		if(existsSync(configuration)) {
 			let config = require(configuration).commands;
 			for(const command of Object.keys(config)) {
-				this.submodule_configuration[command] = join(process.cwd(), 'node_modules', config[command]);
+				let location = targetPath(config[command]);
+				if(!existsSync(location)){
+					// istanbul ignore next
+					location = targetPath('node_modules', config[command]);
+				}
+				this.submodule_configuration[command] = location;
+				console.log(location);
+				
 			}	
 		}
 		return this;
