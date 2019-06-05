@@ -12,7 +12,7 @@ export enum Parser {
     list = <any>(s=>s.split(',')),
     collect = <any>((val,memo)=>{memo.push(val);return memo.splice(0);}),
     increaseVerbosity = <any>((_,t)=>t+1),
-    string = <any>(s => s.toString()),
+    string = <any>(s => (s===true?'':s.toString())),
     truefalse = <any> (s=>s),
     enum = <any>(s => s.toString()),
 }
