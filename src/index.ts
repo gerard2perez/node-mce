@@ -37,7 +37,7 @@ export class MCEProgram {
 	}
 	constructor (private root:string) {
 		process.env.MCE_ROOT = root;
-		let { version, bin } = require(resolve(root.replace('src', ''), 'package.json'));
+		let { version, bin } = require(resolve(root.replace('src', '').replace('dist', ''), 'package.json'));
 		let [name] = Object.keys(bin);
 		this.name = name;
 		this.version = version;
