@@ -36,7 +36,7 @@ export class MCEProgram {
 		return this;
 	}
 	constructor (private root:string) {
-		process.env.MCE_ROOT = root;
+		process.env.MCE_ROOT = root.replace('dist', '');
 		let { version, bin } = require(resolve(root.replace('src', '').replace('dist', ''), 'package.json'));
 		let [name] = Object.keys(bin);
 		this.name = name;
@@ -138,8 +138,6 @@ export class MCEProgram {
 					location = targetPath('node_modules', config[command]);
 				}
 				this.submodule_configuration[command] = location;
-				console.log(location);
-				
 			}	
 		}
 		return this;

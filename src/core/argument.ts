@@ -34,7 +34,6 @@ export class Argument {
         this.parser = Argument.parser[this.type];
 	}
 	find(args:string[]) {
-		console.log(args);
 		switch (this.kind) {
 			case OptionKind.required:
 				if (!args[0]) throw new Error(`Missing argument ${this.name}`);
