@@ -19,16 +19,16 @@ function padding(text: string, len: Function, long?: number) {
 }
 export class HelpRenderer {
     static formatOption(option:any, tags_len, val_len, desc_len) {
-        let [tags, desc, tagLen, val, valLen, defaults] = option;
+		let [tags, desc, tagLen, val, valLen, defaults] = option;
         let def = defaults && (defaults.length || defaults > 0) ? `[${chalk.red(defaults)}]` : '';
         let [main, ...overflow] = desc;
-        let argDescription = [`${padding(tags, tags_len, tagLen)} ${padding(val, val_len, valLen)} ${chalk.white(padding(main, desc_len))} ${def}`];
-        overflow.map(d=>argDescription.push(`${padding('', tags_len)}  ${padding('', val_len)} ${chalk.white(d)}`))
+		let argDescription = [`${padding(tags, tags_len, tagLen)} ${padding(val, val_len, valLen)} ${chalk.white(padding(main, desc_len).trimRight())} ${def}`];
+		overflow.map(d=>argDescription.push(`${padding('', tags_len)}  ${padding('', val_len)} ${chalk.white(d)}`))
         return argDescription.map(arg=>`\n        ${arg}`).join('');
     }
     static formatDescription(desc: string, desc_limit: number, parser:Parser, expresion:string[]) {
         let parts:string[] = [];
-        let index = 0;
+		let index = 0;
         desc.replace(/ +/gm, ' ').split('\n').map(line => line.split(' ')).map(line => {
             for(const word of line) {
                 parts[index] = parts[index] || '';
