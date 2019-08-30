@@ -77,8 +77,9 @@ export class Command {
 			options.push(HelpRenderer.renderOptions(option, desc_limit, desc_len, tags_len, val_len));
 		}
         for (let option of options) {
-            help += HelpRenderer.formatOption(option, tags_len, val_len, desc_len);            
-        }
+            help += HelpRenderer.formatOption(option, tags_len, val_len, desc_len);
+		}
+		help = help.split('\n').map(line=>line.trimRight()).join('\n');
         MainSpinner.stream.write(help + '\n\n');
     }
     private buildArguments (args:string) {

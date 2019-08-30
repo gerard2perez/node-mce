@@ -3,10 +3,10 @@
 
     mce new <application> [options]
       Creates a new MCE project.
-        -f, --force          Overrides target directory                            
-        -n, --npm            Install npm dependencies                              
+        -f, --force          Overrides target directory
+        -n, --npm            Install npm dependencies
         -s, --style <style>  Define the style of command you will use. If you need [single]
                               more than one command use git.
                               Values: git | single
-                             
+
 
