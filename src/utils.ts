@@ -1,7 +1,7 @@
 /**
  * @module @gerard2p/mce/utils
  */
-import chalk from "chalk";
+import * as chalk from "chalk";
 import { copyFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { ok } from "./console";

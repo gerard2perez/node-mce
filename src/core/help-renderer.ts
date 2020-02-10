@@ -1,7 +1,7 @@
 /**
  * @module @gerard2p/mce/core
  */
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import { Parser, OptionKind, Option } from './option';
 import { Argument } from './argument';
 function padding(text: string, len: Function, long?: number) {

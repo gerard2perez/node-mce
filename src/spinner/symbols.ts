@@ -1,5 +1,4 @@
-import chalk from 'chalk';
-
+import * as chalk from 'chalk';
 export let supported =  !process.env.TEST && (process.platform !== 'win32' || process.env.CI || process.env.TERM === 'xterm-256color' || process.env.VSCODE_PID);
 export enum LogSymbols {
 	/** 'ℹ' : 'i' */

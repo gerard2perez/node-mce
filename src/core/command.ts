@@ -1,7 +1,7 @@
 /**
  * @module @gerard2p/mce/core
  */
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import { Argument } from './argument';
 import { HelpRenderer } from './help-renderer';
 import { MainSpinner } from '../spinner';

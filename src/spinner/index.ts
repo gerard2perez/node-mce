@@ -2,13 +2,11 @@
  * @module @gerard2p/mce/spinner
  */
 import { animations } from './animations';
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import { LogSymbols, supported } from './symbols';
 import { stripAnsi } from './strip-ansi';
 import { wcwidth } from './wcwidth';
 import { Cursor } from './cursor';
-
-
 const TEXT = Symbol('mce_spinner');
 
 export interface  ISpinnerOptions {
