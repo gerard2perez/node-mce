@@ -116,6 +116,7 @@ export class Spinner {
 		this.clear();
 		this.stream.write(this.frame());
 		this.linesToClear = this.lineCount;
+		this.stream.cursorTo(0);
 		return this;
 	}
 	start(text?:string) {
