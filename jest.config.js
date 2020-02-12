@@ -1,5 +1,8 @@
 module.exports = {
   preset: 'ts-jest',
+  testPathIgnorePatterns: [
+    "templates"
+  ],
   testEnvironment: 'node',
   coverageDirectory: "./coverage",
   "collectCoverage": true,
@@ -8,8 +11,8 @@ module.exports = {
 	],
 	coveragePathIgnorePatterns : [
 		"/node_modules/",
-		"/src/server.ts",
-		"/src/middleware/"
+		"src/cli.ts",
+		"src/spinner/"
 	],
     "coverageReporters": [
       "html",

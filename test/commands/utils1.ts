@@ -1,11 +1,8 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
-import { ok, error, warn, info, ask, input, pause, resume } from '../../src/console';
-import { created, updated } from '../../src/utils';
-import { targetPath, cliPath } from '../../src/paths';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
+import { error, info, ok, pause, resume, warn } from '../../src/console';
+import { cliPath, targetPath } from '../../src/paths';
 import { spin } from '../../src/spinner';
-import * as assert from 'assert';
-import { override } from '../../src/override';
-import { mkdirSync } from 'fs';
+import { created, updated } from '../../src/utils';
 export let description = 'A description for your command';
 export let args = '';
 export let options = {

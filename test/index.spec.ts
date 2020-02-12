@@ -1,89 +1,73 @@
 
 process.env.TEST = 'test';
-import chai = require('chai');
-import chaiAsPromised = require("chai-as-promised");
-import { readFileSync } from 'fs';
-import { describe, it } from 'mocha';
-import { cliSpinner, wait } from '../src/spinner';
-import './arguments.spec';
-import { FakeStream } from './fake-output';
+jest.mock('../src/fs');
+jest.mock('../src/spawn');
+import { existsSync, readFileSync } from '../src/fs';
+import { spawn } from '../src/spawn';
 import { loader, subcommand, subCommandWithModule } from './loader';
-import './options.spec';
-import './utils.spec';
-import { resolve } from 'path';
-
-chai.use(chaiAsPromised);
-chai.should();
-const stream = new FakeStream('log.txt');
-cliSpinner({text: '',stream, enabled:true});
-function loadContent(path:string) {
-	return readFileSync(path, 'utf-8').replace(/\r/g, '');
-}
-
-describe('Self Test', async ()=>{
-	it('renders help', async()=>{
-		stream.clear();
-        await subcommand('new --version');
-		stream.content.should.match(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
+import { readLog } from './log-reader';
+//@ts-ignore
+readFileSync.mockReturnValue('');
+//@ts-ignore
+spawn.mockReturnValue(Promise.resolve(true));
+describe('Self Test', ()=>{
+	test('renders help', async()=>{
+		await expect(subcommand('new --version'))
+				.resolves
+				.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
     });
-    it('create a new project', async()=>{
+    test('create a new project', async()=>{
 		loader('./src');
-		stream.clear();
-		await subcommand('new single_repo -f -s single');
-		wait(1).then(o=>process.stdin.push('n\n'));
-		stream.content.should.be.equal(loadContent('./test/logs/new.output.log'));
-		await subcommand('new single_repo -s single');
+		await expect(subcommand('new single_repo -f -s single'))
+			.resolves.toBe(readLog('new.output.log'));
     });
-    it('create a new project multicommand', async()=>{
-		stream.clear();
-		await subcommand('new single_repo -f -s git');
-		stream.content.should.be.equal(loadContent('./test/logs/new-git.output.log'));
+    test('create a new project multicommand', async()=>{
+		await expect(subcommand('new git_repo -f -s git'))
+				.resolves.toBe(readLog('new-git.output.log'));
     });
-    it('command does not exist', async()=>{
-		stream.clear();
-		await subcommand('trim');
-		stream.content.should.be.equal('Command does not exists\n');
+    test('command does not exist', async()=>{
+		await expect(subcommand('trim'))
+				.resolves.toBe('Command does not exists\n');
 	});
-    it('renders all help', async()=>{
-		stream.clear();
-		await subcommand('-h');
-		stream.content.should.be.equal(loadContent('./test/logs/all.help.log'));
+    test('renders all help', async()=>{
+		await expect(subcommand('-h'))
+			.resolves
+			.toBe(readLog('all.help.log'));
     });
-    it('renders command help', async()=>{
-		stream.clear();
-        let help = await subcommand('new -h');
-		stream.content.should.be.equal(loadContent('./test/logs/new.help.log'));
+    test('renders command help', async()=>{
+		await expect(subcommand('new -h'))
+			.resolves
+			.toBe(readLog('new.help.log'));
 	});
-	it('renders help for add command', async () => {
-		stream.clear();
-		await subcommand('add -h');
-		stream.content.should.be.equal(loadContent('./test/logs/add.help.log'));
+	test('renders help for add command', async () => {
+		await expect(subcommand('add -h'))
+			.resolves
+			.toBe(readLog('add.help.log'));
 	});
-	it('adds a dummy command fails', async () => {
+	test('adds a dummy command fails', async () => {
+		const result = readLog('add.fail.log');
 		loader('./src');
-		process.chdir('./single_repo/src/');
-		stream.clear();
-		await subcommand('add dummy');
+		process.chdir('./test/sandbox/');
+		await expect(subcommand('add dummy'))
+			.resolves
+			.toBe(result);
 		process.chdir('../../');
-		stream.content.should.be.equal(loadContent('./test/logs/add.fail.log'));
 	});
-	it('adds a dummy command', async () => {
+	test('adds a dummy command', async () => {
+		//@ts-ignore
+		existsSync.mockReturnValue(true);
+		const result = readLog('add.log');
 		loader('./src');
-		process.chdir('./single_repo');
-		stream.clear();
-		await subcommand('add dummy');
+		process.chdir('./test');
+		await expect(subcommand('add dummy'))
+			.resolves
+			.toBe(result);
 		process.chdir('..');
-		stream.content.should.be.equal(loadContent('./test/logs/add.log'));
+		//@ts-ignore
+		existsSync.mockReturnValue(false);
 	});
-	it('loads submodules', async()=>{
+	test('loads submodules', async()=>{
 		process.chdir('test');
-		let res = await subCommandWithModule('test.json', 'submodule.test');
+		await subCommandWithModule('test.json', 'submodule');
 	});
-	// it('ignores help', async()=>{
-	// 	process.chdir('test');
-	// 	console.log(resolve('.'))
-	// 	loader('.');
-	// 	let res = await subcommand('-h');
-	// 	// console.log(stream.content);
-	// });
 });

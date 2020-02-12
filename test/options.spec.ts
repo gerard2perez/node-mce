@@ -1,8 +1,8 @@
 import { subcommand } from './loader';
 describe('Options Parsing', ()=>{
-    it('get defaults options', async ()=>{
-        const res:{} = await subcommand('options.test file.js');
-        res.should.deep.equal({
+    test('get defaults options', async ()=>{
+        const res:{} = await subcommand('options file.js');
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [],
             opt: {
@@ -19,11 +19,11 @@ describe('Options Parsing', ()=>{
             }
         });
     });
-    it('parses options values', async () =>{
+    test('parses options values', async () =>{
         const res = await subcommand(
-			'options.test file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
+			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
 			);
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'
@@ -44,11 +44,11 @@ describe('Options Parsing', ()=>{
             }
         })
 	});
-	it('parses options set string to undefined', async () =>{
+	test('parses options set string to undefined', async () =>{
 		const res = await subcommand(
-			'options.test file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
+			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
 			);
-		res.should.deep.equal({
+		expect(res).toEqual({
 			arg1: 'file.js',
 			varidac: [
 				'var2'
@@ -69,11 +69,11 @@ describe('Options Parsing', ()=>{
 			}
 		})
 	});
-    it('parses options values with symbol =', async () =>{
+    test('parses options values with symbol =', async () =>{
         const res = await subcommand(
-            'options.test file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
+            'options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
             );
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'
@@ -94,11 +94,11 @@ describe('Options Parsing', ()=>{
             }
         })
     });
-    it('parses options values with short tags', async () =>{
+    test('parses options values with short tags', async () =>{
         const res = await subcommand(
-            'options.test file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'
+            'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'
             );
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'
@@ -119,11 +119,11 @@ describe('Options Parsing', ()=>{
             }
         })
 	});
-	it('parses options values with short tags (misstype)', async () =>{
+	test('parses options values with short tags (misstype)', async () =>{
         const res = await subcommand(
-            'options.test file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
+            'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
             );
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
 				'var2',
@@ -146,11 +146,11 @@ describe('Options Parsing', ()=>{
             }
         })
     });
-    it('parses options mixed formats', async () =>{
+    test('parses options mixed formats', async () =>{
         const res = await subcommand(
-            'options.test file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
+            'options file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             );
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'
@@ -172,11 +172,11 @@ describe('Options Parsing', ()=>{
         });
         
 	});
-	it('multiple short tags together', async () =>{
+	test('multiple short tags together', async () =>{
 		const res = await subcommand(
-			'options.test file.js -e single var2 -nf 5 12.58 -rtb 2..55 demo --list=h10,h21 --collect=h30 --collect=h3 --collect=h6 -vvv'
+			'options file.js -e single var2 -nf 5 12.58 -rtb 2..55 demo --list=h10,h21 --collect=h30 --collect=h3 --collect=h6 -vvv'
 			);
-		res.should.deep.equal({
+		expect(res).toEqual({
 			arg1: 'file.js',
 			varidac: [
 				'var2'
@@ -197,11 +197,11 @@ describe('Options Parsing', ()=>{
 			}
 		})
 	});
-    it('parses options mixed formats', async () =>{
+    test('parses options mixed formats', async () =>{
         const res = await subcommand(
-            'options.test file.js --enumeration single var2 -n=5 --floating=gb -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
+            'options file.js --enumeration single var2 -n=5 --floating=gb -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             );
-        res.should.deep.equal({
+        expect(res).toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'

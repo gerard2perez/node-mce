@@ -1,11 +1,7 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
-import { ok, error, warn, info, ask, input } from '../../src/console';
-import { created, updated } from '../../src/utils';
-import { targetPath, cliPath } from '../../src/paths';
-import { spin } from '../../src/spinner';
-import * as assert from 'assert';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
+import { cliPath, targetPath } from '../../src/paths';
 export let description = 'A description for your command';
-export let args = '<arg1> [varidac...]';
+export let args = '';
 export let options = {
     enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
     number: numeric('-n <n>', 'A number'),
@@ -17,10 +13,9 @@ export let options = {
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 };
-export async function action(arg1:string, varidac:string[], opt:Parsed<typeof options>) {
+export async function action(opt:Parsed<typeof options>) {
 	return {
-		arg1,
-		varidac,
-		opt
+        cli: cliPath(),
+        target: targetPath()
 	};
 }

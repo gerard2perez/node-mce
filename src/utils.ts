@@ -2,7 +2,7 @@
  * @module @gerard2p/mce/utils
  */
 import * as chalk from "chalk";
-import { copyFileSync, existsSync, mkdirSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync } from "./fs";
 import { join } from "path";
 import { ok } from "./console";
 import { targetPath } from "./paths";
@@ -64,11 +64,9 @@ export function makeDir(location:string) {
 	}
 }
 export function cp(source:string, target:string, print:boolean = true) {
-	if(existsSync(source)) {
-		copyFileSync(source, target);
-		if(print) {
-			ok(printRelativePath(target));
-		}
+	copyFileSync(source, target);
+	if(print) {
+		ok(printRelativePath(target));
 	}
 }
 export { override } from './override';

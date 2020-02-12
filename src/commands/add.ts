@@ -1,4 +1,4 @@
-import { existsSync } from "fs";
+import { existsSync } from "../fs";
 import { join } from "path";
 import { error } from "../console";
 import { cliPath, targetPath } from "../paths";

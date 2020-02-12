@@ -1,7 +1,7 @@
 /**
  * @module @gerard2p/mce/utils
  */
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "./fs";
 import { iter } from "./utils";
 
 export function render(source:string, data:object, dest?:string ) {

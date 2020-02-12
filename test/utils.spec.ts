@@ -1,36 +1,44 @@
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { command, subcommand } from "./loader";
+import { readLog } from "./log-reader";
 
-describe('Utils functions',async ()=>{
-    it('gets correct paths', async ()=>{
-        let res = await subcommand('utils.test');
-        res.should.be.deep.equal({
+describe('Utils functions', ()=>{
+    test('gets correct paths', async ()=>{
+        let res = await subcommand('utils');
+        expect(res).toEqual({
             cli: resolve('./test'),
             target: resolve('./'),
         });
     });
-    it('test verbosity', async () =>{
-        let res = await subcommand('utils1.test');
+    test('test verbosity 0', async () =>{
+		await expect(subcommand('utils1'))
+			.resolves.toBe(readLog('utils.verbosity.log'));
+	});
+	test('test verbosity 1', async () =>{
+		await expect(subcommand('utils1 -v'))
+			.resolves.toBe(readLog('utils.verbosity2.log'));
     });
-    it('test verbosuty 3', async () =>{
-        let res = await subcommand('utils1.test -vvv');
+    test('test verbosity 2', async () =>{
+		await expect(subcommand('utils1 -vv'))
+			.resolves.toBe(readLog('utils.verbosity3.log'));
     });
-    it('renders a file', async () =>{
-        await subcommand('utils2.test -vvv -r');
+    test('renders a file', async () =>{
+		await expect(subcommand('utils2 -vvv -r'))
+			.resolves.toBeDefined();
         let file = readFileSync('./test/demo.txt', 'utf-8');
-        file.should.be.equal('works');
-		let renered = await subcommand('utils2.test -vvv');
-		renered.should.be.equal('works');
+        expect(file).toBe('works');
+		await expect(subcommand('utils2 -vvv')).resolves.toBe('works');
     });
-    it('executes a single command', async () =>{
+    test('executes a single command', async () =>{
         await command('-v');
 		await command('-h');
 		await command('');
 		await command('--version');
     });
-    it('test override util', async () =>{
-        let res = await subcommand('utils3.test -vvv');
-        res.should.include({res:'true'});
-	});
+    // test('test override util', async () =>{
+    //     let res = await subcommand('utils3 -vvv');
+	// 	// expect(res).toMatchObject({res:'true'});
+	// 	console.log(res);
+	// });
 });
