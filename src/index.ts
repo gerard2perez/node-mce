@@ -131,11 +131,13 @@ export class MCEProgram {
 		this.submodule_configuration = {};
 		if(existsSync(configuration)) {
 			let config = require(configuration).commands;
+			console.log(config);
 			for(const command of Object.keys(config)) {
 				let location = targetPath(config[command]);
+				console.log(location);
 				if(!existsSync(location)){
 					// istanbul ignore next
-					location = targetPath('node_modules', config[command]);
+					location = targetPath('node_modules', command, config[command]);
 				}
 				this.submodule_configuration[command] = location;
 			}	

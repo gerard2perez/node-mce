@@ -1,20 +1,19 @@
 {
-  
   "compilerOptions": {
-    "outDir": "./",
+    "outDir": "./lib",
     "module": "commonjs",
-    "target": "es2018",
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2017",
     "sourceMap": true,
     "declaration": true,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "esModuleInterop":false,
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
   "include": [
-    "./src/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "templates",

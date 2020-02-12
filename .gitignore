@@ -1,8 +1,5 @@
-**/*.d.ts
-/*.js
 /commands
 /spinner
-**/*.map
 !**/.gitkeep
 *.tgz
 node_modules
@@ -12,4 +9,7 @@ single_repo
 test/demo.txt
 .DS_Store
 /log.txt
-/core
+/docs
+dist
+lib
+*.tsbuildinfo

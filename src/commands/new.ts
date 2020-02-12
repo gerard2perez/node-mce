@@ -56,10 +56,10 @@ async function createProjectExtructure(application: string, style:Styles) {
 		printRelativePath(nproy('src', 'cli.ts'));
 		if (style === Styles.git) {
 			makeDir(nproy('src', 'commands'));
-			copy(join('src', 'index.ts.tmp'), join('src', 'commands', 'removeme.ts'));
+			copy(join('src', 'index.ts'), join('src', 'commands', 'removeme.ts'));
 		}
 		else {
-			copy(join('src', 'index.ts.tmp'), join('src', 'index.ts'));
+			copy(join('src', 'index.ts'), join('src', 'index.ts'));
 		}
 		makeDir(nproy('.vscode'));
 		copy(join('.vscode', 'launch.json'));

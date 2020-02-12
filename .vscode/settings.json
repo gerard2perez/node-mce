@@ -1,13 +1,6 @@
 {
   "files.exclude": {
-    "commands": true,
-    "spinner":true,
-    "wcwidth": true,
-    "core": true,
     "node_modules": true,
-    "**/*.js": true,
-    "**/*.map": true,
-    "**/*.d.ts": true,
     "package-lock.json": true,
     ".nyc_output":true,
     "coverage": true
@@ -16,5 +9,9 @@
   "codemetrics.basics.ComplexityLevelHigh": 20,
   "codemetrics.basics.ComplexityLevelNormal": 15,
   "codemetrics.basics.CodeLensHiddenUnder": 14,
-  "linter_codeclimate.enabled": true
+  "linter_codeclimate.enabled": true,
+  "files.associations": {
+    "**/templates/**/*.ts": "plaintext",
+    "**/templates/**/*.json": "plaintext"
+  }
 }
