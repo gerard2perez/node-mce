@@ -9,19 +9,21 @@
     "scripts": {
         "clean": "node incremental",
 
+        "vscode": "cpx ./templates/**/.vscode/**/*  lib/templates --clean",
         "templates": "cpx ./templates/**/*  lib/templates --clean",
         "pkg-files": "cpx \"?(package.json|README.md|LICENSE|mce)\"  lib --clean",
         "compile": "tsc",
 
+        "vscode:w": "npm run vscode -- -w",
         "templates:w": "npm run templates -- -w",
         "pkg-files:w": "npm run pkg-files -- -w",
 
         "precompile:w": "rimraf ./incremental.tsbuildinfo",
         "compile:w": "tsc --incremental --tsBuildInfoFile ./incremental.tsbuildinfo -w",
 
-        "build": "npm-run-parallel templates pkg-files compile",
+        "build": "npm-run-parallel templates pkg-files compile vscode",
 
-        "dev": "npm-run-parallel compile:w clean templates:w pkg-files:w",
+        "dev": "npm-run-parallel compile:w clean templates:w pkg-files:w vscode:w",
 
 
         "doc": "typedoc --options .typedoc.json --navigation-label-externals \"Internal API\"",
