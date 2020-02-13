@@ -1,13 +1,13 @@
 import { mkdirSync } from 'fs';
-import { input, updateTextSpin } from '../../src/console';
-import { override } from '../../src/override';
+import { updateTextSpin } from '../../src/spinner/console';
 import { cliPath, targetPath } from '../../src/paths';
 import { spin, wait } from '../../src/spinner';
+import { question, override } from '../../src/input';
 export async function action() {
     let res = await spin('test', async () =>{
         
         wait(1).then(_=>process.stdin.push('10\n', 'utf-8'));
-        await input('give me a value');
+        await question('give me a value');
         let testDir = cliPath('removible');
         try { mkdirSync(testDir); } catch(ex) {}
         await override('get something', testDir, true);

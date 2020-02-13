@@ -1,3 +1,4 @@
+process.env.TEST = 'test';
 import { readFileSync } from "fs";
 import { resolve } from "path";
 import { command, subcommand } from "./loader";

@@ -2,9 +2,8 @@
  * @module @gerard2p/mce/utils
  */
 import * as fs from 'fs';
-
+// istanbul ignore next
 export function remove (path) {
-    // istanbul ignore else
     if (fs.existsSync(path)) {
         fs.readdirSync(path).forEach(function(file){
             var curPath = path + "/" + file;

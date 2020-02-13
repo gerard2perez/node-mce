@@ -1,8 +1,9 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
-import { error, info, ok, pause, resume, warn } from '../../src/console';
+import { pause, resume } from '../../src/spinner/console';
+import { error, info, ok, warn } from '../../src/verbose';
 import { cliPath, targetPath } from '../../src/paths';
 import { spin } from '../../src/spinner';
-import { created, updated } from '../../src/utils';
+import { created, updated } from '../../src/verbose';
 export let description = 'A description for your command';
 export let args = '';
 export let options = {

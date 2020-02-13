@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/spinner
- */
 import * as signalExit from 'signal-exit';
 export class Cursor {
     static hidden:boolean = false;

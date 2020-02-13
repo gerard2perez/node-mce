@@ -1,10 +1,9 @@
-
 process.env.TEST = 'test';
+import { loader, subcommand, subCommandWithModule } from './loader';
 jest.mock('../src/fs');
 jest.mock('../src/spawn');
 import { existsSync, readFileSync } from '../src/fs';
 import { spawn } from '../src/spawn';
-import { loader, subcommand, subCommandWithModule } from './loader';
 import { readLog } from './log-reader';
 //@ts-ignore
 readFileSync.mockReturnValue('');
@@ -55,11 +54,9 @@ describe('Self Test', ()=>{
 	test('adds a dummy command fails', async () => {
 		const result = readLog('add.fail.log');
 		loader('./src');
-		process.chdir('./test/sandbox/');
 		await expect(subcommand('add dummy'))
 			.resolves
 			.toBe(result);
-		process.chdir('../../');
 	});
 	test('adds a dummy command', async () => {
 		//@ts-ignore

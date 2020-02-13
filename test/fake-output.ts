@@ -21,4 +21,9 @@ export class FakeStream extends Stream.Writable {
 		this.content += text;
 		return true;
 	}
+	read() {
+		const {content } = this;
+		this.content = '';
+		return content;
+	}
 }

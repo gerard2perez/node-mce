@@ -1,15 +1,32 @@
 process.env.MCE_DEV = 'true';
+import { setMainOutput, setMainInput } from '../src/system-streams';
+import { FakeStream } from './fake-output';
+import { Readable } from 'stream';
+export const output = new FakeStream;
+class FakeInput extends Readable {
+	isTTY:boolean = true;
+	constructor() {
+		super();
+	}
+	write(message:string) {
+		this.push(message+'\n');
+	}
+	_read() {
+		return null;
+	}
+}
+export const input = new FakeInput;
+setMainOutput(output);
+setMainInput(input);
+
+
 import { resolve } from 'path';
 import { MCE } from '../src';
-import { FakeStream } from './fake-output';
-import { cliSpinner } from '../src/spinner';
 let NODE_MCE = MCE('./test');
-const stream = new FakeStream;
-cliSpinner({text: '',stream, enabled:true});
 export function subcommand(command:string): Promise<{}>{
-	stream.clear();
+	output.clear();
 	return NODE_MCE.subcommand(command.split(' ')).then(res=>{
-		return stream.content || res;
+		return output.content || res;
 	}) as any;
 }
 export function subCommandWithModule(config:string, command:string): Promise<{}>{

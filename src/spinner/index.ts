@@ -6,9 +6,9 @@ import * as chalk from 'chalk';
 import { LogSymbols, supported } from './symbols';
 import { stripAnsi } from './strip-ansi';
 import { wcwidth } from './wcwidth';
-import { Cursor } from './cursor';
+import { Cursor } from './control';
+import { main_output } from '../system-streams';
 const TEXT = Symbol('mce_spinner');
-
 export interface  ISpinnerOptions {
     color?:string
     text:string
@@ -49,7 +49,7 @@ export class Spinner {
 		this.options = Object.assign({
 			text: '',
 			color: 'cyan',
-			stream: process.stderr
+			stream: main_output
 		}, options);
 		this.changeSpinner('dots');
 		/*istanbul ignore next*/
@@ -171,7 +171,7 @@ export class Spinner {
 	info(text?:string, newline:boolean=true) {
 		return this.persist({symbol: LogSymbols.info, text}, newline ? '\n':'');
 	}
-	private persist(options:{ symbol:LogSymbols,text:string }, newline:string='\n') {
+	public persist(options:{ symbol:LogSymbols,text:string }, newline:string='\n') {
 		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
@@ -193,9 +193,6 @@ export class Spinner {
 }
 /** @ignore */
 export let MainSpinner = new Spinner({text:''});
-export function cliSpinner (options:ISpinnerOptions) {
-    MainSpinner = new Spinner(options);
-}
 export function wait(time:number=1000) {
 	return new Promise((resolve)=>{
 		setTimeout(resolve, time);

@@ -1,3 +1,4 @@
+process.env.TEST = 'test';
 import { subcommand } from './loader';
 
 describe('Arguments Parsing', ()=>{

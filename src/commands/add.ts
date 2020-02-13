@@ -1,20 +1,14 @@
 import { existsSync } from "../fs";
 import { join } from "path";
-import { error } from "../console";
+import { error } from "../verbose";
 import { cliPath, targetPath } from "../paths";
-import { cp } from '../utils';
-
-function templates (...path:string[]) {
-	return cliPath('templates', ...path).replace('src/templates/', 'templates/').replace('src\\templates\\', 'templates\\');
-}
-let nproy;
-const copy = (file:string, target:string) => cp(templates(file), nproy(target));
+import { copy, intercept } from "../tree-maker";
 export const description = 'Adds a new command to the git project.'
 export const args = '<command>';
 export  async function action(command:string/*, opt:Parsed<typeof options>*/) {
-	nproy = targetPath.bind(null);
+	intercept((folder:string)=>join(__dirname, '../templates', folder), p=>p);
 	if(existsSync(targetPath('src/commands')))	 {
-		copy(join('src', 'index.ts.tmp'), join('src', 'commands', `${command}.ts`));
+		copy(join('src', 'index.ts'), join('src', 'commands', `${command}.ts`));
 	} else {
 		error('this project does not have a commands forlder');
 	}
