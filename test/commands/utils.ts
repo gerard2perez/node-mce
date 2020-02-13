@@ -1,5 +1,5 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
-import { cliPath, targetPath } from '../../src/paths';
+import { cliPath, callerPath } from '../../src/tree-maker/fs';
 export let description = 'A description for your command';
 export let args = '';
 export let options = {
@@ -16,6 +16,6 @@ export let options = {
 export async function action(opt:Parsed<typeof options>) {
 	return {
         cli: cliPath(),
-        target: targetPath()
+        target: callerPath()
 	};
 }

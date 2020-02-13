@@ -1,9 +1,4 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
-import { ok, error, warn, info, ask, input } from '../../src/console';
-import { created, updated } from '../../src/utils';
-import { targetPath, cliPath } from '../../src/paths';
-import { spin } from '../../src/spinner';
-import * as assert from 'assert';
+import { numeric, Parsed } from '../../src';
 export let description = 'A description for your command';
 export let options = {
     number: numeric('-n', 'A number', 10),

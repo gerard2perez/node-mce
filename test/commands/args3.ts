@@ -1,9 +1,4 @@
-import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '../../src';
-import { ok, error, warn, info, ask, input } from '../../src/console';
-import { created, updated } from '../../src/utils';
-import { targetPath, cliPath } from '../../src/paths';
-import { spin } from '../../src/spinner';
-import * as assert from 'assert';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
 export let description = 'A description for your command';
 export let args = '<arg1>';
 export let options = {

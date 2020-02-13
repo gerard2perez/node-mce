@@ -1,7 +1,7 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
 import { pause, resume } from '../../src/spinner/console';
 import { error, info, ok, warn } from '../../src/verbose';
-import { cliPath, targetPath } from '../../src/paths';
+import { cliPath, callerPath } from '../../src/tree-maker/fs';
 import { spin } from '../../src/spinner';
 import { created, updated } from '../../src/verbose';
 export let description = 'A description for your command';
@@ -31,6 +31,6 @@ export async function action(opt:Parsed<typeof options>) {
     });
 	return {
         cli: cliPath(),
-        target: targetPath()
+        target: callerPath()
 	};
 }

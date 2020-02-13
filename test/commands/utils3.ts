@@ -1,6 +1,6 @@
 import { mkdirSync } from 'fs';
 import { updateTextSpin } from '../../src/spinner/console';
-import { cliPath, targetPath } from '../../src/paths';
+import { cliPath, callerPath } from '../../src/tree-maker/fs';
 import { spin, wait } from '../../src/spinner';
 import { question, override } from '../../src/input';
 export async function action() {
@@ -22,7 +22,7 @@ export async function action() {
     
 	return {
         cli: cliPath(),
-        target: targetPath(),
+        target: callerPath(),
         res
 	};
 }

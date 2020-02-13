@@ -29,7 +29,6 @@ export function iter<T=any>(obj: any) {
 		}
 	 };
 }
-export * from './paths';
 export { remove } from './remove';
 export { render } from './render';
 export { rawSpawn, spawn, spinSpawn } from './spawn';

@@ -5,7 +5,7 @@ import { existsSync, readdirSync } from "fs";
 import { join, resolve } from "path";
 import { Command, Option, Parser } from "./core";
 import { MainSpinner } from "./spinner";
-import { targetPath } from "./paths";
+import { callerPath } from "./tree-maker/fs";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 
 export class MCEProgram {
@@ -127,15 +127,15 @@ export class MCEProgram {
 	}
 	submodule_configuration:any
 	public submodules(config_file:string) {
-		let configuration = targetPath(config_file);
+		let configuration = callerPath(config_file);
 		this.submodule_configuration = {};
 		if(existsSync(configuration)) {
 			let config = require(configuration).commands;
 			for(const command of Object.keys(config)) {
-				let location = targetPath(config[command]);
+				let location = callerPath(config[command]);
 				if(!existsSync(location)){
 					// istanbul ignore next
-					location = targetPath('node_modules', command, config[command]);
+					location = callerPath('node_modules', command, config[command]);
 				}
 				this.submodule_configuration[command] = location;
 			}	
@@ -147,3 +147,4 @@ export function MCE (localdir?:string) {
 	return new MCEProgram(localdir);
 }
 export { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options';
+export {callerPath, cliPath } from './tree-maker/fs';

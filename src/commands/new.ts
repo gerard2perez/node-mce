@@ -1,11 +1,10 @@
 import { bool, enumeration, Parsed } from '../';
-import { error } from "../verbose";
 import { override } from "../input";
-import { targetPath } from "../paths";
 import { spawn } from "../spawn";
 import { spin } from "../spinner";
-import { c, TreeMaker, d, r, w, z, match, intercept } from "../tree-maker";
-import {posix, join} from 'path';
+import { c, d, match, r, TreeMaker, w, z } from "../tree-maker";
+import { error } from "../verbose";
+import { project, template, callerPath, cliPath } from '../tree-maker/fs';
 
 enum Styles {
 	git = 'git',
@@ -21,7 +20,7 @@ export const description = 'Creates a new MCE project.'
 export const args = '<application>';
 export  async function action(application:string, opt:Parsed<typeof options>) {
 
-	nproy = targetPath.bind(null, application);
+	nproy = callerPath.bind(null, application);
 	//istanbul ignore if
 	if(!(await override('Directory already exist. Do you want to override it', nproy(), opt.force)))
 		return;
