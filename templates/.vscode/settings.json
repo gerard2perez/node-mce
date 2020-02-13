@@ -5,5 +5,9 @@
     "**/*.map": true,
     "**/*.d.ts": true,
     "package-lock.json": true
+  },
+  "files.associations": {
+    "**/templates/**/*.ts": "plaintext",
+    "**/templates/**/*.json": "plaintext"
   }
 }

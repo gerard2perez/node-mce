@@ -30,8 +30,7 @@
 
 
     "doc": "typedoc --options .typedoc.json --navigation-label-externals \"Internal API\"",
-    "test": "mocha test/index.spec.ts",
-    "cover": "nyc mocha test/index.spec.ts"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
