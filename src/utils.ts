@@ -29,7 +29,6 @@ export function iter<T=any>(obj: any) {
 		}
 	 };
 }
-export { remove } from './remove';
-export { render } from './render';
+export { render } from './tree-maker/render';
 export { rawSpawn, spawn, spinSpawn } from './spawn';
 

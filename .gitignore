@@ -1,15 +1,9 @@
-/commands
-/spinner
 !**/.gitkeep
 *.tgz
 node_modules
 coverage
-.nyc_output
-single_repo
-test/demo.txt
 .DS_Store
-/log.txt
-/docs
+docs
 dist
 lib
 *.tsbuildinfo

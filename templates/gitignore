@@ -1,5 +1,6 @@
-/**/*.js
-/**/*.map
-/**/*.d.ts
-/node_modules/
-/coverage/
+node_modules
+coverage
+lib
+*.tsbuildinfo
+!**/.gitkeep
+docs

@@ -1,5 +1,6 @@
 process.env.TEST = 'test';
-import { readFileSync } from "fs";
+jest.mock('../src/fs');
+import { existsSync, readFileSync, readdirSync, writeFileSync } from '../src/fs';
 import { resolve } from "path";
 import { command, subcommand } from "./loader";
 import { readLog } from "./log-reader";
@@ -25,10 +26,13 @@ describe('Utils functions', ()=>{
 			.resolves.toBe(readLog('utils.verbosity3.log'));
     });
     test('renders a file', async () =>{
+		//@ts-ignore
+		readFileSync.mockReturnValue('{{demo}}');
+		
 		await expect(subcommand('utils2 -vvv -r'))
 			.resolves.toBeDefined();
-        let file = readFileSync('./test/demo.txt', 'utf-8');
-        expect(file).toBe('works');
+		expect(writeFileSync).toBeCalledTimes(1);
+		expect(writeFileSync).toBeCalledWith(resolve(process.cwd(), './test/demo.txt'), 'works');
 		await expect(subcommand('utils2 -vvv')).resolves.toBe('works');
     });
     test('executes a single command', async () =>{

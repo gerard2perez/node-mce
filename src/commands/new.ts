@@ -58,7 +58,11 @@ async function createProjectExtructure(application: string, style:Styles) {
 			c('settings.json'),
 			c('tasks.json')
 		)
-		.w(z('package.json',{application}));
+		.w(
+			z('package.json',{application}),
+			c('incremental.js'),
+			c('jest.config.js')
+		);
 	});
 	return tree;
 }

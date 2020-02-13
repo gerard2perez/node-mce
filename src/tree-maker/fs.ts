@@ -1,7 +1,7 @@
 import * as chalk from "chalk";
 import { copyFileSync, mkdirSync, writeFileSync} from "../fs";
 import { join, resolve } from "path";
-import { render } from "../render";
+import { render } from "./render";
 import { ok } from "../verbose";
 export interface fs_interface {
 	root:string
@@ -30,12 +30,12 @@ export function pathResolver(_template:typeof template, _target?:typeof project)
 	//istanbul ignore else
 	if(_target)PROJECT = _target;
 }
-export function write(this:fs_interface, target:string, content:string) {
+export function write(target:string, content:string) {
 	target = PROJECT(this.project(target));
 	writeFileSync(target, content);
 	fFile(target);
 }
-export function mkdir (this:fs_interface, dir:string) {
+export function mkdir (dir:string) {
 	dir = this.project(dir)
     try{
     	mkdirSync(dir);
@@ -52,9 +52,11 @@ export function copy (source:string, target:string=source) {
 	fFile(_target);
 }
 
-export function compile(this:fs_interface, source:string, data:{[p:string]:string}, target:string=source) {
+export function compile(source:string, data:{[p:string]:string}, target:string=source) {
 	source = TEMPLATE(this.template(source))
 	target = PROJECT(this.project(target));
 	render(source, data, target);
 	fFile(target);
 }
+
+export {remove} from './remove';

@@ -2,11 +2,13 @@ process.env.TEST = 'test';
 import { loader, subcommand, subCommandWithModule } from './loader';
 jest.mock('../src/fs');
 jest.mock('../src/spawn');
-import { existsSync, readFileSync } from '../src/fs';
+import { existsSync, readFileSync, readdirSync } from '../src/fs';
 import { spawn } from '../src/spawn';
 import { readLog } from './log-reader';
 //@ts-ignore
 readFileSync.mockReturnValue('');
+//@ts-ignore
+readdirSync.mockReturnValue([]);
 //@ts-ignore
 spawn.mockReturnValue(Promise.resolve(true));
 describe('Self Test', ()=>{

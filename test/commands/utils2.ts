@@ -1,6 +1,6 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, text, verbose } from '../../src';
 import { cliPath } from '../../src/tree-maker/fs';
-import { render } from '../../src/render';
+import { render } from '../../src/tree-maker/render';
 export let description = 'A description for your command';
 export let args = '';
 export let options = {
@@ -15,6 +15,6 @@ export let options = {
 };
 
 export async function action(opt:Parsed<typeof options>) {
-    let target = opt.render ? cliPath('../test/demo.txt'): undefined;
+	let target = opt.render ? cliPath('../test/demo.txt'): undefined;
     return render(cliPath('../test/file.txt'), {demo: 'works'}, target);
 }

@@ -1,1 +1,1 @@
-export { copyFileSync, existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
+export { rmdirSync, readdirSync, unlinkSync, lstatSync, copyFileSync, existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";

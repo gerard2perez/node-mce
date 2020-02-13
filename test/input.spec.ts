@@ -3,7 +3,7 @@ jest.mock('../src/fs');
 import {input, output} from './loader';
 import {question, confirm, override} from '../src/input';
 import { wait, spin } from '../src/spinner';
-import { existsSync } from '../src/fs';
+import { existsSync, readdirSync } from '../src/fs';
 describe('test user interactions', () => {
 	test('question', async ()=>{
 		let w = wait(10).then(_=>input.write('Gerardo Perez'));
@@ -34,6 +34,8 @@ describe('test user interactions', () => {
 	test('ask for folder override', async ()=>{
 		//@ts-ignore
 		existsSync.mockReturnValue(true);
+		//@ts-ignore
+		readdirSync.mockReturnValue([]);
 		let w = wait(10).then(_=>input.write('n'));
 		await expect(override('Do you want to continue', 'fake_folder', false)).resolves.toBeFalsy();
 		await w;

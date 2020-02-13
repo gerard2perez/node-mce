@@ -18,10 +18,17 @@
     "author":"",
     "license":"MIT",
     "devDependencies": {
+        "@types/jest": "^25.1.2",
+        "chokidar": "^3.3.1",
+        "glob": "^7.1.6",
+        "jest": "^25.1.0",
+        "ts-jest": "^25.2.0",
+        "npm-run-parallel": "^0.6.0",
+        "cpx": "^1.5.0",
         "@types/node": "^10.10.3",
-        "typescript": "^3.0.3"
+        "typescript": "^3.7.5"
     },
     "dependencies": {
-        "@gerard2p/mce": "^1.1.2"
+        "@gerard2p/mce": "^2.0.0"
     }
 }
