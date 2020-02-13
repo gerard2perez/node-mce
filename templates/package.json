@@ -11,7 +11,7 @@
 
         "vscode": "cpx ./templates/**/.vscode/**/*  lib/templates --clean",
         "templates": "cpx ./templates/**/*  lib/templates --clean",
-        "pkg-files": "cpx \"?(package.json|README.md|LICENSE|mce)\"  lib --clean",
+        "pkg-files": "cpx \"?(package.json|README.md|LICENSE|{{application}})\"  lib --clean",
         "compile": "tsc",
 
         "vscode:w": "npm run vscode -- -w",
@@ -30,7 +30,7 @@
         "test": "jest"
     },
     "repository": {},
-    "keywords":["mce", "cmd"],
+    "keywords":["{{application}}", "cmd"],
     "author":"",
     "license":"MIT",
     "devDependencies": {
