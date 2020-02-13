@@ -1,18 +1,12 @@
-import { writeFileSync } from "../fs";
-import { join } from "path";
-import { error, ok } from "../console";
 import { bool, enumeration, Parsed } from '../';
+import { error } from "../console";
+import { override } from "../override";
+import { targetPath } from "../paths";
 import { spawn } from "../spawn";
 import { spin } from "../spinner";
-import { printRelativePath, makeDir, cp } from '../utils';
-import { override } from "../override";
-import { targetPath, cliPath } from "../paths";
-import { render } from "../render";
+import { c, chain_return, d, r, w, z, match, intercept } from "../tree-maker";
+import {posix, join} from 'path';
 
-function templates (...path:string[]) {
-	return cliPath('templates', ...path).replace('src/templates/', 'templates/').replace('src\\templates\\', 'templates\\');
-}
-const copy = (file:string, target:string = file) => cp(templates(file), nproy(target));
 enum Styles {
 	git = 'git',
 	single= 'single'
@@ -30,7 +24,7 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 	nproy = targetPath.bind(null, application);
 	if(!(await override('Directory already exist. Do you want to override it', nproy(), opt.force)))
 		return;
-	await createProjectExtructure(application, opt.style);
+	let tree = await createProjectExtructure(application, opt.style);
 	// istanbul ignore next
 	opt.npm && await spin('Initializing npm', async() => {
 		if ( !await spawn('npm', ['install', '-S'], {cwd: nproy()}).catch(()=>false) ) {
@@ -42,30 +36,30 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 		if ( !await spawn('git', ['init'], {cwd: nproy()}).catch(()=>false) ) {
 			error('git init')
 		}
-		copy('gitignore','.gitignore');
+		tree.w(c('gitignore','.gitignore'))
 	});
 }
 async function createProjectExtructure(application: string, style:Styles) {
+	let tree:chain_return;
 	await spin('Creating Files', async () => {
-		makeDir(nproy());
-		copy('app', application);
-		copy('tsconfig.json');
-		makeDir(nproy('src'));
 		let cli = `import { MCE } from "@gerard2p/mce";\n\nMCE(__dirname).${style === Styles.git ? 'subcommand':'command'}(process.argv);`;
-		writeFileSync(nproy('src', 'cli.ts'), cli);
-		printRelativePath(nproy('src', 'cli.ts'));
-		if (style === Styles.git) {
-			makeDir(nproy('src', 'commands'));
-			copy(join('src', 'index.ts'), join('src', 'commands', 'removeme.ts'));
-		}
-		else {
-			copy(join('src', 'index.ts'), join('src', 'index.ts'));
-		}
-		makeDir(nproy('.vscode'));
-		copy(join('.vscode', 'launch.json'));
-		copy(join('.vscode', 'settings.json'));
-		copy(join('.vscode', 'tasks.json'));
-		render(templates('package.json'), {application}, nproy('package.json'));
-		ok(printRelativePath(nproy('package.json')));
+		intercept((folder:string)=>join(__dirname, '../templates', folder));
+		tree = r(application);
+		tree.w(
+			c('app', application),
+			c('tsconfig.json')
+		)
+		.d('src',
+			w('cli.ts', cli),
+			match(style == Styles.single, c('index.ts')),
+			match(style == Styles.git, d('commands', c('../index.ts', 'removeme.ts'))),
+		)
+		.d('.vscode',
+			c('launch.json'),
+			c('settings.json'),
+			c('tasks.json')
+		)
+		.w(z('package.json',{application}));
 	});
+	return tree;
 }

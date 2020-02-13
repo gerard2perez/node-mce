@@ -2,6 +2,7 @@
 √ single_repo/single_repo
 √ single_repo/tsconfig.json
 √ single_repo/src
+√ single_repo/src/cli.ts
 √ single_repo/src/index.ts
 √ single_repo/.vscode
 √ single_repo/.vscode/launch.json

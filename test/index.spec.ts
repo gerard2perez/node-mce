@@ -18,12 +18,20 @@ describe('Self Test', ()=>{
     });
     test('create a new project', async()=>{
 		loader('./src');
+		//@ts-ignore
+		existsSync.mockReturnValue(true);
 		await expect(subcommand('new single_repo -f -s single'))
 			.resolves.toBe(readLog('new.output.log'));
+			//@ts-ignore
+		existsSync.mockReturnValue(false);
     });
     test('create a new project multicommand', async()=>{
+		//@ts-ignore
+		existsSync.mockReturnValue(true);
 		await expect(subcommand('new git_repo -f -s git'))
 				.resolves.toBe(readLog('new-git.output.log'));
+				//@ts-ignore
+		existsSync.mockReturnValue(false);
     });
     test('command does not exist', async()=>{
 		await expect(subcommand('trim'))

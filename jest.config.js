@@ -1,7 +1,8 @@
 module.exports = {
   preset: 'ts-jest',
   testPathIgnorePatterns: [
-    "templates"
+	"templates",
+	"test/sandbox"
   ],
   testEnvironment: 'node',
   coverageDirectory: "./coverage",

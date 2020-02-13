@@ -1,8 +1,8 @@
 import * as chalk from "chalk";
-import { copyFileSync, mkdirSync } from "fs";
+import { copyFileSync, mkdirSync, writeFileSync} from "./fs";
 import { join } from "path";
 import { render } from "./render";
-import { ok } from "assert";
+import { ok } from "./console";
 //#region Types and interfaces
 interface chainable {}
 interface Chain {
@@ -10,7 +10,7 @@ interface Chain {
 	args:any[]
 }
 type operations = chainable;
-type chain_return = { d: typeof chainable_dir, dir: typeof chainable_dir, with: (...operations:operations[]) => chain_return, w: (...operations:operations[]) => chain_return };
+export type chain_return = { d: typeof chainable_dir, dir: typeof chainable_dir, with: (...operations:operations[]) => chain_return, w: (...operations:operations[]) => chain_return };
 interface fs_interface {
 	root:string
 	template:(...path:string[])=>string,
@@ -38,26 +38,36 @@ function _cmp(source:string, data:{[p:string]:string}, target:string=source) {
 function _dir(folder:string, ...operations:chainable[] ) {
 	return {
 		fn:mkdirtreeandchild,
-		args:[folder, ...operations]
+		args:[folder, ...operations.filter(d=>d)]
+	} as chainable;
+}
+function _write(target:string, content:string ) {
+	return {
+		fn:write,
+		args:[target, content]
 	} as chainable;
 }
 //#region actual functions
-
+function write(this:fs_interface, target:string, content:string) {
+	target = project(this.project(target));
+	writeFileSync(target, content);
+	fFile(target);
+}
 function mkdir (this:fs_interface, dir:string='') {
 	dir = this.project(dir)
     try{
     	mkdirSync(dir);
-    }catch(e){}
+	}catch(e){}
     fFile(dir);
 }
 /**
  * Copies a file from the cli root to the target application folder
  */
 function copy (this:fs_interface, source:string, target:string=source) {
-	source = template(this.template(source));
-	target = project(this.project(target));
-	copyFileSync(source, target);
-	fFile(target);
+	let _source = template(this.template(source));
+	let _target = project(this.project(target));
+	copyFileSync(_source, _target);
+	fFile(_target);
 }
 
 function compile(this:fs_interface, source:string, data:{[p:string]:string}, target:string=source) {
@@ -70,7 +80,7 @@ function compile(this:fs_interface, source:string, data:{[p:string]:string}, tar
 function mkdirtreeandchild(folder, ...operations:chainable[]) {
 	mkdir.bind(this)(folder);
 	let root = this.root;
-	for(const rtnOBJ of operations as Chain[]) {
+	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
 		let fsInterface:fs_interface = {
 			root,
 			template: (...args)=> this.template(folder, ...args),
@@ -88,7 +98,7 @@ function chainable_dir(folder:string, ...operations:chainable[] ) {
 		mkdir.bind({project:(...args)=>join(...args)})(path);
 		// fFile(path);
 	}
-	for(const rtnOBJ of operations as Chain[]) {
+	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
 		let fsInterface:fs_interface = {
 			root,
 			template: (...args)=> join(path.replace(root,''), ...args),
@@ -119,7 +129,7 @@ function _root(root:string){
 /**
  * Initiates a filesystem building tree
  */
-export const root = _root.bind({path:''}) as typeof _root;
+export const root = ((folder:string)=> _root.bind({path:''})(folder)) as typeof _root;
 /**
  * create a directory that can contain multiple actions
  */
@@ -128,6 +138,11 @@ export const dir = _dir.bind({fn:chainable_dir}) as typeof _dir;
  * Copies a file from the cli root to the target application folder
  */
 export const cpy = _copy.bind({fn:copy}) as typeof _copy;
+export const wrt = _write.bind({fn:write}) as typeof _write;
 export const cmp = _cmp.bind({fn:compile}) as typeof _cmp;
 
-export { cpy as c, cmp as z, dir as d, root as r};
+export { cpy as c, cmp as z, dir as d, root as r, wrt as w};
+
+export function match(condition:boolean, fn:chainable):chainable {
+	return condition ? fn:undefined;
+}

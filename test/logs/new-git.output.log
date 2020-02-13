@@ -2,6 +2,7 @@
 √ git_repo/git_repo
 √ git_repo/tsconfig.json
 √ git_repo/src
+√ git_repo/src/cli.ts
 √ git_repo/src/commands
 √ git_repo/src/commands/removeme.ts
 √ git_repo/.vscode
