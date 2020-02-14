@@ -11,6 +11,7 @@ var path_1 = require("path");
 var fs_1 = require("fs");
 var glob_1 = require("glob");
 var chokidar = require("chokidar");
+var chalk = require("chalk");
 var _a = process.argv.slice(2), sources = _a[0], target = _a[1], args = _a.slice(2);
 var Options;
 (function (Options) {
@@ -50,6 +51,13 @@ function createDirIfNotExist(to) {
     });
 }
 ;
+function log(place) {
+    var text = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        text[_i - 1] = arguments[_i];
+    }
+    console.log.apply(console, __spreadArrays(["[" + chalk.gray(new Date().toLocaleTimeString()) + "] [" + chalk.blue(place) + "]"], text));
+}
 function copy(from) {
     var to = findTarget(from);
     createDirIfNotExist(to);
@@ -57,11 +65,13 @@ function copy(from) {
     if (stats.isDirectory()) {
         return;
     }
+    log('CPX.CPY', from, '>', to);
     fs_1.writeFileSync(to, fs_1.readFileSync(from));
 }
 ;
 function remove(from) {
     var to = findTarget(from);
+    log('CPX.DEL', to);
     if (fs_1.existsSync(to))
         fs_1.unlinkSync(to);
 }
