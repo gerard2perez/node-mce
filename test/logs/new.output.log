@@ -7,8 +7,8 @@
 √ single_repo/.vscode
 √ single_repo/.vscode/launch.json
 √ single_repo/.vscode/settings.json
-√ single_repo/.vscode/tasks.json
 √ single_repo/package.json
 √ single_repo/incremental.js
+√ single_repo/cpx.js
 √ single_repo/jest.config.js
 √ single_repo/.gitignore

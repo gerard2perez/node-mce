@@ -8,8 +8,8 @@
 √ git_repo/.vscode
 √ git_repo/.vscode/launch.json
 √ git_repo/.vscode/settings.json
-√ git_repo/.vscode/tasks.json
 √ git_repo/package.json
 √ git_repo/incremental.js
+√ git_repo/cpx.js
 √ git_repo/jest.config.js
 √ git_repo/.gitignore

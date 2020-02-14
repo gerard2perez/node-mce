@@ -14,7 +14,10 @@ function fFile(target:string) {
 	let last:string = path.pop();
 	ok(join(...path, chalk.green(last)).replace(/\\/mg, '/'));
 }
-let TEMPLATE = (folder:string)=>callerPath('templates', folder);
+let TEMPLATE = (folder:string)=>{
+	let res = cliPath('templates', folder)
+	return res;
+};
 let PROJECT = (folder:string)=>folder;
 export let template = (path:string)=>path;
 export let project = (path:string)=>path;

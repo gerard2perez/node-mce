@@ -1,9 +1,6 @@
 {
   "files.exclude": {
     "node_modules": true,
-    "**/*.js": true,
-    "**/*.map": true,
-    "**/*.d.ts": true,
     "package-lock.json": true
   },
   "files.associations": {

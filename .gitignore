@@ -7,3 +7,4 @@ docs
 dist
 lib
 *.tsbuildinfo
+/cpx.ts

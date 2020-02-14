@@ -56,11 +56,11 @@ async function createProjectExtructure(application: string, style:Styles) {
 		.d('.vscode',
 			c('launch.json'),
 			c('settings.json'),
-			c('tasks.json')
 		)
 		.w(
 			z('package.json',{application}),
 			c('incremental.js'),
+			c('cpx.js'),
 			c('jest.config.js')
 		);
 	});

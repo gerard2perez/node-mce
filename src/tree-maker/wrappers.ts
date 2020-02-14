@@ -1,4 +1,4 @@
-import { join } from "path";
+import { join, relative } from "path";
 import { compile, copy, fs_interface, mkdir, write } from "./fs";
 export type TreeMaker = { d: typeof chainable_dir, dir: typeof chainable_dir, with: (...operations:operations[]) => TreeMaker, w: (...operations:operations[]) => TreeMaker };
 type operations = chainable;
@@ -49,7 +49,7 @@ export function chainable_dir(folder:string, ...operations:chainable[] ) {
 	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
 		let fsInterface:fs_interface = {
 			root,
-			template: (...args)=> join(path.replace(root,''), ...args),
+			template: (...args)=> join(relative(root,path), ...args),
 			project: (...args)=> join(path, ...args)
 		}
 		rtnOBJ.fn.bind(fsInterface)(...rtnOBJ.args);

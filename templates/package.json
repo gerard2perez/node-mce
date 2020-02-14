@@ -9,9 +9,9 @@
     "scripts": {
         "clean": "node incremental",
 
-        "vscode": "cpx ./templates/**/.vscode/**/*  lib/templates --clean",
-        "templates": "cpx ./templates/**/*  lib/templates --clean",
-        "pkg-files": "cpx \"?(package.json|README.md|LICENSE|{{application}})\"  lib --clean",
+        "vscode": "node cpx ./templates/**/.vscode/**/*  lib/templates --clean",
+        "templates": "node cpx ./templates/**/*  lib/templates --clean",
+        "pkg-files": "node cpx \"?(package.json|README.md|LICENSE|{{application}})\"  lib --clean",
         "compile": "tsc",
 
         "vscode:w": "npm run vscode -- -w",
