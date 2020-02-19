@@ -1,11 +1,13 @@
 process.env.TEST = 'test';
-process.env.MCE_ROOT = process.cwd()
 jest.mock('../src/fs');
 import { resolve } from "path";
-import { readFileSync, writeFileSync } from '../src/fs';
-import { command, subcommand } from "./loader";
+import { readFileSync, writeFileSync, readdirSync, existsSync } from '../src/fs';
+import { command, subcommand, loader } from "./loader";
 import { readLog } from "./log-reader";
-
+//@ts-ignore
+readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
+//@ts-ignore
+existsSync.mockReturnValue(true)
 describe('Utils functions', ()=>{
     test('gets correct paths', async ()=>{
         let res = await subcommand('utils');
@@ -33,7 +35,6 @@ describe('Utils functions', ()=>{
     test('renders a file', async () =>{
 		//@ts-ignore
 		readFileSync.mockReturnValue('{{demo}}');
-		
 		await expect(subcommand('utils2 -vvv -r'))
 			.resolves.toBeDefined();
 		expect(writeFileSync).toBeCalledTimes(1);
@@ -46,9 +47,9 @@ describe('Utils functions', ()=>{
 		await command('');
 		await command('--version');
     });
-    // test('test override util', async () =>{
-    //     let res = await subcommand('utils3 -vvv');
-	// 	// expect(res).toMatchObject({res:'true'});
-	// 	console.log(res);
-	// });
+    // // test('test override util', async () =>{
+    // //     let res = await subcommand('utils3 -vvv');
+	// // 	// expect(res).toMatchObject({res:'true'});
+	// // 	console.log(res);
+	// // });
 });

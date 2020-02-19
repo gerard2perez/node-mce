@@ -1,5 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
+  "maxWorkers": 1,
   "coverageThreshold": {
     "global": {
       "branches": 99,
@@ -9,7 +10,7 @@ module.exports = {
     }
   },
   testPathIgnorePatterns: [
-	  "templates",
+    "templates",
     "node_modules",
     "coverage",
     "lib"
