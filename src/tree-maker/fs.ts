@@ -1,6 +1,6 @@
 import * as chalk from "chalk";
 import { copyFileSync, mkdirSync, writeFileSync} from "../fs";
-import { join, resolve } from "path";
+import { join, resolve, win32, dirname, posix,basename } from "path";
 import { render } from "./render";
 import { ok } from "../verbose";
 export interface fs_interface {
@@ -8,11 +8,11 @@ export interface fs_interface {
 	template:(...path:string[])=>string,
 	project:(...path:string[])=>string
 }
-function fFile(target:string) {
-    let path = target.split(/\\|\//gm);
-	// path.splice(0,0,RelPathRoot);
-	let last:string = path.pop();
-	ok(join(...path, chalk.green(last)).replace(/\\/mg, '/'));
+export function highLightBasename(path:string, highlight:string) {
+	return chalk`${dirname(path)}/{${highlight} ${basename(path)}}`.replace(/\\/gm, posix.sep).replace(/^\.[\\\/]/, '');
+}
+function printHighLigthed(target:string) {
+	ok(highLightBasename(target, 'green.bold'));
 }
 let TEMPLATE = (folder:string)=>{
 	let res = cliPath('templates', folder)
@@ -36,14 +36,14 @@ export function pathResolver(_template:typeof template, _target?:typeof project)
 export function write(target:string, content:string) {
 	target = PROJECT(this.project(target));
 	writeFileSync(target, content);
-	fFile(target);
+	printHighLigthed(target);
 }
 export function mkdir (dir:string) {
 	dir = this.project(dir)
     try{
     	mkdirSync(dir);
 	}catch(e){}
-    fFile(dir);
+    printHighLigthed(dir);
 }
 /**
  * Copies a file from the cli root to the target application folder
@@ -52,14 +52,14 @@ export function copy (source:string, target:string=source) {
 	let _source = TEMPLATE(this.template(source));
 	let _target = PROJECT(this.project(target));
 	copyFileSync(_source, _target);
-	fFile(_target);
+	printHighLigthed(_target);
 }
 
 export function compile(source:string, data:{[p:string]:string}, target:string=source) {
 	source = TEMPLATE(this.template(source))
 	target = PROJECT(this.project(target));
 	render(source, data, target);
-	fFile(target);
+	printHighLigthed(target);
 }
 
 export {remove} from './remove';

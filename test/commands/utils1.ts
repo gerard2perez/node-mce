@@ -21,10 +21,10 @@ export let options = {
 export async function action(opt:Parsed<typeof options>) {
     await spin('test', async () =>{
         pause();
-        ok('');
-        error('');
-        warn('');
-        info('');
+        ok`{red}test`;
+        error`test`;
+        warn`test`;
+        info('test');
         resume();
         created('chochis.ts');
         updated('chochis.ts');

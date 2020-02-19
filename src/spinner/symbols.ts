@@ -4,12 +4,12 @@ let fixtures = process.env.CI || process.env.TERM === 'xterm-256color' || proces
 export let supported =  !process.env.TEST && (utf8 || fixtures);
 export enum LogSymbols {
 	/** 'ℹ' : 'i' */
-	info = <any>chalk.blue(supported ? 'ℹ' : 'i'),
+	info = <any>(supported ? 'ℹ' : 'i'),
 	/** '✔' : '√' */
-	success = <any>chalk.green(supported ? '✔' : '√'),
+	success = <any>(supported ? '✔' : '√'),
 	/** '⚠' : '!!' */
-	warning = <any>chalk.yellow(supported ? '⚠' : '!!'),
+	warning = <any>(supported ? '⚠' : '!!'),
 	/** '✖' : '×' */
-	error = <any>chalk.red(supported ? '✖' : '×'),
-	updated = <any>chalk.blueBright(supported ? '✐' : '√')
+	error = <any>(supported ? '✖' : '×'),
+	updated = <any>(supported ? '✐' : '√')
 }

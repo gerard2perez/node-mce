@@ -171,6 +171,15 @@ export class Spinner {
 	info(text?:string, newline:boolean=true) {
 		return this.persist({symbol: LogSymbols.info, text}, newline ? '\n':'');
 	}
+	public log(text:TemplateStringsArray, ...values:any[]) {
+		let send = `${chalk(text,...values)}\n`;
+		if (!this.enabled) {
+			return this;
+		}
+		this.clear();
+		this.stream.write(send);
+		return this;
+	}
 	public persist(options:{ symbol:LogSymbols,text:string }, newline:string='\n') {
 		/*istanbul ignore next*/
 		if (!this.enabled) {
