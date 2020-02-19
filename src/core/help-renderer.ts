@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/core
- */
 import * as chalk from 'chalk';
 import { Parser, OptionKind, Option } from './option';
 import { Argument } from './argument';

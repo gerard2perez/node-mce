@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/utils
- */
 import * as cspawn from 'cross-spawn';
 import { SpawnOptions } from 'child_process';
 import { spin } from './spinner';

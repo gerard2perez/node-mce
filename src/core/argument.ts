@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/core
- */
 import { OptionKind } from "./option";
 export class Argument {
     kind:OptionKind = OptionKind.optional;

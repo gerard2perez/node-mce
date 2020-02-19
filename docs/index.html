@@ -40,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -54,7 +56,7 @@
 					<a href="index.html">Globals</a>
 				</li>
 			</ul>
-			<h1> @gerard2p/mce</h1>
+			<h1>@gerard2p/mce</h1>
 		</div>
 	</div>
 </header>
@@ -62,23 +64,33 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="mce">MCE</h1>
+				<a href="#mce" id="mce" style="color: inherit; text-decoration: none;">
+					<h1>MCE</h1>
+				</a>
 				<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2Fgerard2p%2Fnode-mce?ref=badge_shield"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgerard2p%2Fnode-mce.svg?type=shield" alt="FOSSA Status"></a></p>
-				<p><a href="https://travis-ci.org/gerard2p/node-mce"><img src="https://img.shields.io/travis/gerard2p/node-mce/master.svg?style=flat-square" alt="Build Status"></a><a href="https://david-dm.org/gerard2p/node-mce"><img src="https://david-dm.org/gerard2p/node-mce.svg?style=flat-square" alt="Dependency Status"></a><img src="https://img.shields.io/badge/PRs%20🔀-Welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></p>
+				<p><a href="https://travis-ci.org/gerard2p/node-mce"><img src="https://img.shields.io/travis/gerard2p/node-mce/master.svg?style=flat-square" alt="Build Status"></a><a href="https://david-dm.org/gerard2p/node-mce"><img src="https://david-dm.org/gerard2p/node-mce.svg?style=flat-square" alt="Dependency Status"></a><img src="https://img.shields.io/badge/PRs%20%F0%9F%94%80-Welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome"></p>
 				<p><a href="https://codeclimate.com/github/gerard2p/node-mce?style=flat-square"><img src="https://codeclimate.com/github/gerard2p/node-mce/badges/gpa.svg?style=flat-square" alt="Code Climate"></a> <a href="https://codeclimate.com/github/gerard2p/node-mce/coverage"><img src="https://codeclimate.com/github/gerard2p/node-mce/badges/coverage.svg?style=flat-square" alt="Test Coverage"></a> <a href="https://codeclimate.com/github/gerard2p/node-mce"><img src="https://codeclimate.com/github/gerard2p/node-mce/badges/issue_count.svg?style=flat-square" alt="Issue Count"></a></p>
 				<p><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square" alt="semantic-release"><img src="https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square" alt="Commitizen friendly"><a href="https://github.com/ellerbrock/typescript-badges/"><img src="https://badges.frapsoft.com/typescript/code/typescript.png?v=101&style=flat-square" alt="TypeScript"></a></p>
-				<h2 id="installation">Installation</h2>
-				<pre><code class="language-sh">npm i -g node-mce</code></pre>
-				<h2 id="usage">Usage</h2>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<pre><code class="language-sh">npm i -g @gerard2p/mce</code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
 				<pre><code class="language-sh">    mce new &lt;application&gt; [options]
       Creates a new MCE project.
         -f, --force          Overrides target directory                            
         -n, --npm            Install npm dependencies                              
         -s, --style &lt;style&gt;  Define the style of <span class="hljs-built_in">command</span> you will use. If you need
                               more than one <span class="hljs-built_in">command</span> use git.
-                              Values: git | *single</code></pre>
+                              Values: git | *single
+    mce add &lt;<span class="hljs-built_in">command</span>&gt;
+      Adds a new <span class="hljs-built_in">command</span> to the git project.</code></pre>
 				<p>This will create project that is ready to work with mce. The project scaffolding look like this:</p>
-				<h3 id="project-structure">Project Structure</h3>
+				<a href="#project-structure" id="project-structure" style="color: inherit; text-decoration: none;">
+					<h3>Project Structure</h3>
+				</a>
 				<pre><code>project_name::
   |<span class="hljs-string">--.vscode
   </span>|<span class="hljs-string">  </span>|<span class="hljs-string">--launch.json
@@ -95,7 +107,10 @@
   </span>|<span class="hljs-string">--package.json
   </span>|<span class="hljs-string">--tsconfig.json
   </span>|<span class="hljs-string">--project_name
-</span></code></pre><h3 id="configuring-command">Configuring command</h3>
+</span></code></pre>
+				<a href="#configuring-command" id="configuring-command" style="color: inherit; text-decoration: none;">
+					<h3>Configuring command</h3>
+				</a>
 				<ul>
 					<li><strong>Single-Style</strong> only uses a <strong>index.ts</strong> in the src folder.</li>
 					<li><strong>Git-Style uses</strong> [command].ts files inside the commands folder.<blockquote>
@@ -127,7 +142,9 @@
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">action</span>(<span class="hljs-params">arg1:<span class="hljs-built_in">string</span>, varidac:<span class="hljs-built_in">string</span>[], opt:Parsed&lt;<span class="hljs-keyword">typeof</span> options&gt;</span>) </span>{
     <span class="hljs-comment">// Your Code</span>
 }</code></pre>
-				<h2 id="option-parsing">Option Parsing</h2>
+				<a href="#option-parsing" id="option-parsing" style="color: inherit; text-decoration: none;">
+					<h2>Option Parsing</h2>
+				</a>
 				<p>You must export a options variable with the options that you want to use.
 				As you can see you can defined a lot of types for your options most of the options cant take a &#39;&#39; as first parameter and mce will generate the tags for you.</p>
 				<p>The name in the you use to define the property is used as main tag, if you pass &#39;&#39; as the first argument it will fill with a automatic tag_desc and no sort tag will be generated.
@@ -144,10 +161,10 @@
 					</thead>
 					<tbody><tr>
 							<td><code>enumeration:enumeration(&#39;&#39;, &#39;description&#39;, [&#39;a&#39;,&#39;b&#39;])</code></td>
-							<td>| --enumeration</td>
+							<td></td>
+							<td>--enumeration</td>
 							<td><code>&lt;e&gt;</code></td>
 							<td>description Values a | b</td>
-							<td></td>
 						</tr>
 						<tr>
 							<td><code>enumeration:enumeration(&#39;-l&#39;, &#39;description&#39;, [&#39;a&#39;,&#39;b&#39;])</code></td>
@@ -172,45 +189,80 @@
 						</tr>
 				</tbody></table>
 				<p>No mather the case the actual property that is created in the <em>opt</em> is always <em>enumeration</em> for this case.</p>
-				<h3 id="coercion">Coercion</h3>
+				<a href="#coercion" id="coercion" style="color: inherit; text-decoration: none;">
+					<h3>Coercion</h3>
+				</a>
 				<p>As you can see mce come with some handy functios to coerce and validate the user input.</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { numeric, floating, range, text, list, collect, bool, verbose, enumeration } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;</code></pre>
-				<h3 id="validation">Validation</h3>
+				<a href="#validation" id="validation" style="color: inherit; text-decoration: none;">
+					<h3>Validation</h3>
+				</a>
 				<p>If you need to validate the information of any of your arguments you can pass a RegExp as the third arguments of the option_functions</p>
 				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-type">text</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;
 
 export let <span class="hljs-keyword">options</span> = {
  size: text(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(<span class="hljs-keyword">large</span>|medium|small)$/);
-}</code></pre><h3 id="defaults">Defaults</h3>
+}</code></pre>
+				<a href="#defaults" id="defaults" style="color: inherit; text-decoration: none;">
+					<h3>Defaults</h3>
+				</a>
 				<p>The last argument you pass will always be the default value.</p>
 				<pre><code><span class="hljs-keyword">import</span> { <span class="hljs-type">text</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'@gerard2p/mce'</span>;
 
 export let <span class="hljs-keyword">options</span> = {
  size: text(<span class="hljs-string">'-s --size &lt;size&gt;'</span>, <span class="hljs-string">'Pizza size'</span>, /^(<span class="hljs-keyword">large</span>|medium|small)$/, <span class="hljs-string">'medium'</span>);
-}</code></pre><h3 id="version-option">Version option</h3>
+}</code></pre>
+				<a href="#version-option" id="version-option" style="color: inherit; text-decoration: none;">
+					<h3>Version option</h3>
+				</a>
 				<p>By default mce will trace the --version tag and will respond with the version in your package.json.</p>
-				<h3 id="verbose-option">Verbose option</h3>
+				<a href="#verbose-option" id="verbose-option" style="color: inherit; text-decoration: none;">
+					<h3>Verbose option</h3>
+				</a>
 				<p>By default mce will trace the <code>-v --verbose</code> tag and will respond wwith the version in your package.json.</p>
 				<blockquote>
 					<p>Only if you define a verbose obtion you will be passed with the actual verbose value but in most of the cases is no needed.</p>
 				</blockquote>
-				<h2 id="arguments">Arguments</h2>
+				<a href="#arguments" id="arguments" style="color: inherit; text-decoration: none;">
+					<h2>Arguments</h2>
+				</a>
 				<p>You need to export a <code>args:string</code> property with you arguments definition</p>
-				<h3 id="required-args">Required args</h3>
+				<a href="#required-args" id="required-args" style="color: inherit; text-decoration: none;">
+					<h3>Required args</h3>
+				</a>
 				<p><code>&lt;arg&gt;</code> is the convention to make your arg required is no arg detected mce will throw and error.</p>
-				<h3 id="required-args">Required args</h3>
+				<a href="#optional-args" id="optional-args" style="color: inherit; text-decoration: none;">
+					<h3>Optional args</h3>
+				</a>
 				<p><code>[arg]</code> is the convention to make your arg optional.</p>
-				<h3 id="varidac-args">Varidac args</h3>
+				<a href="#varidac-args" id="varidac-args" style="color: inherit; text-decoration: none;">
+					<h3>Varidac args</h3>
+				</a>
 				<p><code>[arg ...]</code> is the convention to make the rest of the args be presented as varidad <code>string[]</code></p>
-				<h3 id="coecion">Coecion</h3>
+				<a href="#coecion" id="coecion" style="color: inherit; text-decoration: none;">
+					<h3>Coecion</h3>
+				</a>
 				<p>Argument can be coerced by default they are treated as string but if you use:</p>
 				<ul>
 					<li><code>&lt;arg:</code><strong>number</strong><code>&gt;</code> will be coerce to number.</li>
 					<li><code>&lt;arg:</code><strong>boolean</strong><code>&gt;</code> will be coerce to boolean.</li>
 				</ul>
-				<h2 id="help-generation">Help Generation</h2>
+				<a href="#help-generation" id="help-generation" style="color: inherit; text-decoration: none;">
+					<h2>Help Generation</h2>
+				</a>
 				<p>By default mce will trace the <code>-h --help</code> options and will automatically render help</p>
-				<h1 id="final-notes">Final Notes</h1>
+				<a href="#add-a-new-command-to-project" id="add-a-new-command-to-project" style="color: inherit; text-decoration: none;">
+					<h1>Add a new command to project</h1>
+				</a>
+				<p>Just run:</p>
+				<pre><code class="language-sh">mce add &lt;<span class="hljs-built_in">command</span>&gt;</code></pre>
+				<p>Adds a new command to a git-style project.</p>
+				<a href="#useful-utilities" id="useful-utilities" style="color: inherit; text-decoration: none;">
+					<h1>Useful Utilities</h1>
+				</a>
+				<a href="#final-notes" id="final-notes" style="color: inherit; text-decoration: none;">
+					<h1>Final Notes</h1>
+				</a>
 				<p>The executable file that is generated only call your ./cli file.</p>
 				<p>When in git-style cli.ts will look like:</p>
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { MCE } <span class="hljs-keyword">from</span> <span class="hljs-string">"@gerard2p/mce"</span>;
@@ -232,19 +284,100 @@ MCE(__dirname).command(process.argv);</code></pre>
 						<a href="index.html"><em>Subsystems</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_gerard2p_mce.html">@gerard2p/mce</a>
+						<a href="modules/_cli_.html">&quot;cli&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_gerard2p_mce_console.html">@gerard2p/mce/console</a>
+						<a href="modules/_commands_add_.html">&quot;commands/add&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_gerard2p_mce_core.html">@gerard2p/mce/core</a>
+						<a href="modules/_commands_new_.html">&quot;commands/new&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_gerard2p_mce_spinner.html">@gerard2p/mce/spinner</a>
+						<a href="modules/_core_argument_.html">&quot;core/argument&quot;</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_gerard2p_mce_utils.html">@gerard2p/mce/utils</a>
+						<a href="modules/_core_command_.html">&quot;core/command&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_core_help_renderer_.html">&quot;core/help-<wbr>renderer&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_core_index_.html">&quot;core/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_core_option_.html">&quot;core/option&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_core_options_.html">&quot;core/options&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_fs_.html">&quot;fs&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_input_confirm_.html">&quot;input/confirm&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_input_index_.html">&quot;input/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_input_override_.html">&quot;input/override&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_input_question_.html">&quot;input/question&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spawn_.html">&quot;spawn&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_animations_.html">&quot;spinner/animations&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_console_.html">&quot;spinner/console&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_control_.html">&quot;spinner/control&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_index_.html">&quot;spinner/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_strip_ansi_.html">&quot;spinner/strip-<wbr>ansi&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_symbols_.html">&quot;spinner/symbols&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_wcwidth_combining_.html">&quot;spinner/wcwidth/combining&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_spinner_wcwidth_index_.html">&quot;spinner/wcwidth/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_streams_.html">&quot;system-<wbr>streams&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_tree_maker_fs_.html">&quot;tree-<wbr>maker/fs&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_tree_maker_index_.html">&quot;tree-<wbr>maker/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_tree_maker_remove_.html">&quot;tree-<wbr>maker/remove&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_tree_maker_render_.html">&quot;tree-<wbr>maker/render&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_tree_maker_wrappers_.html">&quot;tree-<wbr>maker/wrappers&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_.html">&quot;utils&quot;</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_verbose_.html">&quot;verbose&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -255,7 +388,7 @@ MCE(__dirname).command(process.argv);</code></pre>
 		</div>
 	</div>
 </div>
-<footer>
+<footer class="with-border-bottom">
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
@@ -267,6 +400,7 @@ MCE(__dirname).command(process.argv);</code></pre>
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -314,6 +448,9 @@ MCE(__dirname).command(process.argv);</code></pre>
 		</div>
 	</div>
 </footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>

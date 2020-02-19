@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce
- */
 import { existsSync, readdirSync } from "fs";
 import { join, resolve } from "path";
 import { Command, Option, Parser } from "./core";

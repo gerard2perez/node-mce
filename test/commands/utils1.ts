@@ -1,6 +1,6 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
 import { pause, resume } from '../../src/spinner/console';
-import { error, info, ok, warn } from '../../src/verbose';
+import { error, info, ok, warn, log } from '../../src/verbose';
 import { cliPath, callerPath } from '../../src/tree-maker/fs';
 import { spin } from '../../src/spinner';
 import { created, updated } from '../../src/verbose';
@@ -27,7 +27,8 @@ export async function action(opt:Parsed<typeof options>) {
         info('test');
         resume();
         created('chochis.ts');
-        updated('chochis.ts');
+		updated('chochis.ts');
+		log(3)`test`
     });
 	return {
         cli: cliPath(),

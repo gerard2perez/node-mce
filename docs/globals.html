@@ -40,6 +40,8 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -54,7 +56,7 @@
 					<a href="index.html">Globals</a>
 				</li>
 			</ul>
-			<h1> @gerard2p/mce</h1>
+			<h1>@gerard2p/mce</h1>
 		</div>
 	</div>
 </header>
@@ -68,11 +70,38 @@
 						<section class="tsd-index-section ">
 							<h3>Modules</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-external-module"><a href="modules/_gerard2p_mce.html" class="tsd-kind-icon">@gerard2p/mce</a></li>
-								<li class="tsd-kind-external-module"><a href="modules/_gerard2p_mce_console.html" class="tsd-kind-icon">@gerard2p/mce/console</a></li>
-								<li class="tsd-kind-external-module"><a href="modules/_gerard2p_mce_core.html" class="tsd-kind-icon">@gerard2p/mce/core</a></li>
-								<li class="tsd-kind-external-module"><a href="modules/_gerard2p_mce_spinner.html" class="tsd-kind-icon">@gerard2p/mce/spinner</a></li>
-								<li class="tsd-kind-external-module"><a href="modules/_gerard2p_mce_utils.html" class="tsd-kind-icon">@gerard2p/mce/utils</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_cli_.html" class="tsd-kind-icon">&quot;cli&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_commands_add_.html" class="tsd-kind-icon">&quot;commands/add&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_commands_new_.html" class="tsd-kind-icon">&quot;commands/new&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_argument_.html" class="tsd-kind-icon">&quot;core/argument&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_command_.html" class="tsd-kind-icon">&quot;core/command&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_help_renderer_.html" class="tsd-kind-icon">&quot;core/help-<wbr>renderer&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_index_.html" class="tsd-kind-icon">&quot;core/index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_option_.html" class="tsd-kind-icon">&quot;core/option&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_core_options_.html" class="tsd-kind-icon">&quot;core/options&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_fs_.html" class="tsd-kind-icon">&quot;fs&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_index_.html" class="tsd-kind-icon">&quot;index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_input_confirm_.html" class="tsd-kind-icon">&quot;input/confirm&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_input_index_.html" class="tsd-kind-icon">&quot;input/index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_input_override_.html" class="tsd-kind-icon">&quot;input/override&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_input_question_.html" class="tsd-kind-icon">&quot;input/question&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spawn_.html" class="tsd-kind-icon">&quot;spawn&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_animations_.html" class="tsd-kind-icon">&quot;spinner/animations&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_console_.html" class="tsd-kind-icon">&quot;spinner/console&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_control_.html" class="tsd-kind-icon">&quot;spinner/control&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_index_.html" class="tsd-kind-icon">&quot;spinner/index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_strip_ansi_.html" class="tsd-kind-icon">&quot;spinner/strip-<wbr>ansi&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_symbols_.html" class="tsd-kind-icon">&quot;spinner/symbols&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_wcwidth_combining_.html" class="tsd-kind-icon">&quot;spinner/wcwidth/combining&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_spinner_wcwidth_index_.html" class="tsd-kind-icon">&quot;spinner/wcwidth/index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_system_streams_.html" class="tsd-kind-icon">&quot;system-<wbr>streams&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_tree_maker_fs_.html" class="tsd-kind-icon">&quot;tree-<wbr>maker/fs&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_tree_maker_index_.html" class="tsd-kind-icon">&quot;tree-<wbr>maker/index&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_tree_maker_remove_.html" class="tsd-kind-icon">&quot;tree-<wbr>maker/remove&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_tree_maker_render_.html" class="tsd-kind-icon">&quot;tree-<wbr>maker/render&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_tree_maker_wrappers_.html" class="tsd-kind-icon">&quot;tree-<wbr>maker/wrappers&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_utils_.html" class="tsd-kind-icon">&quot;utils&quot;</a></li>
+								<li class="tsd-kind-external-module"><a href="modules/_verbose_.html" class="tsd-kind-icon">&quot;verbose&quot;</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,7 +123,7 @@
 		</div>
 	</div>
 </div>
-<footer>
+<footer class="with-border-bottom">
 	<div class="container">
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
@@ -106,6 +135,7 @@
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -153,6 +183,9 @@
 		</div>
 	</div>
 </footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>

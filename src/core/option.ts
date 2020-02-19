@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/core
- */
 import { MCEProgram } from "..";
 import { Command } from "./command";
 export type Range = [number, number];

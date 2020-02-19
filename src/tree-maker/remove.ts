@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/utils
- */
 import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from '../fs';
 // istanbul ignore next
 export function remove (path:string) {

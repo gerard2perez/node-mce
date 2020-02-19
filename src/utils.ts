@@ -1,7 +1,3 @@
-/**
- * @module @gerard2p/mce/utils
- */
-/** @ignore */
 export function iter<T=any>(obj: any) {
 	obj[Symbol.iterator] = function () {
 		let keys = Object.keys(this);

@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce
- */
 import { Option, Parser, Range, List } from "./option";
 interface DataGroup { 
     [p:string]: Option<number> | Option<Range> | Option<boolean> | Option<string> | Option<Range> | Option<List>;

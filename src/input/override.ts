@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/utils
- */
 import { existsSync } from "../fs";
 import { remove } from "../tree-maker/remove";
 import { spin } from "../spinner";

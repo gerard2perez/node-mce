@@ -25,6 +25,10 @@ describe('Utils functions', ()=>{
     test('test verbosity 2', async () =>{
 		await expect(subcommand('utils1 -vv'))
 			.resolves.toBe(readLog('utils.verbosity3.log'));
+	});
+	test('test verbosity 3', async () =>{
+		await expect(subcommand('utils1 -vvv'))
+			.resolves.toBe(readLog('utils.verbosity4.log'));
     });
     test('renders a file', async () =>{
 		//@ts-ignore

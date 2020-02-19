@@ -1,8 +1,8 @@
 import * as chalk from "chalk";
-import { copyFileSync, mkdirSync, writeFileSync} from "../fs";
-import { join, resolve, win32, dirname, posix,basename } from "path";
-import { render } from "./render";
+import { basename, dirname, posix, resolve } from "path";
+import { copyFileSync, mkdirSync, writeFileSync } from "../fs";
 import { ok } from "../verbose";
+import { render } from "./render";
 export interface fs_interface {
 	root:string
 	template:(...path:string[])=>string,
@@ -62,4 +62,4 @@ export function compile(source:string, data:{[p:string]:string}, target:string=s
 	printHighLigthed(target);
 }
 
-export {remove} from './remove';
+export { remove } from './remove';

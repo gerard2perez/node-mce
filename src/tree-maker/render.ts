@@ -1,6 +1,3 @@
-/**
- * @module @gerard2p/mce/utils
- */
 import { readFileSync, writeFileSync } from "../fs";
 import { iter } from "../utils";
 
