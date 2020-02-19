@@ -1,8 +1,8 @@
 process.env.TEST = 'test';
 process.env.MCE_ROOT = process.cwd()
 jest.mock('../src/fs');
-import { existsSync, readFileSync, readdirSync, writeFileSync } from '../src/fs';
 import { resolve } from "path";
+import { readFileSync, writeFileSync } from '../src/fs';
 import { command, subcommand } from "./loader";
 import { readLog } from "./log-reader";
 

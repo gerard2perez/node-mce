@@ -1,5 +1,13 @@
 module.exports = {
   preset: 'ts-jest',
+  "coverageThreshold": {
+    "global": {
+      "branches": 99,
+      "functions": 99,
+      "lines": 99,
+      "statements": 99
+    }
+  },
   testPathIgnorePatterns: [
 	  "templates",
     "node_modules",

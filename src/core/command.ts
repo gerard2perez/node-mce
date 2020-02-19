@@ -1,3 +1,6 @@
+/**
+ * @module @gerard2p/mce/core
+ */
 import * as chalk from 'chalk';
 import { Argument } from './argument';
 import { HelpRenderer } from './help-renderer';

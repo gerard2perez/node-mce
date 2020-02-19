@@ -12,21 +12,15 @@
   },
   "scripts": {
     "clean": "node incremental",
-
     "templates": "node cpx ./templates/**/*  lib/templates",
     "pkg-files": "node cpx \"?(package.json|README.md|LICENSE|mce)\"  lib",
     "compile": "tsc",
-
     "templates:w": "npm run templates -- -w",
     "pkg-files:w": "npm run pkg-files -- -w",
     "preclean": "rimraf ./incremental.tsbuildinfo",
     "compile:w": "tsc --incremental --tsBuildInfoFile ./incremental.tsbuildinfo -w",
-
     "build": "npm-run-parallel templates pkg-files compile",
-
     "dev": "npm-run-parallel clean templates:w pkg-files:w compile:w",
-
-    "doc": "typedoc --options .typedoc.json --navigation-label-externals \"Internal API\"",
     "test": "jest"
   },
   "repository": {
@@ -66,52 +60,19 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.1",
     "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.0",
+    "@types/node": "^12.0.0",
     "chokidar": "^3.3.1",
     "glob": "^7.1.6",
     "jest": "^25.1.0",
     "npm-run-parallel": "^0.6.0",
     "rimraf": "^3.0.2",
-    "semantic-release": "^17.0.2",
-    "ts-jest": "^25.2.0",
+    "ts-jest": "^25.2.1",
     "ts-node": "^8.6.2",
-    "typedoc": "^0.16.9",
-    "typedoc-plugin-external-module-name": "^2.0.0",
-    "typedoc-plugin-ui-router": "^2.0.1",
     "typescript": "3.7.5"
   },
   "dependencies": {
     "chalk": "^3.0.0",
     "cross-spawn": "^7.0.1",
     "signal-exit": "^3.0.2"
-  },
-  "nyc": {
-    "lines": 99,
-    "statements": 99,
-    "functions": 99,
-    "branches": 98,
-    "reporter": [
-      "lcov",
-      "text"
-    ],
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "src/cli.ts",
-      "src/spinner/wcwidth/*",
-      "src/spinner/symbols.ts",
-      "src/spinner/strip-ansi.ts",
-      "src/spawn.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "sourceMap": true,
-    "instrument": true,
-    "cache": true,
-    "check-coverage": true,
-    "all": true,
-    "report-dir": "./coverage"
   }
 }

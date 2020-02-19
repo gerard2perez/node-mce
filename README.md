@@ -25,6 +25,8 @@ npm i -g @gerard2p/mce
         -s, --style <style>  Define the style of command you will use. If you need
                               more than one command use git.
                               Values: git | *single
+    mce add <command>
+      Adds a new command to the git project.
 ```
 This will create project that is ready to work with mce. The project scaffolding look like this:
 
@@ -145,7 +147,7 @@ You need to export a ```args:string``` property with you arguments definition
 
 ```<arg>``` is the convention to make your arg required is no arg detected mce will throw and error.
 
-### Required args
+### Optional args
 
 ```[arg]``` is the convention to make your arg optional.
 
@@ -166,9 +168,12 @@ By default mce will trace the ```-h --help``` options and will automatically ren
 
 Just run:
 ```sh
-mce add <command>Adds a new command to the git project.
+mce add <command>
 ```
-Inside of your git-style project
+
+Adds a new command to a git-style project.
+
+# Useful Utilities
 
 # Final Notes
 
