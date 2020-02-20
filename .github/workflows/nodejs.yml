@@ -1,4 +1,4 @@
-name: Release
+name: CI
 on:
   push:
     branches:
@@ -32,12 +32,18 @@ jobs:
       with:
         node-version: 10
     - name: Install dependencies
-      run: npm i typescript
-    - name: Build
       run: |
-        npm run templates
-        npm run pkg-files
-        npm run compile
+        npm ci
+        npm i -g semantic-release
+        npm i -g codeclimate-test-reporter
+    - name: Test & Cover
+      run: npx jest
+    - name: Build
+      run: npm run build --if-present
+    - name: CodeClimate
+      env:
+        CODECLIMATE_REPO_TOKEN: ${{secrets.CODECLIMATE_REPO_TOKEN}}
+      run: codeclimate-test-reporter < coverage/lcov.info
     - name: Semantic Release
       env:
         GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
