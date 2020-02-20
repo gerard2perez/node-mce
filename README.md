@@ -1,4 +1,4 @@
-# MCE
+# @gerard2p/mce
 
 
 ![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square) | ![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square) | [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=101&style=flat-square)](https://github.com/ellerbrock/typescript-badges/)
@@ -172,6 +172,132 @@ mce add <command>
 Adds a new command to a git-style project.
 
 # Useful Utilities
+
+MCE con with a handy bunch of utilities to help you build your commands easily.
+
+## Input
+```ts
+import { confirm, override, question} from '@gerard2p/mce/input'
+```
+
+### question(display:string)=>Promise\<string\>
+
+This is the basic function that allows you to wait for user input. Is compatible with the spinner, so, whenever you call this functions the spinner will stop and display the new message.
+
+When the user enters the input the spinner will continue working as expected.
+
+```
+let answer = await question('Are you ready?')
+```
+
+Will display
+
+```
+Are you ready? _
+```
+And will wait for user input.
+
+
+if inside a spinner:
+```
+await spin('demo', async ()=>{
+ let answer = await question('Are you ready?')
+});
+```
+```
+demo - Are you ready? _
+```
+
+### confirm (display:string)=>Promise\<boolean\>
+```ts
+if(await confirm('Are you ready')) {
+ // code
+}
+// Are you ready? [y/n]: _
+```
+```ts
+await spin('demo', async ()=>{
+ if(await confirm('Are you ready')) {
+  // code
+ }
+});
+// demo - Are you ready? [y/n]: _
+```
+
+### override (display:string, testdir:string, state:boolean)=>Promise\<boolean\>
+Returns true if safe to write the directory and content.
+Removes the directory if is needed.
+```ts
+if(await override('Path already exists do you want to continue')) {
+ // code
+}
+// Path already exists do you want to continue? [y/n]: _
+```
+```ts
+await spin('demo', async ()=>{
+ if(await override('Path already exists do you want to continue')) {
+  // code
+ }
+});
+// demo - Path already exists do you want to continue? [y/n]: _
+```
+
+## tree-maker
+
+```ts
+import { pathResolver } from '@gerard2p/mce/tree-maker/fs'
+```
+This function allows you to intersect the path that resolves to your templates and the target path.
+
+
+### pathResolver(_template:(path:string)=>string, _target?:(path:string)=>string):void
+
+_template will resolve to a template folder located next to your package.json
+
+```ts
+import { cpy, cmp, dir, root, wrt } from '@gerard2p/mce/tree-maker'
+import {   c,   z,   d,    r,   w } from '@gerard2p/mce/tree-maker'
+```
+
+This utility allows to create a directory structure in a really easy and chainable way.
+
+```ts
+root('proyect')
+ .with(
+  cpy('LICENSE')
+ )
+ .dir('subfolder',
+ cmp('README.md', {...values}, 'DOC.md'),
+  cmp('README.md', {...values}),
+  wrt('.gitignore','node_modules\ttemplates')
+ )
+```
+will produde:
+```sh
+proyect
+  |- LICENSE
+  |-subfolder
+    |-DOC.md
+    |-README.md
+    |-.gitignore
+```
+
+### root(dir:string)=>TreeMaker
+Creates the initial directory.
+
+### cpy(source:string, target:string)=>chainable
+Copies a file from your template directory to the destination folder.
+Target can be undefined and will use the same name as your source.
+
+### cmp(source:string, data:any, target:string)=>chainable
+Renders a file from your template directory to the destination folder.
+Target can be undefined and will use the same name as your source.
+
+### wrt(target:string, content:string)=>chainable
+Create a file at target location.
+
+### dir(folder:string, ...operations:chainable[])=>chainable
+Create a new directory and allows to chain new operations
 
 # Final Notes
 

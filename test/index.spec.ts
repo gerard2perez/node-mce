@@ -83,7 +83,6 @@ describe('Self Test', ()=>{
 			.toBe(result);
 		//@ts-ignore
 		existsSync.mockReturnValue(false);
-
 	});
 	test('loads submodules', async()=>{
 		process.chdir('test')

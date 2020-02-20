@@ -12,13 +12,13 @@ export function question (display:string) : Promise<string> {
         MainSpinner.stop();
         MainSpinner.info(`${MainSpinner.text} - `, false);
     }
-    return new Promise(resolve => rl.question(`${display} `, (awser)=>{
+    return new Promise(resolve => rl.question(`${display} `, (answer)=>{
         moveCursor(MainSpinner.stream, 0, -1);
         MainSpinner.clear();
         if ( SpinnerWorking ) {
             MainSpinner.start();
         }
 		rl.close();
-		resolve(awser);
+		resolve(answer);
     }));
 }

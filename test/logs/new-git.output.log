@@ -1,6 +1,8 @@
 √ git_repo
 √ git_repo/git_repo
 √ git_repo/tsconfig.json
+√ git_repo/LICENSE
+√ git_repo/README.md
 √ git_repo/src
 √ git_repo/src/cli.ts
 √ git_repo/src/commands

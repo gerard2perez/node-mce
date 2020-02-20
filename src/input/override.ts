@@ -3,10 +3,10 @@ import { remove } from "../tree-maker/remove";
 import { spin } from "../spinner";
 import { confirm } from "./confirm";
 
-export async function override(text:string, testdir:string,  state:boolean) {
+export async function override(display:string, testdir:string,  state:boolean) {
     if( existsSync(testdir) && !state ) {
         state = true;
-        if ( !await confirm(text) ) return false;
+        if ( !await confirm(display) ) return false;
     }
     /*istanbul ignore else*/
     if ( state ) {

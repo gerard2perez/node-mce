@@ -21,7 +21,7 @@
     },
     "repository": {},
     "keywords":["{{application}}", "cmd"],
-    "author":"",
+    "author":"{{author}}",
     "license":"MIT",
     "devDependencies": {
         "@types/jest": "^25.1.3",

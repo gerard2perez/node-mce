@@ -1,6 +1,8 @@
 √ single_repo
 √ single_repo/single_repo
 √ single_repo/tsconfig.json
+√ single_repo/LICENSE
+√ single_repo/README.md
 √ single_repo/src
 √ single_repo/src/cli.ts
 √ single_repo/src/index.ts
