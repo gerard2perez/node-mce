@@ -44,7 +44,6 @@ export function chainable_dir(folder:string, ...operations:chainable[] ) {
 	let {path, root} = this;
 	if(folder) {
 		mkdir.bind({project:(...args)=>join(...args)})(path);
-		// fFile(path);
 	}
 	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
 		let fsInterface:fs_interface = {
@@ -54,10 +53,14 @@ export function chainable_dir(folder:string, ...operations:chainable[] ) {
 		}
 		rtnOBJ.fn.bind(fsInterface)(...rtnOBJ.args);
 	}
+	return makeChainableDir(spath, root);
+}
+
+export function makeChainableDir(path:string, root:string ) {
 	return {
-		d:chainable_dir.bind({path:spath,root}),
-		dir:chainable_dir.bind({path:spath,root}),
-		with:chainable_dir.bind({path:spath,root}, ''),
-		w:chainable_dir.bind({path:spath,root}, ''),
+		d:chainable_dir.bind({path,root}),
+		dir:chainable_dir.bind({path,root}),
+		with:chainable_dir.bind({path,root}, ''),
+		w:chainable_dir.bind({path,root}, ''),
 	} as TreeMaker;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@gerard2p/mce",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "Make command executable easily",
   "main": "./index.js",
   "private": false,
@@ -28,17 +28,8 @@
     "url": "https://github.com/gerard2p/node-mce.git"
   },
   "files": [
-    "/*.js",
-    "/*.d.ts",
-    "/spinners.json",
-    "/wcwidth/**/*.js",
-    "/wcwidth/**/*.d.ts",
-    "/commands/**/*.js",
-    "/commands/**/*.d.ts",
-    "/spinner/**/*.js",
-    "/spinner/**/*.d.ts",
-    "/core/**/*.js",
-    "/core/**/*.d.ts",
+    "/**/*.js",
+    "/**/*.d.ts",
     "/mce",
     "/README.md",
     "/LICENSE",
