@@ -71,9 +71,10 @@ function copy(from) {
 ;
 function remove(from) {
     var to = findTarget(from);
-    log('CPX.DEL', to);
-    if (fs_1.existsSync(to))
+    if (fs_1.existsSync(to)) {
         fs_1.unlinkSync(to);
+        log('CPX.DEL', to);
+    }
 }
 ;
 function rimraf(dir) {

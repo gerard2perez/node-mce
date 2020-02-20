@@ -1,7 +1,8 @@
 module.exports = {
+  testEnvironment: 'node',
   preset: 'ts-jest',
-  "maxWorkers": 1,
-  "coverageThreshold": {
+  maxWorkers: 1,
+  coverageThreshold: {
     "global": {
       "branches": 99,
       "functions": 99,
@@ -15,20 +16,19 @@ module.exports = {
     "coverage",
     "lib"
   ],
-  testEnvironment: 'node',
   coverageDirectory: "./coverage",
-  "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}"
-	],
-	coveragePathIgnorePatterns : [
-		"/node_modules/",
-		"src/cli.ts",
-		"src/spinner/"
-	],
-    "coverageReporters": [
-      "html",
-	  "json",
-	  "lcov"
-    ]
+  collectCoverage: true,
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}"
+  ],
+  coveragePathIgnorePatterns: [
+    "/node_modules/",
+    "src/cli.ts",
+    "src/spinner/"
+  ],
+  "coverageReporters": [
+    "html",
+    "json",
+    "lcov"
+  ]
 };
