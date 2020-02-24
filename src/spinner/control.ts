@@ -1,4 +1,3 @@
-import * as signalExit from 'signal-exit';
 export class Cursor {
     static hidden:boolean = false;
     static showOnExit:boolean = false;
@@ -21,9 +20,9 @@ export class Cursor {
         if(!Cursor.showOnExit) {
 			Cursor.showOnExit = true;
 			/*istanbul ignore next*/
-            signalExit(() => {
-                process.stderr.write('\u001b[?25h');
-            }, {alwaysLast: true});
+			process.once('beforeExit', ()=>{
+				process.stderr.write('\u001b[?25h');
+			});
         }
         Cursor.hidden = true;
         s.write('\u001b[?25l');
