@@ -3,6 +3,6 @@ const pattern = [
     '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PRZcf-ntqry=><~]))'
 ].join('|');
 const expression = new RegExp(pattern, 'g');
-const stripAnsi = input => typeof input === 'string' ? input.replace(expression, '') : input;
+const clearColors = input => typeof input === 'string' ? input.replace(expression, '') : input;
 
-export {stripAnsi, stripAnsi as default}
+export {clearColors as clearColors, clearColors as default}

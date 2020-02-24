@@ -4,7 +4,7 @@
 import { animations } from './animations';
 import * as chalk from 'chalk';
 import { LogSymbols, supported } from './symbols';
-import { stripAnsi } from './strip-ansi';
+import { clearColors } from './clear-colors';
 import { wcwidth } from './wcwidth';
 import { Cursor } from './control';
 import { main_output } from '../system-streams';
@@ -41,7 +41,7 @@ export class Spinner {
 	set text(value) {
 		this[TEXT] = value;
 		const columns = this.stream.columns || /*istanbul ignore next*/80;
-		this.lineCount = stripAnsi('--' + value).split('\n').reduce((count, line) => {
+		this.lineCount = clearColors('--' + value).split('\n').reduce((count, line) => {
 			return count + Math.max(1, Math.ceil(wcwidth(line) / columns));
 		}, 0);
 	}
@@ -111,8 +111,9 @@ export class Spinner {
 	}
 
 	render() {
-		this.clear();
+		this.stream.cursorTo(0);
 		this.stream.write(this.frame());
+		process.stderr.clearLine(1);
 		this.linesToClear = this.lineCount;
 		this.stream.cursorTo(0);
 		return this;
@@ -139,7 +140,6 @@ export class Spinner {
 		if (!this.enabled) {
 			return this;
 		}
-
 		clearInterval(this.id);
 		this.id = null;
 		this.frameIndex = 0;
