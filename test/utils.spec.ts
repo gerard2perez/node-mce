@@ -1,8 +1,8 @@
 process.env.TEST = 'test';
 jest.mock('../src/fs');
 import { resolve } from "path";
-import { readFileSync, writeFileSync, readdirSync, existsSync } from '../src/fs';
-import { command, subcommand, loader } from "./loader";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/fs';
+import { command, subcommand } from "./loader";
 import { readLog } from "./log-reader";
 //@ts-ignore
 readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
