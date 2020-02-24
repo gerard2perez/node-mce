@@ -1,7 +1,12 @@
 process.env.TEST = 'test';
 import { subcommand } from './loader';
+import { readLog } from './log-reader';
 
 describe('Arguments Parsing', ()=>{
+	test('full rendering of arguments', async ()=>{
+		await expect(subcommand('args8 -h')).resolves.toBe(readLog('args8.help.log'))
+		
+	});
     test('throws if not required arguments', async()=>{
         let res = subcommand('args8');
         await expect(res).rejects.toThrow('Missing argument arg1');
@@ -63,5 +68,5 @@ describe('Arguments Parsing', ()=>{
     test('Varidac argument can only be in last place', async ()=>{
 		let res = subcommand('args5 true 10 arg2 -n=r -f=a');
         await expect(res).rejects.toThrow('Varidac argument can only be in last place');
-    });
+	});
 });

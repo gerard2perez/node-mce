@@ -8,7 +8,7 @@ export let options = {
     range: range('-r <a>..<b>', 'A Range of two numbers'),
     text: text('-t <n>', 'A string value'),
     list: list('-l <n>', 'comma separed values'),
-    collect: collect('-c <n>', 'A repetable value'),
+    collect: collect('-c <n>', 'A repeatable value'),
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 };

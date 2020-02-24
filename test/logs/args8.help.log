@@ -1,0 +1,14 @@
+    demo args8 <arg1> [...varidac] [options]
+      A description for your command
+        -e, --enumeration <enum>    Define the style of command you will use
+                                     Values: git | single
+
+        -n, --number      <n>       A number
+        -f, --floating    <n>       A float number
+        -r, --range       <a>..<b>  A Range of two numbers
+        -t, --text        <n>       A string value
+        -l, --list        <n>       comma separed values
+        -c, --collect     <n>       [Repeatable] A repeatable value
+        -b, --bool                  A boolean value
+        -v, --verbose               Increase system verbosity
+
