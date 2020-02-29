@@ -113,7 +113,7 @@ export class Spinner {
 	render() {
 		this.stream.cursorTo(0);
 		this.stream.write(this.frame());
-		process.stderr.clearLine(1);
+		this.stream.clearLine(1);
 		this.linesToClear = this.lineCount;
 		this.stream.cursorTo(0);
 		return this;
