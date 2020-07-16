@@ -1,8 +1,9 @@
 import { Option, Parser, Range, List } from "./option";
-interface DataGroup { 
+
+interface CommandOptions { 
     [p:string]: Option<number> | Option<Range> | Option<boolean> | Option<string> | Option<Range> | Option<List>;
 }
-export type Parsed<T extends DataGroup > = { 
+export type Parsed<T extends CommandOptions > = { 
 	readonly [P in keyof T]: T[P]['value'];
 }
 function preOptions<T>(parser:Parser, option:string, description:string, exp:RegExp | any =undefined, defaults:any=undefined) {

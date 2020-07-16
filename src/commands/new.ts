@@ -5,7 +5,6 @@ import { spin } from "../spinner";
 import { c, d, match, r, TreeMaker, w, z } from "../tree-maker";
 import { callerPath } from '../tree-maker/fs';
 import { error } from "../verbose";
-
 enum Styles {
 	git = 'git',
 	single= 'single'
@@ -20,7 +19,6 @@ let nproy;
 export const description = 'Creates a new MCE project.'
 export const args = '<application>';
 export  async function action(application:string, opt:Parsed<typeof options>) {
-
 	nproy = callerPath.bind(null, application);
 	//istanbul ignore if
 	if(!(await override('Directory already exist. Do you want to override it', nproy(), opt.force)))

@@ -8,3 +8,4 @@ dist
 lib
 *.tsbuildinfo
 /cpx.ts
+_*.ts
