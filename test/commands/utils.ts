@@ -1,5 +1,4 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src';
-import { cliPath, callerPath } from '../../src/tree-maker/fs';
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose, cliPath, callerPath } from '../../src';
 export let description = 'A description for your command';
 export let args = '';
 export let options = {

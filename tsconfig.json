@@ -16,6 +16,8 @@
     "src/**/*.ts"
   ],
   "exclude": [
+    "**/**/*.spec.ts",
+    "lib",
     "templates",
     "node_modules"
   ]

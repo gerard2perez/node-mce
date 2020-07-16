@@ -1,10 +1,10 @@
-import { text, bool, enumeration, Parsed } from '../';
+import { bool, enumeration, Parsed, text } from '../';
 import { override } from "../input";
 import { spawn } from "../spawn";
 import { spin } from "../spinner";
 import { c, d, match, r, TreeMaker, w, z } from "../tree-maker";
+import { callerPath } from '../tree-maker/fs';
 import { error } from "../verbose";
-import { project, template, callerPath, cliPath } from '../tree-maker/fs';
 
 enum Styles {
 	git = 'git',
