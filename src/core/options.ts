@@ -35,45 +35,38 @@ export function enumeration(option:string, description:string, options:any, defa
 }
 export function numeric(option:string, description:string, exp:RegExp, defaults?:number) : Option<number>;
 export function numeric(option:string, description:string, defaults?:number) : Option<number>;
-export function numeric(...args) {
-	//@ts-ignore
-	return preOptions<string>(Parser.int, ...args);
+export function numeric(...args:[string, string, RegExp|number, number?]) {
+	return preOptions<number>(Parser.int, ...args);
 }
 export function floating(option:string, description:string, exp:RegExp, defaults?:number) : Option<number>;
 export function floating(option:string, description:string, defaults?:number) : Option<number>;
-export function floating(...args) {
-	//@ts-ignore
-	return preOptions<string>(Parser.float, ...args);
+export function floating(...args:[string, string, RegExp|number, number?]) : Option<number> {
+	return preOptions<number>(Parser.float, ...args);
 }
 export function range(option:string, description:string, exp:RegExp, defaults?:Range) : Option<Range>;
 export function range(option:string, description:string, defaults?:Range) : Option<Range>;
-export function range(...args) {
-	//@ts-ignore
-	return preOptions<string>(Parser.range, ...args);
+export function range(...args:[string, string, RegExp|Range, Range?]) {
+	return preOptions<Range>(Parser.range, ...args);
 }
 export function text(option:string, description:string, exp:RegExp, defaults?:string) : Option<string>;
 export function text(option:string, description:string, defaults?:string) : Option<string>;
-export function text(...args) {
-	//@ts-ignore
+export function text(...args:[string, string, RegExp|string, string?]) {
 	return preOptions<string>(Parser.string, ...args);
 }
 export function list(option:string, description:string, exp:RegExp, defaults?:List) : Option<List>;
 export function list(option:string, description:string, defaults?:List) : Option<List>;
-export function list(...args) {
-	//@ts-ignore
+export function list(...args:[string, string, RegExp|List, List?]) {
 	return preOptions<List>(Parser.list, ...args);
 };
 export function collect(option:string, description:string, exp:RegExp, defaults?:List) : Option<List>;
 export function collect(option:string, description:string, defaults?:List) : Option<List>;
-export function collect(...args) {
-	//@ts-ignore
+export function collect(...args:[string, string, RegExp|List, List?]) {
 	return preOptions<List>(Parser.collect, ...args);
 };
 
 export function bool(short:string, description:string) : Option<boolean> {
 	return preOptions(Parser.truefalse, short, description);
 }
-
 export function verbose(desciprtion?:string): Option<number> {
 	return preOptions(Parser.increaseVerbosity, '-v', desciprtion);
 }
