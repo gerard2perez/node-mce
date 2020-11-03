@@ -42,16 +42,16 @@
   "homepage": "https://github.com/gerard2p/node-mce#readme",
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
-    "@types/jest": "^26.0.4",
-    "@types/node": "^12.12.50",
-    "chokidar": "^3.4.1",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^12.12.54",
+    "chokidar": "^3.4.2",
     "glob": "^7.1.6",
-    "jest": "^26.1.0",
+    "jest": "^26.4.0",
     "npm-run-parallel": "^0.6.0",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.1.2",
+    "ts-jest": "^26.2.0",
     "ts-node": "^8.10.2",
-    "typescript": "3.9.6"
+    "typescript": "^3.9.7"
   },
   "dependencies": {
     "chalk": "^4.1.0",

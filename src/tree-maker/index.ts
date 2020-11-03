@@ -21,6 +21,9 @@ export const dir = _dir.bind({fn:chainable_dir}) as typeof _dir;
  */
 export const cpy = _copy.bind({fn:copy}) as typeof _copy;
 export const wrt = _write.bind({fn:write}) as typeof _write;
+/**
+ * Compiles a file applying the data object to the source template
+ */
 export const cmp = _cmp.bind({fn:compile}) as typeof _cmp;
 
 // export { compile, copy, intercept, mkdir, write, template, project } from './fs';
