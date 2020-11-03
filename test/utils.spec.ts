@@ -47,9 +47,13 @@ describe('Utils functions', ()=>{
 		await command('');
 		await command('--version');
     });
-    // // test('test override util', async () =>{
-    // //     let res = await subcommand('utils3 -vvv');
-	// // 	// expect(res).toMatchObject({res:'true'});
-	// // 	console.log(res);
-	// // });
+    test('test override util', async () =>{
+		let res:any = await subcommand('utils3 -vvv');
+		expect(res).toHaveProperty('information');
+		let object = expect(res.information);
+		object.toHaveProperty('name','demoapp');
+		object.toHaveProperty('bin');
+		object.toHaveProperty('main');
+		object.toHaveProperty('version');
+	});
 });

@@ -6,6 +6,7 @@ import { join, resolve } from "path";
 import { Command, Option, Parser } from "./core";
 import { MainSpinner } from "./spinner";
 import { callerPath } from "./tree-maker/fs";
+import { locations } from "./program";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
 
 export class MCEProgram {
@@ -41,7 +42,7 @@ export class MCEProgram {
 		let [name] = Object.keys(bin);
 		this.name = name;
 		this.version = version;
-		process.argv.splice(0, 2);
+		locations(...process.argv.splice(0, 2) as [string, string]);
 		this._verbose()._help()._version();
 	}
 	private getCommand (source:string, /*istanbul ignore else */subcommand:string='') {
@@ -148,3 +149,4 @@ export function MCE (localdir?:string) {
 }
 export { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options';
 export {callerPath, cliPath } from './tree-maker/fs';
+export { information } from './program';
