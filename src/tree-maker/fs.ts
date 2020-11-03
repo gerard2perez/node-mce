@@ -58,7 +58,7 @@ export function mkdir (dir:string) {
     try{
     	mkdirSync(dir);
 	}catch(e){}
-    printHighLigthed(dir);
+	ok(highLightBasename`${dir}`);
 }
 /**
  * Copies a file from the cli root to the target application folder
