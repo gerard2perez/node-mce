@@ -4,6 +4,7 @@ import {input, output} from './loader';
 import {question, confirm, override} from '../src/input';
 import { wait, spin } from '../src/spinner';
 import { existsSync, readdirSync } from '../src/fs';
+
 describe('test user interactions', () => {
 	test('question', async ()=>{
 		let w = wait(10).then(_=>input.write('Gerardo Perez'));

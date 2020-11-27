@@ -1,11 +1,13 @@
+import { loader, reset, subcommand } from "./loader";
+import { readLog } from "./log-reader";
+
 process.env.TEST = 'test';
-import { subcommand } from './loader';
-import { readLog } from './log-reader';
 
 describe('Arguments Parsing', ()=>{
+	beforeAll(()=>loader('./test'));
+	beforeEach(()=>reset());
 	test('full rendering of arguments', async ()=>{
 		await expect(subcommand('args8 -h')).resolves.toBe(readLog('args8.help.log'))
-		
 	});
     test('throws if not required arguments', async()=>{
         let res = subcommand('args8');

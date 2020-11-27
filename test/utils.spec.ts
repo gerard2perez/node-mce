@@ -2,13 +2,15 @@ process.env.TEST = 'test';
 jest.mock('../src/fs');
 import { resolve } from "path";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/fs';
-import { command, subcommand } from "./loader";
+import { command, loader, reset, subcommand } from "./loader";
 import { readLog } from "./log-reader";
 //@ts-ignore
 readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
 //@ts-ignore
 existsSync.mockReturnValue(true)
 describe('Utils functions', ()=>{
+	beforeAll(()=>loader('./test'));
+	beforeEach(()=>reset());
     test('gets correct paths', async ()=>{
         let res = await subcommand('utils');
         expect(res).toEqual({

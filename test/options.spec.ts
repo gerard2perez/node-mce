@@ -1,5 +1,8 @@
-import { subcommand } from './loader';
+import { loader, reset, subcommand } from "./loader";
+
 describe('Options Parsing', ()=>{
+	beforeAll(()=>loader('./test'))
+	beforeEach(()=>reset())
     test('get defaults options', async ()=>{
         const res:{} = await subcommand('options file.js');
         expect(res).toEqual({

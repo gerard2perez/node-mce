@@ -1,10 +1,14 @@
 process.env.TEST = 'test';
-import { loader, subcommand, subCommandWithModule } from './loader';
+import { existsSync, readdirSync, readFileSync } from '../src/fs';
+import { spawn } from '../src/spawn';
+import { findCommands, loader, reset, subcommand, subCommandWithModule } from './loader';
+import { readLog } from './log-reader';
 jest.mock('../src/fs');
 jest.mock('../src/spawn');
-import { existsSync, readFileSync, readdirSync } from '../src/fs';
-import { spawn } from '../src/spawn';
-import { readLog } from './log-reader';
+jest.mock('../src/fs');
+jest.mock('../src/spawn');
+//@ts-ignore
+existsSync.mockReturnValue(false);
 //@ts-ignore
 readFileSync.mockReturnValue('');
 //@ts-ignore
@@ -12,6 +16,7 @@ readdirSync.mockReturnValue([]);
 //@ts-ignore
 spawn.mockReturnValue(Promise.resolve(true));
 describe('Self Test', ()=>{
+	beforeEach(()=>reset())
 	test('renders help', async()=>{
 		await expect(subcommand('new --version'))
 				.resolves
@@ -31,7 +36,7 @@ describe('Self Test', ()=>{
     test('create a new project multicommand', async()=>{
 		//@ts-ignore
 		existsSync.mockReturnValue(true);
-		//@ts-ignore
+		//@ts-ignores
 		readdirSync.mockReturnValueOnce(['new.ts'])
 		await expect(subcommand('new git_repo -f -s git'))
 				.resolves.toBe(readLog('new-git.output.log'));
@@ -43,37 +48,35 @@ describe('Self Test', ()=>{
 				.resolves.toBe('Command does not exists\n');
 	});
     test('renders all help', async()=>{
-		//@ts-ignore
+		// @ts-ignore
+		existsSync.mockReturnValueOnce(true);
+		// @ts-ignore
 		readdirSync.mockReturnValueOnce(['new.ts', 'add.ts'])
 		await expect(subcommand('-h'))
 			.resolves
 			.toBe(readLog('all.help.log'));
     });
     test('renders command help', async()=>{
-		//@ts-ignore
-		readdirSync.mockReturnValueOnce(['new.ts'])
+		findCommands('new.ts');
 		await expect(subcommand('new -h'))
 			.resolves
 			.toBe(readLog('new.help.log'));
 	});
 	test('renders help for add command', async () => {
-		//@ts-ignore
-		readdirSync.mockReturnValueOnce(['add.ts'])
+		findCommands('add.ts');
 		await expect(subcommand('add -h'))
 			.resolves
 			.toBe(readLog('add.help.log'));
 	});
 	test('adds a dummy command fails', async () => {
-		//@ts-ignore
-		readdirSync.mockReturnValueOnce(['add.ts'])
+		findCommands('add.ts');
 		const result = readLog('add.fail.log');
 		await expect(subcommand('add dummy'))
 			.resolves
 			.toBe(result);
 	});
 	test('adds a dummy command', async () => {
-		//@ts-ignore
-		readdirSync.mockReturnValueOnce(['add.ts'])
+		findCommands('add.ts');
 		//@ts-ignore
 		existsSync.mockReturnValue(true);
 		const result = readLog('add.log');
