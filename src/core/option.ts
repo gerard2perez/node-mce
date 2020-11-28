@@ -1,6 +1,6 @@
 import { MCEProgram } from "..";
 import { Command } from "./command";
-export type Range = [number, number];
+export type Range = [start:number, end:number];
 export type List = string[];
 export enum Parser {
     float = <any>((n:string, d:number) => parseFloat(n) || d),
@@ -21,9 +21,8 @@ export enum OptionKind {
     varidac,
     verbose
 }
-export class Option<T=any> {
+export class Option<T> {
 	name:string
-	value:T
 	tag:string
 	short:string
 	tag_desc:string

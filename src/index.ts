@@ -1,14 +1,18 @@
 /**
  * @module @gerard2p/mce
  */
-import { existsSync, readdirSync } from "./fs";
 import { join, resolve } from "path";
-import { Command, Option, Parser } from "./core";
+import { Command, ICommand, Option, Parser } from "./core";
+import { existsSync, readdirSync } from "./fs";
+import { locations } from "./program";
 import { MainSpinner } from "./spinner";
 import { callerPath } from "./tree-maker/fs";
-import { locations } from "./program";
 let ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js';
-
+type CommandMap = {
+	scope: string
+	command: string
+	location: string
+}
 export class MCEProgram {
 	private showHelp: boolean = false;
 	private showVersion: boolean = false;
@@ -45,11 +49,19 @@ export class MCEProgram {
 		locations(...process.argv.splice(0, 2) as [string, string]);
 		this._verbose()._help()._version();
 	}
-	private getCommand (source:string, /*istanbul ignore else */subcommand:string='') {
-		let command_name = `${subcommand.replace(`.${ext}`, '')}`.trim();
+	loadModule(source: string): ICommand {
+		try {
+			return require(source);
+		} catch(ex) {
+			/* istanbul ignore next */
+			console.error(ex);
+			/* istanbul ignore next */
+			return {} as any;
+		}
+	}
+	private getCommand (source:ICommand, command_name:string) {
 		let mce_sub_command:Command;
-		let mce_definition:any = require(source);
-		mce_sub_command = new Command(this.name, command_name, mce_definition, this.showHelp);
+		mce_sub_command = new Command(this.name, command_name, source, this.showHelp);
 		return mce_sub_command;
 	}
 	private findCompressed(args:string[]){
@@ -74,18 +86,6 @@ export class MCEProgram {
 		}
 		return composed.filter(c=>c);
 	}
-	private findCommands(){
-		let commands = Object.assign({}, this.submodule_configuration, {})
-		let root = join(this.root, './commands');
-		let raw_routes = readdirSync(root).filter(route=>route.search(new RegExp(`.*\.${ext}$`, 'i')) === 0);
-		for(let route of raw_routes) {
-			let command = route.replace(/\.[t|j]s/m, '');
-			commands[command] = resolve(root, route);
-		}
-		let sorted = {};
-		Object.keys(commands).sort().map(c=>(sorted[c] = commands[c]));
-		return sorted as {[command:string]:string};
-	}
 	prepare(args:string[], single:boolean=false) {
 		args.splice(-1,0, ...this.findCompressed(args));
 		let force_help = !single && args.length ===0;
@@ -96,7 +96,7 @@ export class MCEProgram {
 		if(this.showVersion)MainSpinner.stream.write(this.version);
 		return this.showVersion;
 	}
-	async command (args:string[]) {
+	async command (args:string[] = process.argv) {
 		if(this.prepare(args, true))return;
 		let root = resolve(this.root, `index.${ext}`);
 		let exists = existsSync( root );
@@ -105,48 +105,107 @@ export class MCEProgram {
 			MainSpinner.stream.write('Command does not exists\n');
 			return Promise.resolve();
 		} else {
-			let command = this.getCommand(root);
+			let command = this.getCommand(this.loadModule(root), '');
 			return command.call(args);
 		}
 	}
-	async subcommand (args:string[]):Promise<void> {
+	async subcommand (args:string[] = process.argv):Promise<void> {
 		if(this.prepare(args))return;
-		let commands = this.findCommands();
+		this.readCommands('', this.root, 'commands').map(c => this.register(c))
 		let [subcommand] = args.splice(0,1);
-		let source = commands[subcommand];
+		let source = this.commandMapping.get(subcommand);
 		if(source) {
-			return this.getCommand(source, subcommand).call(args);
+			return this.getCommand(source, source.name).call(args);
 		} else if (!subcommand && this.showHelp) {
-			for(const command of Object.keys(commands)) {
-				await this.getCommand(commands[command], command).help();
+			let allCommands = [...this.commands_map._owned.sort(), ...this.commands_map._local.sort(), ...this.commands_map.plugins.sort()]
+			for(const command of allCommands) {
+				const Command = this.commandMapping.get(command);
+				await this.getCommand(Command, Command.name).help();
 			}
-			return Promise.resolve();	
+			return Promise.resolve();
 		} else {
 			MainSpinner.stream.write('Command does not exists\n');
 			return Promise.resolve();	
 		}
 	}
-	submodule_configuration:any
-	public submodules(config_file:string) {
-		let configuration = callerPath(config_file);
-		this.submodule_configuration = {};
-		if(existsSync(configuration)) {
-			let config = require(configuration).commands;
-			for(const command of Object.keys(config)) {
-				let location = callerPath(config[command]);
-				if(!existsSync(location)){
-					// istanbul ignore next
-					location = callerPath('node_modules', command, config[command]);
-				}
-				this.submodule_configuration[command] = location;
-			}	
+	private register(mapping: CommandMap) {
+		switch(mapping.scope) {
+			case '':
+				this.commands_map._owned.push(mapping.command);
+				break;
+			case 'l':
+				this.commands_map._local.push(mapping.command);
+				break;
+			default:
+				this.commands_map.plugins.push(mapping.command);
+				break;
 		}
+		let icommand = this.loadModule(mapping.location);
+		icommand.name = mapping.command;
+		this.commandMapping.set(mapping.command, icommand);
+		if(icommand.alias) 
+			this.commandMapping.set(icommand.alias, icommand);
+	}
+	commands_map = {
+		_owned: [],
+		_local: [],
+		plugins: []
+	}
+	commandMapping = new Map<string, ICommand>();
+	// {[p:string]: ICommand} = {}
+	/**
+	 * 
+	 * @deprecated use withPlugins instead
+	 */
+	/* istanbul ignore next */
+	public submodules(keyword: string, args?: string[] ) {
+		this.detectPlugins(keyword).map(c=>this.register(c));
 		return this;
+	}
+	public withPlugins(keyword: string, args?: string[] ) {
+		this.detectPlugins(keyword).map(c=>this.register(c));
+		return this.subcommand(args);
+	}
+	detectPlugins(keyword: string): CommandMap[] {
+		let root = callerPath('package.json');
+		console.log(callerPath('package.json'));
+		let {dependencies, devDependencies} = require(callerPath('package.json'));
+		let packages = Object.keys({...dependencies, ...devDependencies });
+		let modules = packages.map(pack => {
+			const path = callerPath('node_modules', pack);
+			let {keywords = [], name} = require(callerPath('node_modules', pack, 'package.json')) as {name:string, keywords: string[]};
+			name = name.split('/').slice(-1)[0].replace('@', '');
+			return {
+				path,
+				name,
+				keywords
+			};
+		})
+		.filter(p=>{
+			
+			return p.keywords.includes(keyword);
+		})
+		.map(path => this.readCommands(path.name, path.path));
+		return [].concat.apply([], [this.readCommands('l', callerPath()), ...modules]);
+	}
+	private readCommands(scope: string, path: string, container: string = '@commands'): CommandMap[] {
+		let commandsRoot = join(path, container);
+		return !existsSync(commandsRoot) ? [] : readdirSync(commandsRoot)
+		.filter(file => (!file.includes('.map') && !file.includes('.d.ts')))
+		.map(file=>{
+			let name = file.split('.');
+			return {
+				scope,
+				command: scope ? `${scope}:${name[0]}` : name[0],
+				location: join(path, container, name.slice(0, -1).join('.'))
+			}
+		});
 	}
 }
 export function MCE (localdir?:string) {
 	return new MCEProgram(localdir);
 }
 export { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options';
-export {callerPath, cliPath } from './tree-maker/fs';
 export { information } from './program';
+export { callerPath, cliPath } from './tree-maker/fs';
+

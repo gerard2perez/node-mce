@@ -1,10 +1,10 @@
-import { Option, Parser, Range, List } from "./option";
+import { List, Option, Parser, Range } from "./option";
 
 interface CommandOptions { 
     [p:string]: Option<number> | Option<Range> | Option<boolean> | Option<string> | Option<Range> | Option<List>;
 }
 export type Parsed<T extends CommandOptions > = { 
-	readonly [P in keyof T]: T[P]['value'];
+	readonly [P in keyof T]: T[P] extends Option<infer R> ? R:never;
 }
 function preOptions<T>(parser:Parser, option:string, description:string, exp:RegExp | any =undefined, defaults:any=undefined) {
     if( arguments.length === 4 && !(exp instanceof RegExp)) {

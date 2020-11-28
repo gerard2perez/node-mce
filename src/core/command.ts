@@ -2,9 +2,9 @@
  * @module @gerard2p/mce/core
  */
 import * as chalk from 'chalk';
+import { MainSpinner } from '../spinner';
 import { Argument } from './argument';
 import { HelpRenderer } from './help-renderer';
-import { MainSpinner } from '../spinner';
 import { Option, OptionKind } from './option';
 /**
  * Rendering help need some fixed spaces between tags, short tags, descriptions
@@ -17,7 +17,9 @@ function countMaxLength() {
         return maxvalue;
     };
 }
-interface ICommand {
+export interface ICommand {
+	name?: string;
+	alias?: string;
 	ignore:boolean
 	options?:{ [p: string]: Option<any> }
 	args?:string
@@ -25,6 +27,7 @@ interface ICommand {
 	action:any
 }
 export class Command {
+	alias?: string
 	ignoreFromHelp:boolean = false
 	showHelp:boolean = false
 
@@ -37,6 +40,7 @@ export class Command {
 			options:{},
 			ignore:false
 		}, definition);
+		this.alias = definition.alias;
         this.arguments = this.buildArguments(definition.args);
 		this.options = Object.keys(definition.options).map(tag=>definition.options[tag].makeTag(tag, this));
         this.description = definition.description;
@@ -59,6 +63,7 @@ export class Command {
     async help() {
 		// istanbul ignore next
 		if(this.ignoreFromHelp)return;
+		let alias = this.alias ? `\n      Alias: ${chalk.yellow(this.alias)}` : '';
         let help = chalk.yellow(`    ${this.program} ${this.name} `);
 		help += this.arguments.map(a=>HelpRenderer.drawArg(a)).join(' ');
         // istanbul ignore else
@@ -72,7 +77,7 @@ export class Command {
         let desc_limit = 50;
         // istanbul ignore else
         if (this.description)
-			help += `\n      ${this.description}`;
+			help += alias + `\n      ${this.description}`;
 		for(const option of this.options) {
 			options.push(HelpRenderer.renderOptions(option, desc_limit, desc_len, tags_len, val_len));
 		}

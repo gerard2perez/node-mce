@@ -40,7 +40,7 @@ export function cliPath (...path:string[]) {
     return resolve(process.env.MCE_ROOT, ...path);
 }
 export function callerPath (...path:string[]) {
-    return resolve(process.cwd(), ...path);
+    return resolve(process.env.MCE_ROOT, ...path);
 }
 //#endregion
 export function pathResolver(_template:typeof template, _target?:typeof project) {
