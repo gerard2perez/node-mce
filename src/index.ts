@@ -70,7 +70,6 @@ export class MCEProgram {
 			let arg = args[pos];
 			if(/^\-[aA-zZ]{2,}/g.test(arg)) {
 				let ps = arg.replace('-','').split('').map(a=>`-${a}`);
-				// let pos = args.indexOf(arg);
 				let nargs = args.slice(pos+1);
 				args.splice(pos, 1);
 				for(let i=0; i < ps.length; i++) {
@@ -152,7 +151,6 @@ export class MCEProgram {
 		plugins: []
 	}
 	commandMapping = new Map<string, ICommand>();
-	// {[p:string]: ICommand} = {}
 	/**
 	 * 
 	 * @deprecated use withPlugins instead
@@ -167,7 +165,6 @@ export class MCEProgram {
 		return this.subcommand(args);
 	}
 	detectPlugins(keyword: string): CommandMap[] {
-		let root = callerPath('package.json');
 		let {dependencies, devDependencies} = require(callerPath('package.json'));
 		let packages = Object.keys({...dependencies, ...devDependencies });
 		let modules = packages.map(pack => {
@@ -193,6 +190,7 @@ export class MCEProgram {
 		.filter(file => (!file.includes('.map') && !file.includes('.d.ts')))
 		.map(file=>{
 			let name = file.split('.');
+			if(name.length===1) name.push('');
 			return {
 				scope,
 				command: scope ? `${scope}:${name[0]}` : name[0],
