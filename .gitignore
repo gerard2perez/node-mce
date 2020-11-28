@@ -1,6 +1,7 @@
 !**/.gitkeep
 *.tgz
 node_modules
+!test/node_modules/
 coverage
 .DS_Store
 docs

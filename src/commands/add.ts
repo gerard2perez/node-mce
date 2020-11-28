@@ -6,7 +6,6 @@ export const description = 'Adds a new command to the git project.'
 export const args = '<command>';
 export  async function action(command:string/*, opt:Parsed<typeof options>*/) {
 	pathResolver((folder:string)=>join(__dirname, '../templates', folder), p=>p);
-	console.log(callerPath('commands'))
 	if(existsSync(callerPath('commands')))	 {
 		copy(join('src', 'index.ts'), join('src', 'commands', `${command}.ts`));
 	} else {

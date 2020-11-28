@@ -168,7 +168,6 @@ export class MCEProgram {
 	}
 	detectPlugins(keyword: string): CommandMap[] {
 		let root = callerPath('package.json');
-		console.log(callerPath('package.json'));
 		let {dependencies, devDependencies} = require(callerPath('package.json'));
 		let packages = Object.keys({...dependencies, ...devDependencies });
 		let modules = packages.map(pack => {
