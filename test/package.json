@@ -3,5 +3,9 @@
     "version": "0.0.1",
     "bin": {
         "demo": "./demo"
+    },
+    "dependencies": {
+        "module": "x.x.x",
+        "module2": "x.x.x"
     }
 }

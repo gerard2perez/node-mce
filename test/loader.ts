@@ -1,5 +1,5 @@
 process.env.MCE_DEV = 'true';
-import { resolve } from 'path';
+import { join, resolve } from 'path';
 import { Readable } from 'stream';
 import { existsSync, readdirSync } from '../src/fs';
 // import { MCE } from '../src';
@@ -21,7 +21,7 @@ class FakeInput extends Readable {
 export const input = new FakeInput;
 setMainOutput(output);
 setMainInput(input);
-
+const origin = join(__dirname, '../');
 const {MCE} = require('../src');
 let NODE_MCE = MCE('./test');
 export function subcommand(command:string): Promise<{}>{
@@ -31,14 +31,15 @@ export function subcommand(command:string): Promise<{}>{
 	}) as any;
 }
 export function subCommandWithModule(config:string, command:string): Promise<{}>{
-	return NODE_MCE.submodules(config).subcommand(command.split(' ')) as any;
+	return NODE_MCE.withPlugins(config, command.split(' '))as any;
 }
 export function command(command:string): Promise<{}> {
 	return NODE_MCE.command(command.split(' ')) as any;
 }
 export function loader(path:string){
-	process.argv.push('', resolve(path));
-	NODE_MCE = MCE(resolve(path));
+	process.chdir(join(origin, path));
+	process.argv.push('', resolve());
+	NODE_MCE = MCE(join(origin, path));
 }
 export function reset() {
 	NODE_MCE.commandMapping = new Map();
@@ -47,6 +48,10 @@ export function reset() {
 		_local: [],
 		plugins: []
 	};
+	// process.chdir(origin);
+}
+export function restore() {
+	process.chdir(origin);
 }
 export function findCommands(...files: string[]) {
 	// @ts-ignore

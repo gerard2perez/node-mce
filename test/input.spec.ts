@@ -1,11 +1,14 @@
 process.env.TEST = 'test';
 jest.mock('../src/fs');
-import {input, output} from './loader';
+import {input, loader, output, reset, restore} from './loader';
 import {question, confirm, override} from '../src/input';
 import { wait, spin } from '../src/spinner';
 import { existsSync, readdirSync } from '../src/fs';
 
 describe('test user interactions', () => {
+	beforeAll(()=>loader('./test'));
+	beforeEach(()=>reset());
+	afterAll(()=>restore());
 	test('question', async ()=>{
 		let w = wait(10).then(_=>input.write('Gerardo Perez'));
 		let message = expect(wait(5).then(_=>output.read())).resolves.toBe('what\'s your name? ')

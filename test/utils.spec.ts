@@ -2,7 +2,7 @@ process.env.TEST = 'test';
 jest.mock('../src/fs');
 import { resolve } from "path";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/fs';
-import { command, loader, reset, subcommand } from "./loader";
+import { command, loader, reset, restore, subcommand } from "./loader";
 import { readLog } from "./log-reader";
 //@ts-ignore
 readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
@@ -11,10 +11,11 @@ existsSync.mockReturnValue(true)
 describe('Utils functions', ()=>{
 	beforeAll(()=>loader('./test'));
 	beforeEach(()=>reset());
+	afterAll(()=>restore());
     test('gets correct paths', async ()=>{
         let res = await subcommand('utils');
         expect(res).toEqual({
-            cli: resolve('./test'),
+            cli: resolve('./'),
             target: resolve('./'),
         });
     });
@@ -40,7 +41,7 @@ describe('Utils functions', ()=>{
 		await expect(subcommand('utils2 -vvv -r'))
 			.resolves.toBeDefined();
 		expect(writeFileSync).toBeCalledTimes(1);
-		expect(writeFileSync).toBeCalledWith(resolve(process.cwd(), './test/demo.txt'), 'works');
+		expect(writeFileSync).toBeCalledWith(resolve(process.cwd(), './demo.txt'), 'works');
 		await expect(subcommand('utils2 -vvv')).resolves.toBe('works');
     });
     test('executes a single command', async () =>{
