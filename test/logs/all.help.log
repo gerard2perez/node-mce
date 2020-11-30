@@ -2,8 +2,9 @@
       Adds a new command to the git project.
 
     mce new <application> [options]
+      Alias: n
       Creates a new MCE project.
-        -a, --author          Author of the package [author]
+        -a, --author          Author of the package [GIT_OR_NPM_USER]
         -f, --force           Overrides target directory
         -n, --npm             Install npm dependencies
         -s, --style  <style>  Define the style of command you will use. If you need [single]

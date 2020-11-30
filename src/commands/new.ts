@@ -43,9 +43,11 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 async function createProjectExtructure(application: string, opt:Parsed<typeof options>) {
 	let tree:TreeMaker;
 	let {author} = opt;
+	/* istanbul ignore else */
 	if(author === 'GIT_OR_NPM_USER') {
 		let git_user: any = await spawn('git', ['config', 'user.name'], {}, false);
 		let git_email: any = await spawn('git', ['config', 'user.email'], {}, false);
+		/* istanbul ignore else */
 		if(!git_user) git_user = await spawn('npm', ['whoami'], {}, false);
 		author = `${git_user.trim()} <${git_email.trim()}>`;
 	}

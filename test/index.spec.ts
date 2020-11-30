@@ -13,8 +13,6 @@ existsSync.mockReturnValue(false);
 readFileSync.mockReturnValue('');
 //@ts-ignore
 readdirSync.mockReturnValue([]);
-//@ts-ignore
-spawn.mockReturnValue(Promise.resolve(true));
 describe('Self Test', ()=>{
 	beforeAll(()=>loader('./src'));
 	beforeEach(()=>reset());
@@ -26,11 +24,19 @@ describe('Self Test', ()=>{
     });
     test('create a new project', async()=>{
 		findCommands('new.ts');
+		// @ts-ignore
+		spawn.mockReturnValueOnce(Promise.resolve(''))
+			.mockReturnValueOnce(Promise.resolve('gerard2perez@outlook.com'))
+			.mockReturnValueOnce(Promise.resolve('gerard2p'))
+			.mockReturnValue(Promise.resolve(true));
 		await expect(subcommand('new single_repo -f -s single'))
 			.resolves.toBe(readLog('new.output.log'));
     });
     test('create a new project multicommand', async()=>{
 		findCommands('new.ts');
+		// @ts-ignore
+		spawn.mockReturnValue(Promise.resolve('gerard2p'))
+			.mockReturnValue(Promise.resolve('gerard2perez@gmail'));
 		await expect(subcommand('new git_repo -f -s git'))
 				.resolves.toBe(readLog('new-git.output.log'));
     });

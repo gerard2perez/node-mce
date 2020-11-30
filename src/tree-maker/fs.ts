@@ -37,7 +37,7 @@ let PROJECT = (folder:string)=>folder;
 export let template = (path:string)=>path;
 export let project = (path:string)=>path;
 export function cliPath (...path:string[]) {
-    return resolve(process.env.MCE_ROOT, ...path);
+    return resolve(process.env.MCE_ROOT, ...path).replace(process.env.TEST === 'test' ? 'src/' : '', '');
 }
 export function callerPath (...path:string[]) {
     return resolve(process.cwd(), ...path);
@@ -71,7 +71,7 @@ export function copy (source:string, target:string=source) {
 }
 
 export function compile(source:string, data:{[p:string]:string}, target:string=source) {
-	source = TEMPLATE(this.template(source))
+	source = TEMPLATE(this.template(source));
 	target = PROJECT(this.project(target));
 	render(source, data, target);
 	printHighLigthed(target);
