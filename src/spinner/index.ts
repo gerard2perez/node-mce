@@ -2,7 +2,7 @@
  * @module @gerard2p/mce/spinner
  */
 import { animations } from './animations';
-import * as chalk from 'chalk';
+import chalk from "chalk";
 import { LogSymbols, supported } from './symbols';
 import { clearColors } from './clear-colors';
 import { wcwidth } from './wcwidth';

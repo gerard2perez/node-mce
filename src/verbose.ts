@@ -1,6 +1,6 @@
 import { MainSpinner } from "./spinner";
 import { LogSymbols } from "./spinner/symbols";
-import * as chalk from "chalk";
+import chalk from "chalk";
 /**
  * Indicates the level of verbosity required in order to display
  * @param lvl 

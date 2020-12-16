@@ -1,4 +1,4 @@
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { basename, dirname, posix, resolve } from "path";
 import { copyFileSync, mkdirSync, writeFileSync } from "../fs";
 import { ok } from "../verbose";

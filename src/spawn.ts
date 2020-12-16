@@ -1,4 +1,4 @@
-import * as cspawn from 'cross-spawn';
+import cspawn from 'cross-spawn';
 import { SpawnOptions } from 'child_process';
 import { spin } from './spinner';
 /* istanbul ignore next */

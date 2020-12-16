@@ -18,9 +18,9 @@ export class MCEProgram {
 	private showVersion: boolean = false;
 	name: string;
 	version: string;
-	common:{[p:string]:Option<any>} = {}
+	private common:{[p:string]:Option<any>} = {}
 	unic_shorts:string[] = []
-	verbose:number
+	private verbose:number
 	private createBoolVar(option:string) {
 		let [short, tag] = option.split(' ');
 		let name = (tag||short).replace(/-/g, '');
@@ -28,13 +28,13 @@ export class MCEProgram {
 		this.common[name].makeTag(name, this);
 		return this;
 	}
-	_version(option:string = '--version') {
+	private _version(option:string = '--version') {
 		return this.createBoolVar(option);
 	}
-	_help(option:string = '-h --help') {
+	private _help(option:string = '-h --help') {
 		return this.createBoolVar(option);
 	}
-	_verbose(option:string = '-v') {
+	private _verbose(option:string = '-v') {
 		let [short, tag='--verbose'] = option.split(' ');
 		this.common.verbose = new Option<number>(short,'', Parser.increaseVerbosity,undefined,0);
 		this.common.verbose.makeTag(tag.replace(/-/g, ''),this);
@@ -49,7 +49,7 @@ export class MCEProgram {
 		locations(...process.argv.splice(0, 2) as [string, string]);
 		this._verbose()._help()._version();
 	}
-	loadModule(source: string): ICommand {
+	private loadModule(source: string): ICommand {
 		try {
 			return require(source);
 		} catch(ex) {
@@ -85,7 +85,7 @@ export class MCEProgram {
 		}
 		return composed.filter(c=>c);
 	}
-	prepare(args:string[], single:boolean=false) {
+	private prepare(args:string[], single:boolean=false) {
 		args.splice(-1,0, ...this.findCompressed(args));
 		let force_help = !single && args.length ===0;
 		this.showVersion = this.common.version.find(args) && args.length <= 1;
@@ -108,7 +108,15 @@ export class MCEProgram {
 			return command.call(args);
 		}
 	}
-	async subcommand (args:string[] = process.argv):Promise<void> {
+	/**
+	 * 
+	 * @deprecated use gitStyle instead
+	 */
+	/* istanbul ignore next */
+	async subcommand(args:string[] = process.argv):Promise<void> {
+		return this.gitStyle(args);
+	}
+	async gitStyle (args:string[] = process.argv):Promise<void> {
 		if(this.prepare(args))return;
 		this.readCommands('', this.root, 'commands').map(c => this.register(c))
 		let [subcommand] = args.splice(0,1);
@@ -145,12 +153,12 @@ export class MCEProgram {
 		if(icommand.alias) 
 			this.commandMapping.set(icommand.alias, icommand);
 	}
-	commands_map = {
+	private commands_map = {
 		_owned: [],
 		_local: [],
 		plugins: []
 	}
-	commandMapping = new Map<string, ICommand>();
+	private commandMapping = new Map<string, ICommand>();
 	/**
 	 * 
 	 * @deprecated use withPlugins instead
@@ -164,7 +172,8 @@ export class MCEProgram {
 		this.detectPlugins(keyword).map(c=>this.register(c));
 		return this.subcommand(args);
 	}
-	detectPlugins(keyword: string): CommandMap[] {
+	private detectPlugins(keyword: string): CommandMap[] {
+		if(!existsSync(callerPath('package.json'))) return[]
 		let {dependencies, devDependencies} = require(callerPath('package.json'));
 		let packages = Object.keys({...dependencies, ...devDependencies });
 		let modules = packages.map(pack => {
@@ -181,10 +190,10 @@ export class MCEProgram {
 			
 			return p.keywords.includes(keyword);
 		})
-		.map(path => this.readCommands(path.name, path.path));
-		return [].concat.apply([], [this.readCommands('l', callerPath()), ...modules]);
+		.map(path => this.readCommands(path.name, path.path, '@commands'));
+		return [].concat.apply([], [this.readCommands('l', callerPath(), `@${keyword}`), ...modules]);
 	}
-	private readCommands(scope: string, path: string, container: string = '@commands'): CommandMap[] {
+	private readCommands(scope: string, path: string, container: string): CommandMap[] {
 		let commandsRoot = join(path, container);
 		return !existsSync(commandsRoot) ? [] : readdirSync(commandsRoot)
 		.filter(file => (!file.includes('.map') && !file.includes('.d.ts')))
