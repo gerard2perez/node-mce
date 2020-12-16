@@ -57,7 +57,7 @@ project_name::
 
 ```typescript
 import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed} from '@gerard2p/mce';
-import { ok, error, warn, info, ask, input } from '@gerard2p/mce/console';
+import { ok, error, warn, info, ask, input } from '@gerard2p/mce/verbose';
 import { created, updated, makeDir, cp, printRelativePath, targetPath, cliPath } from '@gerard2p/mce/utils';
 import { spin } from '@gerard2p/mce/spinner';
 enum Styles { 

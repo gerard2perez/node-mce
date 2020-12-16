@@ -8,6 +8,7 @@ import { clearColors } from './clear-colors';
 import { wcwidth } from './wcwidth';
 import { Cursor } from './control';
 import { main_output } from '../system-streams';
+import { ok } from '../verbose';
 const TEXT = Symbol('mce_spinner');
 export interface  ISpinnerOptions {
     color?:string
@@ -152,24 +153,24 @@ export class Spinner {
 		return this;
 	}
 	ok(text?:string) {
-		return this.persist({symbol: LogSymbols.success, text});
+		return this.persist({symbol: LogSymbols.success, text, color: 'green'});
 	}
 	succeed(text?:string) {
-		return this.stopAndPersist({symbol: LogSymbols.success, text});
+		return this.stopAndPersist({symbol: LogSymbols.success, text, color: 'green'});
 	}
 	/*istanbul ignore next*/
 	fail(text?:string) {
-		return this.stopAndPersist({symbol: LogSymbols.error, text});
+		return this.stopAndPersist({symbol: LogSymbols.error, text, color: 'red'});
 	}
 	error(text?:string) {
-		return this.persist({symbol: LogSymbols.error, text});
+		return this.persist({symbol: LogSymbols.error, text, color: 'red'});
 	}
 	warn(text?:string) {
-		return this.persist({symbol: LogSymbols.warning, text});
+		return this.persist({symbol: LogSymbols.warning, text, color: 'yellow'});
 	}
 
 	info(text?:string, newline:boolean=true) {
-		return this.persist({symbol: LogSymbols.info, text}, newline ? '\n':'');
+		return this.persist({symbol: LogSymbols.info, text, color: 'blue'}, newline ? '\n':'');
 	}
 	public log(text:TemplateStringsArray, ...values:any[]) {
 		let send = `${chalk(text,...values)}\n`;
@@ -180,24 +181,23 @@ export class Spinner {
 		this.stream.write(send);
 		return this;
 	}
-	public persist(options:{ symbol:LogSymbols,text:string }, newline:string='\n') {
-		/*istanbul ignore next*/
-		if (!this.enabled) {
-			return this;
-		}
-		this.clear();
-		this.stream.write(`${options.symbol || /*istanbul ignore next*/' '} ${options.text || this.text}${newline}`);
-		return this;
+	public persist(options:{ symbol:LogSymbols,text:string, color: string }, newline:string='\n') {
+		// /*istanbul ignore next*/
+		// if (!this.enabled) {
+		// 	return this;
+		// }
+		// this.clear();
+		return this.log`{${options.color||'red'} ${options.symbol}} ${options.text || this.text}${newline}`
+		// this.stream.write(`${options.symbol || /*istanbul ignore next*/' '} ${options.text || this.text}${newline}`);
+		// return this;
 	}
-	private stopAndPersist(options:{ symbol:LogSymbols,text:string }) {
+	private stopAndPersist(options:{ symbol:LogSymbols,text:string, color: string }) {
 		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this;
 		}
 		this.stop();
-		this.stream.write(`${options.symbol || /*istanbul ignore next*/ ' '} ${options.text || /*istanbul ignore next*/this.text}\n`);
-
-		return this;
+		return this.persist(options, '')
 	}
 }
 /** @ignore */
@@ -212,6 +212,9 @@ export async function spin(display:string | ISpinnerOptions, fn:() => Promise<st
 	MainSpinner.start();
 	return fn().then(success => {
 		if(success){
+			// console.log(0)
+			// MainSpinner.stop()
+			// ok(success)
 			MainSpinner.succeed(success);
 			return success;
 		} else {
