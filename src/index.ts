@@ -196,7 +196,7 @@ export class MCEProgram {
 	private readCommands(scope: string, path: string, container: string): CommandMap[] {
 		let commandsRoot = join(path, container);
 		return !existsSync(commandsRoot) ? [] : readdirSync(commandsRoot)
-		.filter(file => (!file.includes('.map') && !file.includes('.d.ts')))
+		.filter(file => (!file.includes('.map') && !file.includes('.d.ts') && !file.includes('@shared')))
 		.map(file=>{
 			let name = file.split('.');
 			if(name.length===1) name.push('');
