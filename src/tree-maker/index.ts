@@ -1,5 +1,6 @@
 import { join } from "path";
 import { compile, copy, mkdir, write, writeJSON } from "./fs";
+export { remove } from "./remove";
 import { makeChainableDir, chainable, chainable_dir, makeChainable } from "./wrappers";
 export { PackageJSON } from "./package";
 function _root(root:string){

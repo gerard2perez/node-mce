@@ -70,7 +70,7 @@ export function copy (source:string, target:string=source) {
 	printHighLigthed(_target);
 }
 export function writeJSON(file: string, content: any) {
-	const target = this.project(file)
+	const target = PROJECT(this.project(file))
 	writeFileSync(target, JSON.stringify(content, null, 2)+'\n')
 	printHighLigthed(target)
 }
