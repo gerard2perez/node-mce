@@ -69,6 +69,11 @@ export function copy (source:string, target:string=source) {
 	copyFileSync(_source, _target);
 	printHighLigthed(_target);
 }
+export function writeJSON(file: string, content: any) {
+	const target = this.project(file)
+	writeFileSync(target, JSON.stringify(content, null, 2)+'\n')
+	printHighLigthed(target)
+}
 
 export function compile(source:string, data:{[p:string]:string}, target:string=source) {
 	source = TEMPLATE(this.template(source));

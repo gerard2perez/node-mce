@@ -1,5 +1,5 @@
 import { join } from "path";
-import { compile, copy, mkdir, write } from "./fs";
+import { compile, copy, mkdir, write, writeJSON } from "./fs";
 import { makeChainableDir, chainable, chainable_dir } from "./wrappers";
 import { makeChainable } from "./make_chainable";
 function _root(root:string){
@@ -8,6 +8,7 @@ function _root(root:string){
 	mkdir.bind({project:(...args)=>join(...args)})(path);
 	return makeChainableDir(path, root)
 }
+export const json = makeChainable(writeJSON)
 /**
  * Initiates a filesystem building tree
  */
