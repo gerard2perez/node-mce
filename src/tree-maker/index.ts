@@ -1,7 +1,7 @@
 import { join } from "path";
 import { compile, copy, mkdir, write, writeJSON } from "./fs";
-import { makeChainableDir, chainable, chainable_dir } from "./wrappers";
-import { makeChainable } from "./make_chainable";
+import { makeChainableDir, chainable, chainable_dir, makeChainable } from "./wrappers";
+export { PackageJSON } from "./package";
 function _root(root:string){
 	this.path = join(this.path, root);
 	let path = this.path;
