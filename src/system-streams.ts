@@ -1,9 +1,11 @@
-import { Writable, Readable } from "stream";
-export let main_output = process.stderr;
-export let main_input = process.stdin;
-export function setMainOutput(stream:Writable) {
-	main_output = stream as any;
+import { Writable, Readable } from "stream"
+import { MainSpinner } from './spinner'
+export const streams  = {
+	output: process.stderr,
+	input: process.stdin
 }
-export function setMainInput(stream:Readable) {
-	main_input = stream as any;
+export function SetStreams(output: Writable, input: Readable) {
+	streams.output = output as any
+	streams.input = input as any
+	MainSpinner.stream = output
 }

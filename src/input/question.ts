@@ -1,9 +1,9 @@
 import { createInterface, moveCursor } from "readline";
 import { MainSpinner } from "../spinner";
-import { main_input } from "../system-streams";
+import { streams } from "../system-streams";
 export function question (display:string) : Promise<string> {
     const rl = createInterface({
-        input: main_input,
+        input: streams.input,
         output: MainSpinner.stream,
         terminal: false
     });
