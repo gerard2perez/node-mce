@@ -515,27 +515,32 @@ export class PackageJSON {
         }
     }
     [inspect.custom]() {
-        return this.prepare()
-    }
-    private prepare() {
-        let clone = JSON.parse(JSON.stringify(this)) as PackageJSON
-        clone.contributors = []
-        delete clone.location
-        for(const key of Object.keys(clone)) {
-            if(clone[key] instanceof Array && !clone[key].length) {
-                delete clone[key]
-            }
-        }
-        clone = clone || {} as any
-        return clone
-    }
+        return this.toJSON()
+	}
+	toJSON() {
+		const clone = {} as PackProperties
+		clone.contributors = []
+		for(const key of Object.keys(this)) {
+			if(key === 'location') continue;
+			switch(typeof(this[key])) {
+				case 'function':
+					continue;
+				case 'object':
+					if(this[key] instanceof Array && !this[key].length) continue;
+				default:
+					clone[key] = this[key]
+					break;
+			}
+		}
+		return clone;
+	}
     persist() {
         try {
             mkdirSync(dirname(this.location), {recursive: true})
         } catch (ex ) {
             console.error(ex)
          }
-        writeFileSync(this.location, JSON.stringify(this.prepare(), null, 2)+'\n')
+        writeFileSync(this.location, JSON.stringify(this, null, 2)+'\n')
     }
     withDefaults(data: PackProperties) {
         Object.assign(this, data, this)
@@ -546,7 +551,7 @@ export class PackageJSON {
         return this
     }
     save() {
-        return makeChainable(writeJSON)('package.json', this.prepare())
+        return makeChainable(writeJSON)('package.json', this.toJSON())
     }
 }
 type Props<T=PackageJSON> = {
