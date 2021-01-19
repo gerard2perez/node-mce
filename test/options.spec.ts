@@ -1,11 +1,11 @@
-import { loader, reset, restore, subcommand } from "./loader";
+import { SetProjectPath, Reset, Restore, GitStyle } from "./loader";
 
 describe('Options Parsing', ()=>{
-	beforeAll(()=>loader('./test'));
-	beforeEach(()=>reset());
-	afterAll(()=>restore());
+	beforeAll(()=>SetProjectPath('./test'));
+	beforeEach(()=>Reset());
+	afterAll(()=>Restore());
     test('get defaults options', async ()=>{
-        const res:{} = await subcommand('options file.js');
+        const res:{} = await GitStyle('options file.js');
         expect(res).toEqual({
             arg1: 'file.js',
             varidac: [],
@@ -24,7 +24,7 @@ describe('Options Parsing', ()=>{
         });
     });
     test('parses options values', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
 			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
 			);
         expect(res).toEqual({
@@ -49,7 +49,7 @@ describe('Options Parsing', ()=>{
         })
 	});
 	test('parses options set string to undefined', async () =>{
-		const res = await subcommand(
+		const res = await GitStyle(
 			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
 			);
 		expect(res).toEqual({
@@ -74,7 +74,7 @@ describe('Options Parsing', ()=>{
 		})
 	});
     test('parses options values with symbol =', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
             'options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
             );
         expect(res).toEqual({
@@ -99,7 +99,7 @@ describe('Options Parsing', ()=>{
         })
     });
     test('parses options values with short tags', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
             'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'
             );
         expect(res).toEqual({
@@ -124,7 +124,7 @@ describe('Options Parsing', ()=>{
         })
 	});
 	test('parses options values with short tags (misstype)', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
             'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
             );
         expect(res).toEqual({
@@ -151,7 +151,7 @@ describe('Options Parsing', ()=>{
         })
     });
     test('parses options mixed formats', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
             'options file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             );
         expect(res).toEqual({
@@ -177,7 +177,7 @@ describe('Options Parsing', ()=>{
         
 	});
 	test('multiple short tags together', async () =>{
-		const res = await subcommand(
+		const res = await GitStyle(
 			'options file.js -e single var2 -nf 5 12.58 -rtb 2..55 demo --list=h10,h21 --collect=h30 --collect=h3 --collect=h6 -vvv'
 			);
 		expect(res).toEqual({
@@ -202,7 +202,7 @@ describe('Options Parsing', ()=>{
 		})
 	});
     test('parses options mixed formats', async () =>{
-        const res = await subcommand(
+        const res = await GitStyle(
             'options file.js --enumeration single var2 -n=5 --floating=gb -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             );
         expect(res).toEqual({

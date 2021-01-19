@@ -113,26 +113,26 @@ export class MCEProgram {
 	 * @deprecated use gitStyle instead
 	 */
 	/* istanbul ignore next */
-	async subcommand(args:string[] = process.argv):Promise<void> {
-		return this.gitStyle(args);
+	async subcommand<T>(args:string[] = process.argv):Promise<T> {
+		return this.gitStyle<T>(args);
 	}
-	async gitStyle (args:string[] = process.argv):Promise<void> {
+	async gitStyle<T=void> (args:string[] = process.argv):Promise<T> {
 		if(this.prepare(args))return;
 		this.readCommands('', this.root, 'commands').map(c => this.register(c))
 		let [subcommand] = args.splice(0,1);
 		let source = this.commandMapping.get(subcommand);
 		if(source) {
-			return this.getCommand(source, source.name).call(args);
+			return this.getCommand(source, source.name).call(args) as any;
 		} else if (!subcommand && this.showHelp) {
 			let allCommands = [...this.commands_map._owned.sort(), ...this.commands_map._local.sort(), ...this.commands_map.plugins.sort()]
 			for(const command of allCommands) {
 				const Command = this.commandMapping.get(command);
 				await this.getCommand(Command, Command.name).help();
 			}
-			return Promise.resolve();
+			return Promise.resolve(undefined);
 		} else {
 			MainSpinner.stream.write('Command does not exists\n');
-			return Promise.resolve();	
+			return Promise.resolve(undefined);	
 		}
 	}
 	private register(mapping: CommandMap) {
@@ -168,9 +168,9 @@ export class MCEProgram {
 		this.detectPlugins(keyword).map(c=>this.register(c));
 		return this;
 	}
-	public withPlugins(keyword: string, args?: string[] ) {
+	public withPlugins<T=void>(keyword: string, args?: string[] ) {
 		this.detectPlugins(keyword).map(c=>this.register(c));
-		return this.subcommand(args);
+		return this.subcommand<T>(args);
 	}
 	private detectPlugins(keyword: string): CommandMap[] {
 		if(!existsSync(callerPath('package.json'))) return[]
@@ -178,6 +178,7 @@ export class MCEProgram {
 		let packages = Object.keys({...dependencies, ...devDependencies });
 		let modules = packages.map(pack => {
 			const path = callerPath('node_modules', pack);
+			if(!existsSync(callerPath('node_modules', pack, 'package.json'))) return {keywords: []}
 			let {keywords = [], name} = require(callerPath('node_modules', pack, 'package.json')) as {name:string, keywords: string[]};
 			name = name.split('/').slice(-1)[0].replace('@', '');
 			return {
@@ -195,7 +196,8 @@ export class MCEProgram {
 	}
 	private readCommands(scope: string, path: string, container: string): CommandMap[] {
 		let commandsRoot = join(path, container);
-		return !existsSync(commandsRoot) ? [] : readdirSync(commandsRoot)
+		const detected = !existsSync(commandsRoot) ? [] : readdirSync(commandsRoot)
+		return detected
 		.filter(file => (!file.includes('.map') && !file.includes('.d.ts') && !file.includes('@shared')))
 		.map(file=>{
 			let name = file.split('.');

@@ -1,5 +1,5 @@
 import { Stream } from 'stream';
-export class FakeStream extends Stream.Writable {
+export class STDOut extends Stream.Writable {
 	content:string = '';
 	isFake = true;
 	isTTY:boolean = true;
