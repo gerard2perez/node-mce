@@ -29,6 +29,7 @@ export async function action(opt:Parsed<typeof options>) {
         created('chochis.ts');
 		updated('chochis.ts');
 		log(3)`test`
+		log(3)('test 2')
     });
 	return {
         cli: cliPath(),
