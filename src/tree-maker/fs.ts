@@ -4,6 +4,7 @@ import { copyFileSync, mkdirSync, writeFileSync } from "../fs";
 import { ok } from "../verbose";
 import { render } from "./render";
 export interface fs_interface {
+	path: string
 	root:string
 	template:(...path:string[])=>string,
 	project:(...path:string[])=>string

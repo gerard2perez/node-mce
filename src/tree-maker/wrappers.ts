@@ -6,30 +6,19 @@ interface Chain {
 	fn:any
 	args:any[]
 }
-export function mkdirtreeandchild(folder, ...operations:chainable[]) {
-	mkdir.bind(this)(folder);
-	let root = this.root;
-	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
-		let fsInterface:fs_interface = {
-			root,
-			template: (...args)=> this.template(folder, ...args),
-			project: (...args)=> this.project(folder, ...args)
-		}
-		rtnOBJ.fn.bind(fsInterface)(...rtnOBJ.args);
-	}
-
-}
 export interface chainable {}
 export function chainable_dir(folder:string, ...operations:chainable[] ) {
 	let spath = this.path;
 	this.path = join(this.path, folder);
 	let {path, root} = this;
 	if(folder) {
+		
 		mkdir.bind({project:(...args)=>join(...args)})(path);
 	}
 	for(const rtnOBJ of operations.filter(d=>d) as Chain[]) {
 		let fsInterface:fs_interface = {
 			root,
+			path,
 			template: (...args)=> join(relative(root,path), ...args),
 			project: (...args)=> join(path, ...args)
 		}
