@@ -1,12 +1,10 @@
-process.env.TEST = 'test';
-jest.mock('../src/fs');
-jest.mock('../src/spawn');
-jest.mock('../src/fs');
-jest.mock('../src/spawn');
-import { existsSync, readdirSync, readFileSync } from '../src/fs';
-import { spawn } from '../src/spawn';
-import { findCommands, SetProjectPath, Reset, Restore, GitStyle, WithPlugins } from './loader';
+process.env.TEST = 'test'
+jest.mock('../src/fs')
+import { mockSpawn } from '../src/test/spawn'
+import { existsSync, readdirSync, readFileSync } from '../src/fs'
+import { findCommands, SetProjectPath, Reset, Restore, GitStyle } from './loader'
 import { readLog } from './log-reader';
+
 //@ts-ignore
 existsSync.mockReturnValue(false);
 //@ts-ignore
@@ -24,20 +22,28 @@ describe('Self Test', ()=>{
     });
     test('create a new project', async()=>{
 		findCommands('new.ts');
-		// @ts-ignore
-		spawn.mockReturnValueOnce(Promise.resolve(''))
-			.mockReturnValueOnce(Promise.resolve('gerard2perez@outlook.com'))
-			.mockReturnValueOnce(Promise.resolve('gerard2p'))
-			.mockReturnValue(Promise.resolve(true));
+		mockSpawn((stdout, stderr)=>{
+			stderr.emit('data', Buffer.from(''))
+			return 1
+		})
+		mockSpawn('gerard2perez@outlook.com')
+		mockSpawn('gerard2p')
+		mockSpawn((stdout, stderr) => {
+			stdout.emit('data', Buffer.from('line1'))
+			stderr.emit('data', Buffer.from('line2'))
+			stdout.emit('data', Buffer.from('line3'))
+			return 0
+		})
 		await expect(GitStyle('new single_repo -f -s single'))
 			.resolves.toBe(readLog('new.output.log'));
     });
     test('create a new project multicommand', async()=>{
 		findCommands('new.ts');
-		// @ts-ignore
-		spawn.mockReturnValue(Promise.resolve('gerard2p'))
-			.mockReturnValue(Promise.resolve('gerard2perez@gmail'));
-		await expect(GitStyle('new git_repo -f -s git'))
+		mockSpawn('gerard2p')
+		mockSpawn('gerard2perez@gmail')
+		mockSpawn('true')
+		mockSpawn('true')
+		await expect(GitStyle('new git_repo -f -s -n git'))
 				.resolves.toBe(readLog('new-git.output.log'));
     });
     test('command does not exist', async()=>{

@@ -95,7 +95,7 @@ export class MCEProgram {
 		if(this.showVersion)MainSpinner.stream.write(this.version);
 		return this.showVersion;
 	}
-	async command (args:string[] = process.argv) {
+	async command (/* istanbul ignore next */ args:string[] = process.argv) {
 		if(this.prepare(args, true))return;
 		let root = resolve(this.root, `index.${ext}`);
 		let exists = existsSync( root );
@@ -116,7 +116,7 @@ export class MCEProgram {
 	async subcommand<T>(args:string[] = process.argv):Promise<T> {
 		return this.gitStyle<T>(args);
 	}
-	async gitStyle<T=void> (args:string[] = process.argv):Promise<T> {
+	async gitStyle<T=void> (/* istanbul ignore next */ args:string[] = process.argv):Promise<T> {
 		if(this.prepare(args))return;
 		this.readCommands('', this.root, 'commands').map(c => this.register(c))
 		let [subcommand] = args.splice(0,1);
@@ -179,6 +179,7 @@ export class MCEProgram {
 		let modules = packages.map(pack => {
 			const path = callerPath('node_modules', pack);
 			if(!existsSync(callerPath('node_modules', pack, 'package.json'))) return {keywords: []}
+			/* istanbul ignore next */
 			let {keywords = [], name} = require(callerPath('node_modules', pack, 'package.json')) as {name:string, keywords: string[]};
 			name = name.split('/').slice(-1)[0].replace('@', '');
 			return {

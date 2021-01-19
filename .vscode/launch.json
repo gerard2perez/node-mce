@@ -28,7 +28,7 @@
                 "--colors",
                 "${workspaceFolder}/test/index.spec.ts"
             ],
-            "console": "integratedTerminal",
+            "console": "internalConsole",
             "internalConsoleOptions": "neverOpen"
         },
         {
