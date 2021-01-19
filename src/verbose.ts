@@ -7,7 +7,7 @@ import chalk from "chalk";
  */
 export function log(lvl:number) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
-		return MainSpinner.log.bind(MainSpinner);
+		return internal_log;
 	}
 	return ()=>{}
 }
@@ -24,14 +24,22 @@ function prerender(text:TemplateStringsArray, ...values:any[]) {
 	updated.raw = updated;
 	return [transform, chalk(updated, ...values)];
 }
-function addSymbol(lvl:number, symbol:LogSymbols, deftransform:string) {
+function internal_log(text:TemplateStringsArray|string, ...values:any[]) {
+	if(typeof text === 'object' && text.raw && text.raw instanceof Array) {
+		let [_transform, req] = prerender(text, ...values);
+		MainSpinner.log`${req}\n`
+	} else {
+		MainSpinner.log`${text}\n`
+	}
+}
+function addSymbol(lvl:number, symbol:LogSymbols, color:string) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
 		return (text:TemplateStringsArray|string, ...values:any[]) => {
 			if(typeof text === 'object' && text.raw && text.raw instanceof Array) {
 				let [transform, req] = prerender(text, ...values);
-				MainSpinner.log`{${transform||deftransform} ${symbol}} ${req}`;
+				MainSpinner.log`{${transform||color} ${symbol}} ${req}\n`;
 			} else {
-				MainSpinner.log`{${deftransform} ${symbol}} ${text}`;
+				MainSpinner.log`{${color} ${symbol}} ${text}\n`;
 			}
 		};
 	} else {

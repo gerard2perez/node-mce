@@ -171,7 +171,7 @@ export class Spinner {
 		return this.persist({symbol: LogSymbols.info, text, color: 'blue'}, newline ? '\n':'');
 	}
 	public log(text:TemplateStringsArray, ...values:any[]) {
-		let send = `${chalk(text,...values)}\n`;
+		let send = `${chalk(text,...values)}`;
 		if (!this.enabled) {
 			return this;
 		}
@@ -179,15 +179,9 @@ export class Spinner {
 		this.stream.write(send);
 		return this;
 	}
-	public persist(options:{ symbol:LogSymbols,text:string, color: string }, newline:string='\n') {
-		// /*istanbul ignore next*/
-		// if (!this.enabled) {
-		// 	return this;
-		// }
-		// this.clear();
+	public persist(options:{ symbol:LogSymbols,text:string, color: string }, newline:string=undefined) {
+		newline = newline === undefined ? '\n' : ''
 		return this.log`{${options.color||'red'} ${options.symbol}} ${options.text || this.text}${newline}`
-		// this.stream.write(`${options.symbol || /*istanbul ignore next*/' '} ${options.text || this.text}${newline}`);
-		// return this;
 	}
 	private stopAndPersist(options:{ symbol:LogSymbols,text:string, color: string }) {
 		/*istanbul ignore next*/
