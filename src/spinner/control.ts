@@ -1,30 +1,30 @@
 export class Cursor {
-    static hidden:boolean = false;
-    static showOnExit:boolean = false;
-    static show (stream:any) {
+    static hidden = false
+    static showOnExit = false
+    static show (stream: any) {
 
-		const s = stream || /*istanbul ignore next*/ process.stderr;
+		const s = stream || /*istanbul ignore next*/ process.stderr
 		/*istanbul ignore next*/
         if (!s.isTTY) {
-            return;
+            return
         }
-        Cursor.hidden = false;
-        s.write('\u001b[?25h');
+        Cursor.hidden = false
+        s.write('\u001b[?25h')
     }
-    static hide(stream:any) {
-		const s = stream || /*istanbul ignore next*/process.stderr;
+    static hide(stream: any) {
+		const s = stream || /*istanbul ignore next*/process.stderr
 		/*istanbul ignore next*/
         if (!s.isTTY) {
-            return;
+            return
         }
         if(!Cursor.showOnExit) {
-			Cursor.showOnExit = true;
+			Cursor.showOnExit = true
 			/*istanbul ignore next*/
-			process.once('beforeExit', ()=>{
-				process.stderr.write('\u001b[?25h');
-			});
+			process.once('beforeExit', () => {
+				process.stderr.write('\u001b[?25h')
+			})
         }
-        Cursor.hidden = true;
-        s.write('\u001b[?25l');
-    };
+        Cursor.hidden = true
+        s.write('\u001b[?25l')
+    }
 }

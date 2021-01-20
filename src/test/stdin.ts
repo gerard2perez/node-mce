@@ -1,14 +1,14 @@
-import { Readable } from "stream";
+import { Readable } from 'stream'
 
 export class STDIn extends Readable {
-	isTTY:boolean = true;
+	isTTY = true
 	constructor() {
-		super();
+		super()
 	}
-	write(message:string) {
-		this.push(message+'\n');
+	write(message: string) {
+		this.push(message+'\n')
 	}
 	_read() {
-		return null;
+		return null
 	}
 }

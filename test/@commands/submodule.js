@@ -15,5 +15,5 @@
 module.exports.action = async function action() {
 	return {
 		opt: true
-	};
+	}
 }

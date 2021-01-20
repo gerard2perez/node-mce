@@ -1,30 +1,28 @@
 process.env.TEST = 'test'
 jest.mock('../src/fs')
-import { mockSpawn } from '../src/test/spawn'
 import { existsSync, readdirSync, readFileSync } from '../src/fs'
-import { findCommands, SetProjectPath, Reset, Restore, GitStyle } from './loader'
-import { readLog } from './log-reader';
-import { stdout } from 'process'
-import { stderr } from 'chalk'
+import { mockSpawn } from '../src/test/spawn'
+import { findCommands, GitStyle, Reset, Restore, SetProjectPath } from './loader'
+import { readLog } from './log-reader'
 
 //@ts-ignore
-existsSync.mockReturnValue(false);
+existsSync.mockReturnValue(false)
 //@ts-ignore
-readFileSync.mockReturnValue('');
+readFileSync.mockReturnValue('')
 //@ts-ignore
-readdirSync.mockReturnValue([]);
-describe('Self Test', ()=>{
-	beforeAll(()=>SetProjectPath('./src'));
-	beforeEach(()=>Reset());
-	afterAll(()=>Restore());
-	test('renders help', async()=>{
+readdirSync.mockReturnValue([])
+describe('Self Test', () => {
+	beforeAll(() => SetProjectPath('./src'))
+	beforeEach(() => Reset())
+	afterAll(() => Restore())
+	test('renders help', async() => {
 		await expect(GitStyle('new --version'))
 				.resolves
-				.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/);
-    });
-    test('create a new project', async()=>{
-		findCommands('new.ts');
-		mockSpawn((stdout, stderr)=>{
+				.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)
+    })
+    test('create a new project', async() => {
+		findCommands('new.ts')
+		mockSpawn((stdout, stderr) => {
 			stderr.emit('data', Buffer.from(''))
 			return 1
 		})
@@ -37,10 +35,10 @@ describe('Self Test', ()=>{
 			return 0
 		})
 		await expect(GitStyle('new single_repo -f -s single'))
-			.resolves.toBe(readLog('new.output.log'));
-    });
-    test('create a new project multicommand', async()=>{
-		findCommands('new.ts');
+			.resolves.toBe(readLog('new.output.log'))
+    })
+    test('create a new project multicommand', async() => {
+		findCommands('new.ts')
 		mockSpawn('gerard2p')
 		mockSpawn('gerard2perez@gmail')
 		mockSpawn('true')
@@ -49,43 +47,43 @@ describe('Self Test', ()=>{
 			return 1
 		})
 		await expect(GitStyle('new git_repo -f -s -n git'))
-				.resolves.toBe(readLog('new-git.output.log'));
-    });
-    test('command does not exist', async()=>{
+				.resolves.toBe(readLog('new-git.output.log'))
+    })
+    test('command does not exist', async() => {
 		await expect(GitStyle('trim'))
-				.resolves.toBe('Command does not exists\n');
-	});
-    test('renders all help', async()=>{
-		findCommands('new.ts', 'add.ts');
+				.resolves.toBe('Command does not exists\n')
+	})
+    test('renders all help', async() => {
+		findCommands('new.ts', 'add.ts')
 		await expect(GitStyle('-h'))
 			.resolves
-			.toBe(readLog('all.help.log'));
-    });
-    test('renders command help', async()=>{
-		findCommands('new.ts');
+			.toBe(readLog('all.help.log'))
+    })
+    test('renders command help', async() => {
+		findCommands('new.ts')
 		await expect(GitStyle('new -h'))
 			.resolves
-			.toBe(readLog('new.help.log'));
-	});
+			.toBe(readLog('new.help.log'))
+	})
 	test('renders help for add command', async () => {
-		findCommands('add.ts');
+		findCommands('add.ts')
 		await expect(GitStyle('add -h'))
 			.resolves
-			.toBe(readLog('add.help.log'));
-	});
+			.toBe(readLog('add.help.log'))
+	})
 	test('adds a dummy command fails', async () => {
-		findCommands('add.ts');
+		findCommands('add.ts')
 		await expect(GitStyle('add dummy'))
 			.resolves
-			.toBe(readLog('add.fail.log'));
-	});
+			.toBe(readLog('add.fail.log'))
+	})
 	test('adds a dummy command', async () => {
-		findCommands('add.ts');
+		findCommands('add.ts')
 		//@ts-ignore
-		existsSync.mockReturnValue(true);
+		existsSync.mockReturnValue(true)
 		await expect(GitStyle('add dummy'))
 			.resolves
-			.toBe(readLog('add.log'));
+			.toBe(readLog('add.log'))
 
-	});
-});
+	})
+})

@@ -508,7 +508,7 @@ export class PackageJSON {
     readme?: string
     constructor(private location: string) {
         try {
-        	Object.assign(this, JSON.parse(readFileSync(location, { encoding: 'utf-8'})))
+			Object.assign(this, JSON.parse(readFileSync(location, { encoding: 'utf-8'})))
         } catch(ex) {
 			/* istanbul ignore next */
             return this
@@ -522,16 +522,17 @@ export class PackageJSON {
 		const clone = {} as PackProperties
 		this.contributors = this.contributors || []
 		for(const key of Object.getOwnPropertyNames(this)) {
-			if(key === 'location') continue;
-			switch(typeof(this[key])) {
+			if(key === 'location') continue
+			switch(typeof this[key]) {
 				case 'object':
-					if(this[key] instanceof Array && !this[key].length) continue;
+					if(this[key] instanceof Array && !this[key].length) continue
+				// eslint-disable-next-line no-fallthrough
 				default:
 					clone[key] = this[key]
-					break;
+					break
 			}
 		}
-		return clone;
+		return clone
 	}
 	/* istanbul ignore next */
     persist() {

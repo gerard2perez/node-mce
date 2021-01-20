@@ -1,14 +1,14 @@
 /**
  * @module @gerard2p/mce/console
  */
-import { MainSpinner } from ".";
+import { MainSpinner } from '.'
 export const pause = () => {
-    MainSpinner.stop();
+    MainSpinner.stop()
 }
 
 export const resume = () => {
-    MainSpinner.start();
+    MainSpinner.start()
 }
-export function updateTextSpin(text:string) {
-    MainSpinner.text = text;
+export function updateTextSpin(text: string) {
+    MainSpinner.text = text
 }

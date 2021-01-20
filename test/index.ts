@@ -1,7 +1,8 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../src';
-export let description = 'A description for your command';
-export let args = '';
-export let options = {
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../src'
+export const description = 'A description for your command'
+export const args = ''
+export const options = {
     enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
     number: numeric('-n <n>', 'A number'),
     floating: floating('-f <n>', 'A float number'),
@@ -11,7 +12,5 @@ export let options = {
     collect: collect('-c <n>', 'A repetable value'),
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
-};
-export async function action(opt:Parsed<typeof options>) {
-	
 }
+export async function action(_opt: Parsed<typeof options>) {}

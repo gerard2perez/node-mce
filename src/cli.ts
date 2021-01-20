@@ -1,2 +1,2 @@
-import { MCE } from "./index";
-MCE(__dirname).subcommand(process.argv);
+import { MCE } from './index'
+MCE(__dirname).subcommand(process.argv)

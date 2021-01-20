@@ -1,12 +1,12 @@
 export function iter<T=any>(obj: any) {
 	obj[Symbol.iterator] = function () {
-		let keys = Object.keys(this);
-		let data:{[p:string]:T} = this;
-		let total = keys.length;
+		const keys = Object.keys(this)
+		const data: {[p: string]: T} = Object.assign({}, this)
+		const total = keys.length
 		return { i: 0,
 			next() {
-				let current = this.i;
-				let key = keys[current];
+				const current = this.i
+				const key = keys[current]
 				return {
 					value: [
 						key,
@@ -15,13 +15,13 @@ export function iter<T=any>(obj: any) {
 						total
 					],
 					done: this.i++ === total
-				};
+				}
 			}
-		};
+		}
 	}
     return obj as {
-		[Symbol.iterator]():{
+		[Symbol.iterator](): {
 			next(): IteratorResult<[string, T, number, number]>
 		}
-	 };
+	}
 }

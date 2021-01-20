@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { MCEProgram } from '../mce-cli'
 import { SetStreams } from '../system-streams'
 import { STDIn } from './stdin'
@@ -8,11 +9,11 @@ export const output = new STDOut
 export const input = new STDIn
 SetStreams(output, input)
 
-let NODE_MCE: Promise<MCEProgram>;
+let NODE_MCE: Promise<MCEProgram>
 export function SetCommandsLocation(path: string) {
 	// @ts-ignore
 	NODE_MCE = import('..').then(({MCE}) => {
-		return MCE(path) as MCEProgram;
+		return MCE(path) as MCEProgram
 	})
 }
 
@@ -25,7 +26,7 @@ export async function GitStyle<T=string>(command: string) {
 	output.clear()
 	return (await NODE_MCE)
 		.gitStyle<T>(command.split(' '))
-		.then(result=>{
+		.then(result => {
 			return output.content || result
 		})
 }
@@ -33,7 +34,7 @@ export async function WithPlugins<T=string>(keyword: string, command: string) {
 	output.clear()
 	return (await NODE_MCE)
 		.withPlugins<T>(keyword, command.split(' '))
-		.then(result=>{
+		.then(result => {
 			return output.content || result
 		})
 }
@@ -45,5 +46,5 @@ export async function Reset() {
 		_owned: [],
 		_local: [],
 		plugins: []
-	};
+	}
 }

@@ -1,96 +1,98 @@
-import { MainSpinner } from "./spinner";
-import { LogSymbols } from "./spinner/symbols";
-import chalk from "chalk";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import { MainSpinner } from './spinner'
+import { LogSymbols } from './spinner/symbols'
+import chalk from 'chalk'
 /**
  * Indicates the level of verbosity required in order to display
  * @param lvl 
  */
-export function log(lvl:number) {
+export function log(lvl: number) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
-		return internal_log;
+		return internal_log
 	}
-	return ()=>{}
+	return () => {}
 }
-function prerender(text:TemplateStringsArray, ...values:any[]) {
+function prerender(text: TemplateStringsArray, ...values: any[]) {
 	let updated = []
-	const [all, transform] = /\{([aA-zZ\.]+)\}/.exec(text[0]) || [];
+	const [all, transform] = /\{([aA-zZ.]+)\}/.exec(text[0]) || []
 	if(transform) {
-		updated.push(text[0].replace(all, ''));
-		updated.push(...text.slice(1));
+		updated.push(text[0].replace(all, ''))
+		updated.push(...text.slice(1))
 	} else {
-		updated = [...text.raw] as any;
+		updated = [...text.raw] as any
 	}
-	//@ts-ignore
-	updated.raw = updated;
-	return [transform, chalk(updated, ...values)];
+	(updated as any).raw = updated
+	return [transform, chalk(updated, ...values)]
 }
-function internal_log(text:TemplateStringsArray|string, ...values:any[]) {
+function internal_log(text: string): void
+function internal_log(text: TemplateStringsArray, ...values: any[]): void
+function internal_log(text: TemplateStringsArray|string, ...values: any[]) {
 	if(typeof text === 'object' && text.raw && text.raw instanceof Array) {
-		let [_transform, req] = prerender(text, ...values);
+		const [_transform, req] = prerender(text, ...values)
 		MainSpinner.log`${req}\n`
 	} else {
 		MainSpinner.log`${text}\n`
 	}
 }
-function addSymbol(lvl:number, symbol:LogSymbols, color:string) {
+function addSymbol(lvl: number, symbol: LogSymbols, color: string) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
-		return (text:TemplateStringsArray|string, ...values:any[]) => {
+		return (text: TemplateStringsArray|string, ...values: any[]) => {
 			if(typeof text === 'object' && text.raw && text.raw instanceof Array) {
-				let [transform, req] = prerender(text, ...values);
-				MainSpinner.log`{${transform||color} ${symbol}} ${req}\n`;
+				const [transform, req] = prerender(text, ...values)
+				MainSpinner.log`{${transform||color} ${symbol}} ${req}\n`
 			} else {
-				MainSpinner.log`{${color} ${symbol}} ${text}\n`;
+				MainSpinner.log`{${color} ${symbol}} ${text}\n`
 			}
-		};
+		}
 	} else {
-		return ()=>{}
+		return () => {}
 	}
 }
 /**
  * Level 2 verbosity function
  */
-export function info(text:string):void;
-export function info(text:TemplateStringsArray, ...values:any[]):void;
-export function info(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(2, LogSymbols.info, 'blue')(text, ...values);
+export function info(text: string): void
+export function info(text: TemplateStringsArray, ...values: any[]): void
+export function info(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(2, LogSymbols.info, 'blue')(text, ...values)
 }
 /**
  * Level 1 verbosity function
  */
-export function warn(text:string):void;
-export function warn(text:TemplateStringsArray, ...values:any[]):void;
-export function warn(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(1, LogSymbols.warning, 'yellow')(text, ...values);
+export function warn(text: string): void
+export function warn(text: TemplateStringsArray, ...values: any[]): void
+export function warn(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(1, LogSymbols.warning, 'yellow')(text, ...values)
 }
 /**
  * Level 0 verbosity function
  */
-export function error(text:string):void;
-export function error(text:TemplateStringsArray, ...values:any[]):void;
-export function error(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(0, LogSymbols.error, 'red')(text, ...values);
+export function error(text: string): void
+export function error(text: TemplateStringsArray, ...values: any[]): void
+export function error(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(0, LogSymbols.error, 'red')(text, ...values)
 }
 /**
  * Level 0 verbosity function
  */
-export function ok(text:string):void;
-export function ok(text:TemplateStringsArray, ...values:any[]):void;
-export function ok(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(0, LogSymbols.success, 'green')(text, ...values);
+export function ok(text: string): void
+export function ok(text: TemplateStringsArray, ...values: any[]): void
+export function ok(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(0, LogSymbols.success, 'green')(text, ...values)
 }
 /**
  * Level 0 verbosity function
  */
-export function updated(text:string):void;
-export function updated(text:TemplateStringsArray, ...values:any[]):void;
-export function updated(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(0, LogSymbols.updated, 'blueBright')(text, ...values);
+export function updated(text: string): void
+export function updated(text: TemplateStringsArray, ...values: any[]): void
+export function updated(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(0, LogSymbols.updated, 'blueBright')(text, ...values)
 }
 /**
  * Level 0 verbosity function
  */
-export function created(text:string):void;
-export function created(text:TemplateStringsArray, ...values:any[]):void;
-export function created(text:TemplateStringsArray|string, ...values:any[]) {
-	addSymbol(0, LogSymbols.success, 'green')(text, ...values);
+export function created(text: string): void
+export function created(text: TemplateStringsArray, ...values: any[]): void
+export function created(text: TemplateStringsArray|string, ...values: any[]) {
+	addSymbol(0, LogSymbols.success, 'green')(text, ...values)
 }

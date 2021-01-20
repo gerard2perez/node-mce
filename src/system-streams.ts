@@ -1,4 +1,4 @@
-import { Writable, Readable } from "stream"
+import { Writable, Readable } from 'stream'
 import { MainSpinner } from './spinner'
 export const streams  = {
 	output: process.stderr,
