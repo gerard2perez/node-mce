@@ -33,6 +33,9 @@ export async function WithPlugins<T=string>(keyword: string, command: string) {
 	output.clear()
 	return (await NODE_MCE)
 		.withPlugins<T>(keyword, command.split(' '))
+		.then(result=>{
+			return output.content || result
+		})
 }
 export async function Reset() {
 	// @ts-ignore
