@@ -1,8 +1,7 @@
 import { join } from "path";
-import { compile, copy, mkdir, write, writeJSON } from "./fs";
-export { remove } from "./remove";
+import { compile, copy, mkdir, write, writeJSON, remove } from "./fs";
 import { makeChainableDir, chainable, chainable_dir, makeChainable } from "./wrappers";
-export { PackageJSON } from "./package";
+export { PackageJSON } from "../@utils/package-json";
 function _root(root:string){
 	this.path = join(this.path, root);
 	let path = this.path;
@@ -34,4 +33,5 @@ export { cpy as c, cmp as z, dir as d, root as r, wrt as w };
 export function match(condition:boolean, fn:chainable):chainable {
 	return condition ? fn:undefined;
 }
-export { makeChainable }
+export { makeChainable, remove }
+export { PackageJSON2Chain } from './package-json'

@@ -80,10 +80,10 @@ export class LiveStream {
 	async run(): Promise<Buffer> {
 		return new Promise((resolve, reject) => {
 			const child = cspawn(...this.#arguments)
-			if(this.#onError) this.stdout.on('error', this.catchAndRelease.bind(this, this.#onError))
-			if(this.#onError) this.stderr.on('error', this.catchAndRelease.bind(this, this.#onError))
-			this.stdout.on('data', this.catchAndRelease.bind(this, this.#onData))
-			this.stderr.on('data', this.catchAndRelease.bind(this, this.#onData))
+			if(this.#onError) child.stdout.on('error', this.catchAndRelease.bind(this, this.#onError))
+			if(this.#onError) child.stderr.on('error', this.catchAndRelease.bind(this, this.#onError))
+			child.stdout.on('data', this.catchAndRelease.bind(this, this.#onData))
+			child.stderr.on('data', this.catchAndRelease.bind(this, this.#onData))
 			child.once('close', (code, signal)=>{
 				if(code === 0) {
 					resolve(this.output)

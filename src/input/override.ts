@@ -1,5 +1,5 @@
 import { existsSync } from "../fs";
-import { remove } from "../tree-maker/remove";
+import { remove } from "../tree-maker";
 import { spin } from "../spinner";
 import { confirm } from "./confirm";
 

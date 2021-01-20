@@ -1,11 +1,11 @@
-import { bool, enumeration, Parsed, text } from '../';
+import { bool, enumeration, Parsed, text } from '..';
 import { override } from "../input";
 import { information } from '../program';
 import { exec, LiveStream } from "../spawn";
 import { spin } from "../spinner";
 import { updateTextSpin } from '../spinner/console';
-import { c, d, match, r, TreeMaker, w, z } from "../tree-maker";
-import { callerPath } from '../tree-maker/fs';
+import { c, d, match, PackageJSON, PackageJSON2Chain, r, TreeMaker, w, z } from "../tree-maker";
+import { callerPath, cliPath } from '../tree-maker/fs';
 import { error } from "../verbose";
 function thenOrCatch<T>(result: LiveStream, retVal: T) {
 	return result.data(chunck=>{
@@ -37,13 +37,13 @@ export  async function action(application:string, opt:Parsed<typeof options>) {
 	let tree = await createProjectExtructure(application, opt);
 	// istanbul ignore next
 	opt.npm && await spin('Initializing npm', async() => {
-		if ( !await exec('npm', ['install', '-S'], {cwd: nproy()}).run().catch(()=>false) ) {
+		if ( await exec('npm', ['install', '-S'], {cwd: nproy()}).run().catch(()=>false) === false ) {
 			error('npm installation failed');
 		}
 	});
 	await spin('Initializing git', async()=>{
-		// istanbul ignore next
-		if ( !await thenOrCatch(exec('git', ['init'], {cwd: nproy()}), false) ) {
+		let initResult = await thenOrCatch(exec('git', ['init'], {cwd: nproy()}), false)
+		if ( initResult === false ) {
 			error('git init')
 		}
 		tree.w(c('gitignore','.gitignore'))
@@ -54,14 +54,39 @@ async function createProjectExtructure(application: string, opt:Parsed<typeof op
 	let {author} = opt;
 	/* istanbul ignore else */
 	if(author === 'GIT_OR_NPM_USER') {
-		let git_user: any = await thenOrCatch(exec('git', ['config', 'user.name'], {}), false)
-		let git_email: any = await thenOrCatch(exec('git', ['config', 'user.email'], {}), false)
+		let git_user: any = await thenOrCatch(exec('git', ['config', 'user.name'], {}), '')
+		let git_email: any = await thenOrCatch(exec('git', ['config', 'user.email'], {}), '')
 		/* istanbul ignore else */
-		if(!git_user) git_user = await thenOrCatch(exec('npm', ['whoami'], {}), false);
+		if(!git_user) git_user = await thenOrCatch(exec('npm', ['whoami'], {}), '');
 		author = `${git_user.trim()} <${git_email.trim()}>`;
 	}
 	await spin('Creating Files', async () => {
 		let cli = `import { MCE } from "@gerard2p/mce";\n\nMCE(__dirname).${opt.style === Styles.git ? 'subcommand':'command'}(process.argv);`;
+		
+		let nPack = new PackageJSON(cliPath('templates', 'package.json'))
+			.withDefaults({
+				name: application,
+			})
+			.patchValues({
+				name: application,
+			description: '',
+			main: `./${application}`,
+			bin: {
+				[application]: `./${application}`,
+			},
+			keywords: [
+				application,
+				'cmd'
+			],
+			author,
+			license: 'MIT',
+			"scripts": {
+				"pkg-files": `node cpx \"?(package.json|README.md|LICENSE|${application})\"  lib`,
+			},
+			dependencies: {
+				"@gerard2p/mce": `^${information().version}`
+			}
+		})
 		tree = r(application);
 		tree.w(
 			c('app', application),
@@ -78,8 +103,8 @@ async function createProjectExtructure(application: string, opt:Parsed<typeof op
 			c('launch.json'),
 			c('settings.json'),
 		)
-		.w(
-			z('package.json',{application, local_version: information().version, author }),
+		.w(	
+			PackageJSON2Chain(nPack),
 			c('incremental.js'),
 			c('cpx.js'),
 			c('jest.config.js')

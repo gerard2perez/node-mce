@@ -10,6 +10,16 @@ export function mockSpawn(callback:string | ((stdout: STDOut, stderr: STDOut) =>
 	cspawn.mockImplementationOnce((cmd, cmdOptions, options) => {
 		const [_, stdout, stderr] = options.stdio as STDOut[]
 		return {
+			stderr: {
+				on(event: string, cb: any){
+					stderr.on(event, cb)
+				}
+			},
+			stdout: {
+				on(event: string, cb: any){
+					stdout.on(event, cb)
+				}
+			},
 			once(event: string, finalize: (code: number, signal: string)=>{}) {
 				let exitCode = 0
 				if(typeof(callback) === 'string') {

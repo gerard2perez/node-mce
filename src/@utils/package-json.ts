@@ -2,8 +2,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname } from 'path'
 import { inspect } from 'util'
-import { writeJSON } from './fs'
-import { makeChainable } from './wrappers'
+import { mergeDeep } from './merge-deep'
 /**
  * is an object with a "name" field and optionally "url" and "email"
  * Or you can shorten that all into a single string, and npm will parse it for you:
@@ -509,22 +508,22 @@ export class PackageJSON {
     readme?: string
     constructor(private location: string) {
         try {
-        Object.assign(this, JSON.parse(readFileSync(location, { encoding: 'utf-8'})))
+        	Object.assign(this, JSON.parse(readFileSync(location, { encoding: 'utf-8'})))
         } catch(ex) {
+			/* istanbul ignore next */
             return this
         }
-    }
+	}
+	/* istanbul ignore next */
     [inspect.custom]() {
         return this.toJSON()
 	}
 	toJSON() {
 		const clone = {} as PackProperties
-		clone.contributors = []
-		for(const key of Object.keys(this)) {
+		this.contributors = this.contributors || []
+		for(const key of Object.getOwnPropertyNames(this)) {
 			if(key === 'location') continue;
 			switch(typeof(this[key])) {
-				case 'function':
-					continue;
 				case 'object':
 					if(this[key] instanceof Array && !this[key].length) continue;
 				default:
@@ -534,6 +533,7 @@ export class PackageJSON {
 		}
 		return clone;
 	}
+	/* istanbul ignore next */
     persist() {
         try {
             mkdirSync(dirname(this.location), {recursive: true})
@@ -542,16 +542,13 @@ export class PackageJSON {
          }
         writeFileSync(this.location, JSON.stringify(this, null, 2)+'\n')
     }
-    withDefaults(data: PackProperties) {
+    withDefaults(data: Partial<PackProperties>) {
         Object.assign(this, data, this)
         return this
     }
-    patchValues(data: PackProperties) {
-        Object.assign(this, data)
+    patchValues(data: Partial<PackProperties>) {
+		mergeDeep(this, data)
         return this
-    }
-    save() {
-        return makeChainable(writeJSON)('package.json', this.toJSON())
     }
 }
 type Props<T=PackageJSON> = {

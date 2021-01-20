@@ -1,6 +1,9 @@
+import { fstat } from "fs";
 import { WriteStream } from "tty";
+import { STDOut } from "../test";
+import {open, openSync} from 'fs'
 
 /* istanbul ignore next */
 export function SpawnStreams() {
-	return ['pipe', new WriteStream(1), new WriteStream(2)] as [any, any, any]
+	return ['pipe', 'pipe', 'pipe'] as [any, any, any]
 }

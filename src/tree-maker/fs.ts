@@ -38,7 +38,7 @@ let PROJECT = (folder:string)=>folder;
 export let template = (path:string)=>path;
 export let project = (path:string)=>path;
 export function cliPath (...path:string[]) {
-    return resolve(process.env.MCE_ROOT, ...path).replace(process.env.TEST === 'test' ? 'src/' : '', '');
+    return resolve(process.env.MCE_ROOT, ...path).replace( /* istanbul ignore next */ process.env.TEST === 'test' ? 'src/' : '', '');
 }
 export function callerPath (...path:string[]) {
     return resolve(process.cwd(), ...path);

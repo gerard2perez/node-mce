@@ -4,6 +4,8 @@ import { mockSpawn } from '../src/test/spawn'
 import { existsSync, readdirSync, readFileSync } from '../src/fs'
 import { findCommands, SetProjectPath, Reset, Restore, GitStyle } from './loader'
 import { readLog } from './log-reader';
+import { stdout } from 'process'
+import { stderr } from 'chalk'
 
 //@ts-ignore
 existsSync.mockReturnValue(false);
@@ -42,7 +44,10 @@ describe('Self Test', ()=>{
 		mockSpawn('gerard2p')
 		mockSpawn('gerard2perez@gmail')
 		mockSpawn('true')
-		mockSpawn('true')
+		mockSpawn((stdout, stderr) => {
+			stderr.emit('data', 'fails')
+			return 1
+		})
 		await expect(GitStyle('new git_repo -f -s -n git'))
 				.resolves.toBe(readLog('new-git.output.log'));
     });

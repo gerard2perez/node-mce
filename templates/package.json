@@ -4,7 +4,7 @@
     "description": "",
     "main": "./{{application}}",
     "bin": {
-        "{{application}}": "./{{application}}"
+        
     },
     "scripts": {
         "clean": "node incremental",
