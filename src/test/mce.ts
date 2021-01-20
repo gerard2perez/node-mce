@@ -1,4 +1,4 @@
-import type { MCEProgram } from '..'
+import type { MCEProgram } from '../mce-cli'
 import { SetStreams } from '../system-streams'
 import { STDIn } from './stdin'
 import { STDOut } from './stdout'

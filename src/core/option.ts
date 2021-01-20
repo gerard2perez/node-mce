@@ -1,4 +1,4 @@
-import { MCEProgram } from "..";
+import { MCEProgram } from "../mce-cli";
 import { Command } from "./command";
 export type Range = [start:number, end:number];
 export type List = string[];
