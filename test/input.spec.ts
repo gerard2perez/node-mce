@@ -1,9 +1,9 @@
 process.env.TEST = 'test'
 jest.mock('../src/fs')
-import { input, SetProjectPath, output, Reset, Restore} from './loader'
-import {question, confirm, override} from '../src/input'
-import { wait, spin } from '../src/spinner'
 import { existsSync, readdirSync } from '../src/fs'
+import { confirm, override, question } from '../src/input'
+import { spin, wait } from '../src/spinner'
+import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 
 describe('test user interactions', () => {
 	beforeAll(() => SetProjectPath('./test'))

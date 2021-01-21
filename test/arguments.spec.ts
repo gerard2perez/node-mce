@@ -1,5 +1,5 @@
-import { SetProjectPath, Reset, Restore, GitStyle } from './loader'
-import { readLog } from './log-reader'
+import { GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
+import { readLog } from './@utils/log-reader'
 
 process.env.TEST = 'test'
 

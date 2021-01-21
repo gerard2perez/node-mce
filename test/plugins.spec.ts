@@ -1,6 +1,6 @@
 process.env.TEST = 'test'
-import { Reset, Restore, SetProjectPath, WithPlugins } from './loader'
-import { readLog } from './log-reader'
+import { Reset, Restore, SetProjectPath, WithPlugins } from './@utils/loader'
+import { readLog } from './@utils/log-reader'
 
 describe('Self Test #2', () => {
 	beforeAll(() => SetProjectPath('./test'))

@@ -1,5 +1,0 @@
-{
-    "commands": {
-        "submodule.test": "./module/submodule.test.ts"
-    }
-}

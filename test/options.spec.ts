@@ -1,4 +1,4 @@
-import { GitStyle, Reset, Restore, SetProjectPath } from './loader'
+import { GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
 
 describe('Options Parsing', () => {
 	beforeAll(() => SetProjectPath('./test'))
