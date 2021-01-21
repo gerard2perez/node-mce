@@ -1,10 +1,10 @@
-import { bool, enumeration, Parsed, text } from '..'
+import { bool, enumeration, PackageJSON, Parsed, text } from '..'
 import { override } from '../input'
 import { information } from '../program'
 import { exec, LiveStream } from '../spawn'
 import { spin } from '../spinner'
 import { updateTextSpin } from '../spinner/console'
-import { c, d, match, PackageJSON, PackageJSON2Chain, r, TreeMaker, w, z } from '../tree-maker'
+import { c, d, match, PackageJSON2Chain, r, TreeMaker, w, z } from '../tree-maker'
 import { callerPath, cliPath } from '../tree-maker/fs'
 import { error } from '../verbose'
 function thenOrCatch<T>(result: LiveStream, retVal: T) {

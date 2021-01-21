@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./",
+    "module": "commonjs",
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2018",
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "esModuleInterop": true
+  },
+  "include": [
+    "sourcemap.ts"
+  ],
+  "exclude": [
+    "src/**/*",
+    "**/**/*.spec.ts",
+    "lib",
+    "templates",
+    "node_modules"
+  ]
+}

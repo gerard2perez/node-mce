@@ -2,6 +2,7 @@
  * @module @gerard2p/mce/core
  */
 import chalk from 'chalk'
+import { UseSourceMaps } from '../@utils/user-sourcemaps'
 import { MainSpinner } from '../spinner'
 import { Argument } from './argument'
 import { HelpRenderer } from './help-renderer'
@@ -106,6 +107,7 @@ export class Command {
         return main_args
     }
     private execute(args: string[]) {
+		const debug = process.env.MCE_TRACE === 'true'
 		const _opt_: any = {}
 		this.options.forEach(option => _opt_[option.name] = option.find(args))
 		if(this.verbose) {
@@ -115,6 +117,10 @@ export class Command {
 		const nargs = final_args.length + (this.options.length ? 1:0)
         if (nargs !== this.action.length)
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`)
-        return this.action(...final_args, _opt_)
+		return this.action(...final_args, _opt_)
+			.catch(error => debug ? UseSourceMaps(error): Promise.reject(error))
+			.finally(() => {
+				process.stdin.destroy()
+			})
     }
 }

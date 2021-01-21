@@ -19,8 +19,8 @@ export async function spin(display: string | ISpinnerOptions, fn: () => Promise<
 		} else {
 			MainSpinner.stop()
 		}
-	}).catch( /*istanbul ignore next*/ err => {
-		MainSpinner.fail(`${MainSpinner.text}: ${err.message}`)
+	}).catch( /*istanbul ignore next*/ (err: Error) => {
+		MainSpinner.stop()
 		throw err
 	})
 }

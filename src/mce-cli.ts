@@ -169,11 +169,13 @@ export class MCEProgram {
 		return this.subcommand<T>(args)
 	}
 	private detectPlugins(keyword: string): CommandMap[] {
+		// istanbul ignore if
 		if(!existsSync(callerPath('package.json'))) return[]
 		const {dependencies, devDependencies} = require(callerPath('package.json'))
 		const packages = Object.keys({...dependencies, ...devDependencies })
 		const modules = packages.map(pack => {
 			const path = callerPath('node_modules', pack)
+			// istanbul ignore if
 			if(!existsSync(callerPath('node_modules', pack, 'package.json'))) return {keywords: []}
 			/* istanbul ignore next */
 			let {keywords = [], name} = require(callerPath('node_modules', pack, 'package.json')) as {name: string, keywords: string[]}

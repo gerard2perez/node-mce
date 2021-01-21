@@ -132,11 +132,11 @@ export class Spinner {
 	}
 
 	stop() {
+		clearInterval(this.id)
 		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this
 		}
-		clearInterval(this.id)
 		this.id = null
 		this.frameIndex = 0
 		this.clear()
@@ -181,11 +181,11 @@ export class Spinner {
 		return this.log`{${options.color||'red'} ${options.symbol}} ${options.text || this.text}${newline}`
 	}
 	private stopAndPersist(options: { symbol: LogSymbols, text: string, color: string }) {
+		this.stop()
 		/*istanbul ignore next*/
 		if (!this.enabled) {
 			return this
 		}
-		this.stop()
 		return this.persist(options, '')
 	}
 }
