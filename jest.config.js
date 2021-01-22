@@ -11,6 +11,7 @@ module.exports = {
     }
   },
   testPathIgnorePatterns: [
+    "src/commands/build/*",
     "templates",
     "node_modules",
     "coverage",
@@ -22,6 +23,7 @@ module.exports = {
     "src/**/*.{ts,tsx}"
   ],
   coveragePathIgnorePatterns: [
+    "src/commands/build/*",
     "/node_modules/",
     "src/cli.ts",
     "src/spinner/"

@@ -55,6 +55,8 @@ export function mkdir (dir: string) {
 	dir = this.project(dir)
     try {
 		mkdirSync(dir)
+	} catch(_error) { 
+		_error.message = null
 	} finally {
 		ok(highLightBasename`${dir}`)
 	}
@@ -83,3 +85,4 @@ export function compile(source: string, data: {[p: string]: string}, target: str
 }
 
 export { remove } from './remove'
+
