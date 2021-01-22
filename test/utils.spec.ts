@@ -1,6 +1,6 @@
 process.env.TEST = 'test'
 jest.mock('../src/fs')
-import { resolve } from 'path'
+import { dirname, resolve } from 'path'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/fs'
 import { GitStyle, Reset, Restore, SetProjectPath, SingleStyle } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
@@ -9,7 +9,7 @@ readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
 //@ts-ignore
 existsSync.mockReturnValue(true)
 describe('Utils functions', () => {
-	beforeAll(() => SetProjectPath('./test'))
+	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
     test('gets correct paths', async () => {
@@ -41,7 +41,7 @@ describe('Utils functions', () => {
 		await expect(GitStyle('utils2 -vvv -r'))
 			.resolves.toBeDefined()
 		expect(writeFileSync).toBeCalledTimes(1)
-		expect(writeFileSync).toBeCalledWith(resolve(process.cwd(), './demo.txt'), 'works')
+		expect(writeFileSync).toBeCalledWith(resolve(dirname(__dirname), 'test/demo_project', './demo.txt'), 'works')
 		await expect(GitStyle('utils2 -vvv')).resolves.toBe('works')
     })
     test('executes a single command', async () => {

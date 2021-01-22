@@ -56,6 +56,7 @@ export function mkdir (dir: string) {
     try {
 		mkdirSync(dir)
 	} catch(_error) { 
+		// istanbul ignore next
 		_error.message = null
 	} finally {
 		ok(highLightBasename`${dir}`)

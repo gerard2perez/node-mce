@@ -1,4 +1,4 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src'
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../../src'
 export const description = 'A description for your command'
 export const args = '<arg1:number> [arg2:bool]'
 export const options = {

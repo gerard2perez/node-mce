@@ -1,8 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src'
-import { spin } from '../../src/spinner'
-import { pause, resume } from '../../src/spinner/console'
-import { callerPath, cliPath } from '../../src/tree-maker/fs'
-import { created, error, info, log, ok, updated, warn } from '../../src/verbose'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {
@@ -16,22 +13,4 @@ export const options = {
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 }
-
-export async function action(_opt: Parsed<typeof options>) {
-    await spin('test', async () => {
-        pause()
-        ok`{red}test`
-        error`test`
-        warn`test`
-        info('test')
-        resume()
-        created('chochis.ts')
-		updated('chochis.ts')
-		log(3)`test`
-		log(3)('test 2')
-    })
-	return {
-        cli: cliPath(),
-        target: callerPath()
-	}
-}
+export async function action(_opt: Parsed<typeof options>) {}

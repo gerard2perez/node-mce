@@ -4,7 +4,7 @@ import { readLog } from './@utils/log-reader'
 process.env.TEST = 'test'
 
 describe('Arguments Parsing', () => {
-	beforeAll(() => SetProjectPath('./test'))
+	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
 	test('full rendering of arguments', async () => {

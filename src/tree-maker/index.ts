@@ -30,6 +30,7 @@ export const cmp = makeChainable(compile)
 export { PackageJSON2Chain } from './package-json'
 export { TreeMaker } from './wrappers'
 export { cpy as c, cmp as z, dir as d, root as r, wrt as w }
+// istanbul ignore next
 export { makeChainable, remove }
 export function match(condition: boolean, fn: chainable): chainable {
 	return condition ? fn:undefined

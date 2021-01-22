@@ -81,7 +81,9 @@ export class LiveStream {
 	async run(): Promise<Buffer> {
 		return new Promise((resolve, reject) => {
 			const child = cspawn(...this.#arguments)
+			// istanbul ignore next
 			const stdout = child.stdout || this.stdout
+			// istanbul ignore next
 			const stderr = child.stderr || this.stderr
 			if(this.#onError) stdout.on('error', this.catchAndRelease.bind(this, this.#onError))
 			if(this.#onError) stderr.on('error', this.catchAndRelease.bind(this, this.#onError))

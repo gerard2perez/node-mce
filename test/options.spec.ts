@@ -1,7 +1,7 @@
 import { GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
 
 describe('Options Parsing', () => {
-	beforeAll(() => SetProjectPath('./test'))
+	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
     test('get defaults options', async () => {

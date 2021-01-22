@@ -1,6 +1,6 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src'
+import { bool, callerPath, cliPath, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../../src'
 export const description = 'A description for your command'
-export const args = '[arg2] <arg1>'
+export const args = ''
 export const options = {
     enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
     number: numeric('-n <n>', 'A number'),
@@ -12,10 +12,9 @@ export const options = {
     bool: bool('-b', 'A boolean value'),
     verbose: verbose('Increase system verbosity'),
 }
-export async function action(arg1: string, arg2: string, opt: Parsed<typeof options>) {
+export async function action(_opt: Parsed<typeof options>) {
 	return {
-        arg1,
-        arg2,
-		opt
+        cli: cliPath(),
+        target: callerPath()
 	}
 }

@@ -3,7 +3,7 @@ import { Reset, Restore, SetProjectPath, WithPlugins } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 
 describe('Self Test #2', () => {
-	beforeAll(() => SetProjectPath('./test'))
+	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
 	test('Can load local commands using the plugin namespace', async() => {
@@ -22,5 +22,10 @@ describe('Self Test #2', () => {
 		process.env.MCE_TRACE_SHOWMCE = 'true'
 		await expect(WithPlugins('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
 		// await expect(WithPlugins('test-commands', 'module:sourcemap -s')).rejects.toThrow('from spinner')
+	})
+	test('test commands in folders', async () => {
+		await expect(WithPlugins('test-commands', 'module:complex'))
+			.resolves
+			.toEqual({opt: true})
 	})
 })

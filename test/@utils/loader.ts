@@ -7,7 +7,7 @@ export { input, output } from '../../src/test'
 export { SingleStyle, GitStyle, Reset, WithPlugins }
 
 const origin = join(__dirname, '../../')
-SetCommandsLocation('./test')
+SetCommandsLocation('./test/demo_project')
 
 export function SetProjectPath(path: string){
 	process.chdir(join(origin, path))

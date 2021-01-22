@@ -6,7 +6,7 @@ import { spin, wait } from '../src/spinner'
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 
 describe('test user interactions', () => {
-	beforeAll(() => SetProjectPath('./test'))
+	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
 	test('question', async () => {
