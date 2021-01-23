@@ -27,6 +27,7 @@ export const wrt = makeChainable(write)
 export const cmp = makeChainable(compile)
 
 // export { compile, copy, intercept, mkdir, write, template, project } from './fs';
+export * from './console'
 export { PackageJSON2Chain } from './package-json'
 export { TreeMaker } from './wrappers'
 export { cpy as c, cmp as z, dir as d, root as r, wrt as w }

@@ -23,6 +23,7 @@ module.exports = {
     "src/**/*.{ts,tsx}"
   ],
   coveragePathIgnorePatterns: [
+    "src/verbose",
     "src/commands/build/*",
     "/node_modules/",
     "src/cli.ts",

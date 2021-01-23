@@ -1,7 +1,7 @@
 process.env.TEST = 'test'
-jest.mock('../src/fs')
-import { existsSync, readdirSync } from '../src/fs'
+jest.mock('../src/mockable/fs')
 import { confirm, override, question } from '../src/input'
+import { existsSync, readdirSync } from '../src/mockable/fs'
 import { spin, wait } from '../src/spinner'
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 

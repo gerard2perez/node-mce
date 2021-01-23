@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { join, resolve } from 'path'
 import { Command, ICommand, Option, Parser } from './core'
-import { existsSync, readdirSync } from './fs'
+import { existsSync, readdirSync } from './mockable/fs'
 import { locations } from './program'
 import { MainSpinner } from './spinner'
 import { callerPath } from './tree-maker/fs'

@@ -1,4 +1,5 @@
 import { bool, enumeration, PackageJSON, Parsed, text } from '..'
+import { error } from '../console'
 import { override } from '../input'
 import { information } from '../program'
 import { exec, LiveStream } from '../spawn'
@@ -6,7 +7,6 @@ import { spin } from '../spinner'
 import { updateTextSpin } from '../spinner/console'
 import { c, d, match, PackageJSON2Chain, r, TreeMaker, w, z } from '../tree-maker'
 import { callerPath, cliPath } from '../tree-maker/fs'
-import { error } from '../verbose'
 function thenOrCatch<T>(result: LiveStream, retVal: T) {
 	return result.data(chunck => {
 		updateTextSpin(chunck.toString())
@@ -38,13 +38,13 @@ export  async function action(application: string, opt: Parsed<typeof options>) 
 	// istanbul ignore next
 	opt.npm && await spin('Initializing npm', async() => {
 		if ( await exec('npm', ['install', '-S'], {cwd: nproy()}).run().catch(() => false) === false ) {
-			error('npm installation failed')
+			error`npm installation failed`
 		}
 	})
 	await spin('Initializing git', async() => {
 		const initResult = await thenOrCatch(exec('git', ['init'], {cwd: nproy()}), false)
 		if ( initResult === false ) {
-			error('git init')
+			error`git init`
 		}
 		tree.w(c('gitignore', '.gitignore'))
 	})

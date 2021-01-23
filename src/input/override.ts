@@ -1,6 +1,6 @@
-import { existsSync } from '../fs'
-import { remove } from '../tree-maker'
+import { existsSync } from '../mockable/fs'
 import { spin } from '../spinner'
+import { remove } from '../tree-maker'
 import { confirm } from './confirm'
 
 export async function override(display: string, testdir: string,  state: boolean) {

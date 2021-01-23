@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from '../fs'
+import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from '../mockable/fs'
 // istanbul ignore next
 export function remove (path: string) {
     if (existsSync(path)) {

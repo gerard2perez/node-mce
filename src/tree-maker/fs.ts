@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { basename, dirname, posix, resolve } from 'path'
-import { copyFileSync, mkdirSync, writeFileSync } from '../fs'
-import { ok } from '../verbose'
+import { ok } from '../console'
+import { copyFileSync, mkdirSync, writeFileSync } from '../mockable/fs'
 import { render } from './render'
 export interface fs_interface {
 	path: string
@@ -9,8 +9,18 @@ export interface fs_interface {
 	template: (...path: string[]) => string,
 	project: (...path: string[]) => string
 }
+/**
+ * @deprecated use new Tagged template system for log function
+ * @example```
+	import { log } from 'gerard2p/mce'
+	log(0)`path/to.file|highlightBasename`
+	```
+ * @param path
+ * @param highlight
+ */
 export function highLightBasename(path: string, highlight: string): string
 export function highLightBasename(text: TemplateStringsArray, ...values: any[]): string
+/* istanbul ignore next */
 export function highLightBasename(...data: any[]) {
 	let result = ''
 	if(data.length === 2 && typeof data[0] === 'string' && typeof data[1] === 'string' ) {
@@ -25,7 +35,7 @@ export function highLightBasename(...data: any[]) {
 	return result
 }
 function printHighLigthed(target: string) {
-	ok(highLightBasename(target, 'green.bold'))
+	ok`{${target}|highlightBasename:green}`
 }
 let TEMPLATE = (folder: string) => {
 	const res = cliPath('templates', folder)
@@ -49,7 +59,7 @@ export function pathResolver(_template: typeof template, _target?: typeof projec
 export function write(target: string, content: string) {
 	target = PROJECT(this.project(target))
 	writeFileSync(target, content)
-	printHighLigthed(target)
+	ok`{${target}|highlightBasename:green}`
 }
 export function mkdir (dir: string) {
 	dir = this.project(dir)
@@ -59,7 +69,7 @@ export function mkdir (dir: string) {
 		// istanbul ignore next
 		_error.message = null
 	} finally {
-		ok(highLightBasename`${dir}`)
+		ok`{${dir}|highlightBasename}`
 	}
 	
 }

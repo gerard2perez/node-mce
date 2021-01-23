@@ -1,7 +1,7 @@
 process.env.TEST = 'test'
-jest.mock('../src/fs')
+jest.mock('../src/mockable/fs')
 import { dirname, resolve } from 'path'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/mockable/fs'
 import { GitStyle, Reset, Restore, SetProjectPath, SingleStyle } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 //@ts-ignore

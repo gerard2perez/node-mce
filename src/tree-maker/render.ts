@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from '../fs'
 import { iter } from '../@utils/iter'
+import { readFileSync, writeFileSync } from '../mockable/fs'
 
 export function render(source: string, data: unknown, dest?: string ) {
     let info = readFileSync(source, 'utf-8')
