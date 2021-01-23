@@ -10,6 +10,9 @@ module.exports = {
       "statements": 90
     }
   },
+  modulePathIgnorePatterns: [
+    '<rootDir>/lib/'
+  ],
   testPathIgnorePatterns: [
     "templates",
     "node_modules",

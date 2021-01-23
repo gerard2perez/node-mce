@@ -1,9 +1,8 @@
-process.env.TEST = 'test'
-jest.mock('../src/mockable/fs')
-import { confirm, override, question } from '../src/input'
-import { existsSync, readdirSync } from '../src/mockable/fs'
-import { spin, wait } from '../src/spinner'
+jest.mock('@gerard2p/mce/mockable/fs')
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
+import { confirm, override, question } from '@gerard2p/mce/input'
+import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
+import { spin, wait } from '@gerard2p/mce/spinner'
 
 describe('test user interactions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))

@@ -10,7 +10,8 @@
             "name": "Jest",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
-                "test"
+                "test",
+                "--runInBand"
             ],
             "port": 9229,
             "skipFiles": [

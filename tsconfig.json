@@ -1,5 +1,11 @@
 {
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
+  },
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./lib",
     "module": "commonjs",
     "forceConsistentCasingInFileNames": true,
@@ -11,14 +17,16 @@
     "experimentalDecorators": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@gerard2p/mce": ["src"],
+      "@gerard2p/mce/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*.ts"
   ],
   "exclude": [
-    "**/**/*.spec.ts",
-    "lib",
     "templates",
     "node_modules"
   ]

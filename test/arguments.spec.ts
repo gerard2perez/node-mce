@@ -1,8 +1,6 @@
 import { GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 
-process.env.TEST = 'test'
-
 describe('Arguments Parsing', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 process.env.MCE_DEV = 'true'
+process.env.TEST = 'test'
+import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
+import { GitStyle, Reset, SetCommandsLocation, SingleStyle, WithPlugins } from '@gerard2p/mce/test'
 import { join, resolve } from 'path'
-import { existsSync, readdirSync } from '../../src/mockable/fs'
-import { GitStyle, Reset, SetCommandsLocation, SingleStyle, WithPlugins } from '../../src/test'
-export { input, output } from '../../src/test'
+export { input, output } from '@gerard2p/mce/test'
 export { SingleStyle, GitStyle, Reset, WithPlugins }
 
 const origin = join(__dirname, '../../')

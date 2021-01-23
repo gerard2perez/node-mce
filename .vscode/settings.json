@@ -9,7 +9,6 @@
   "codemetrics.basics.ComplexityLevelHigh": 20,
   "codemetrics.basics.ComplexityLevelNormal": 15,
   "codemetrics.basics.CodeLensHiddenUnder": 14,
-  "linter_codeclimate.enabled": true,
   "files.associations": {
     "**/templates/**/*.ts": "plaintext",
     "**/templates/**/*.json": "plaintext"

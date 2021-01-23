@@ -1,10 +1,12 @@
-process.env.TEST = 'test'
 import { Reset, Restore, SetProjectPath, WithPlugins } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
-
+jest.unmock('@gerard2p/mce/mockable/fs')
 describe('Self Test #2', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
-	beforeEach(() => Reset())
+	beforeEach(() => {
+		Reset()
+		// findCommands('')
+	})
 	afterAll(() => Restore())
 	test('Can load local commands using the plugin namespace', async() => {
 		await expect(WithPlugins('test-commands', 'l:args -h'))

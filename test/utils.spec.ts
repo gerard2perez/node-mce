@@ -1,9 +1,8 @@
-process.env.TEST = 'test'
-jest.mock('../src/mockable/fs')
-import { dirname, resolve } from 'path'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from '../src/mockable/fs'
+jest.mock('@gerard2p/mce/mockable/fs')
 import { GitStyle, Reset, Restore, SetProjectPath, SingleStyle } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from '@gerard2p/mce/mockable/fs'
+import { dirname, resolve } from 'path'
 //@ts-ignore
 readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
 //@ts-ignore

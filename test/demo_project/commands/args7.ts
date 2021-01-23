@@ -1,4 +1,4 @@
-import { numeric, Parsed } from '../../../src'
+import { numeric, Parsed } from '@gerard2p/mce'
 export const description = 'A description for your command'
 export const options = {
     number: numeric('-n', 'A number', 10),

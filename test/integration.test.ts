@@ -1,9 +1,8 @@
-process.env.TEST = 'test'
-jest.mock('../src/mockable/fs')
-import { existsSync, readdirSync, readFileSync } from '../src/mockable/fs'
-import { mockSpawn } from '../src/test/spawn'
+jest.mock('@gerard2p/mce/mockable/fs')
 import { findCommands, GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
+import { existsSync, readdirSync, readFileSync } from '@gerard2p/mce/mockable/fs'
+import { mockSpawn } from '@gerard2p/mce/test/spawn'
 
 //@ts-ignore
 existsSync.mockReturnValue(false)

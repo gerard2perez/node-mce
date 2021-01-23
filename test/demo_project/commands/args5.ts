@@ -1,4 +1,4 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../../src'
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
 export const description = 'A description for your command'
 export const args = '<arg2:bool> [arg2...] <arg1:number>'
 export const options = {

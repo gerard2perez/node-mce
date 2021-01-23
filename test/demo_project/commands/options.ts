@@ -1,5 +1,5 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../../src'
-import { makeChainable } from '../../../src/tree-maker'
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
+import { makeChainable } from '@gerard2p/mce/tree-maker'
 export const description = 'A description for your command'
 export const args = '<arg1> [varidac...]'
 export const options = {

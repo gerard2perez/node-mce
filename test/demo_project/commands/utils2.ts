@@ -1,6 +1,6 @@
-import { bool, collect, enumeration, floating, list, numeric, Parsed, text, verbose } from '../../../src'
-import { cliPath } from '../../../src/tree-maker/fs'
-import { render } from '../../../src/tree-maker/render'
+import { bool, collect, enumeration, floating, list, numeric, Parsed, text, verbose } from '@gerard2p/mce'
+import { cliPath } from '@gerard2p/mce/tree-maker/fs'
+import { render } from '@gerard2p/mce/tree-maker/render'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {

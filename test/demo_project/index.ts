@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '../../src'
+import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {
