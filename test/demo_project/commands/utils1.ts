@@ -21,7 +21,7 @@ export async function action(_opt: Parsed<typeof options>) {
     await spin('test', async () => {
         pause()
         ok`{test|red}`
-        error`test`
+        error`{test|rgb:0:0:0}`
         warn`test`
         info`test`
         resume()

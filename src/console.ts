@@ -49,9 +49,10 @@ function logformatter(text: TemplateStringsArray, ...values: any[]) {
         let [value, ...pipesWithArgs] = fnWithPipes.split('|')
         for(const pipeWithArgs of pipesWithArgs) {
             const [pipeName, ...args] = pipeWithArgs.trim().split(':')
-            const pipe = Formatters.get(pipeName)
+			const pipe = Formatters.get(pipeName)
+			// istanbul ignore else
             if(pipe) {
-                value = pipe(value, ...args) || ''
+                value = pipe(value, ...args) /* istanbul ignore next */ || ''
             }
         }
         complete = complete.replace(full, value)
