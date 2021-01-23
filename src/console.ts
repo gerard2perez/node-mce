@@ -59,10 +59,13 @@ function logformatter(text: TemplateStringsArray, ...values: any[]) {
     }
     return complete
 }
-export function log(lvl: number) {
+export function log(lvl: number, newLine?: boolean) {
+	newLine = newLine !== false
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
-		return (text: TemplateStringsArray, ...values: any[]) => 
-			MainSpinner.log`${logformatter(text, ...values)}\n`
+		return (text: TemplateStringsArray, ...values: any[]) => {
+			MainSpinner.log`${logformatter(text, ...values)}${newLine?'\n':''}`
+		}
+			
 	}
 	return () => {}
 }

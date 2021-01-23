@@ -1,9 +1,8 @@
 jest.mock('@gerard2p/mce/mockable/fs')
-import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { confirm, override, question } from '@gerard2p/mce/input'
 import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
 import { spin, wait } from '@gerard2p/mce/spinner'
-
+import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 describe('test user interactions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
@@ -16,8 +15,9 @@ describe('test user interactions', () => {
 	})
 	test('question inside spin', async () => {
 		await spin('test', async () => {
+			await wait(10)
 			const w = wait(10).then(_ => input.write('Julius Levart'))
-			const message = expect(wait(5).then(_ => output.read())).resolves.toBe('i test - really? ')
+			const message = expect(wait(5).then(_ => output.read())).resolves.toBe('ℹ test - really? ')
 			await expect(question('really?')).resolves.toBe('Julius Levart')
 			await Promise.all([w, message])
 		})

@@ -5,6 +5,7 @@ import { LogSymbols } from './spinner/symbols'
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Indicates the level of verbosity required in order to display
  * @param lvl 
  */
@@ -53,6 +54,7 @@ function addSymbol(lvl: number, symbol: LogSymbols, color: string) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 2 verbosity function
  */
 export function info(text: string): void
@@ -63,6 +65,7 @@ export function info(text: TemplateStringsArray|string, ...values: any[]) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 1 verbosity function
  */
 export function warn(text: string): void
@@ -73,6 +76,7 @@ export function warn(text: TemplateStringsArray|string, ...values: any[]) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 0 verbosity function
  */
 export function error(text: string): void
@@ -83,6 +87,7 @@ export function error(text: TemplateStringsArray|string, ...values: any[]) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 0 verbosity function
  */
 export function ok(text: string): void
@@ -93,6 +98,7 @@ export function ok(text: TemplateStringsArray|string, ...values: any[]) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 0 verbosity function
  */
 export function updated(text: string): void
@@ -103,6 +109,7 @@ export function updated(text: TemplateStringsArray|string, ...values: any[]) {
 /**
  * @deprecated Use of this function is not recommended please use the new Tagged template system
  * and import from the root of the package
+ * 
  * Level 0 verbosity function
  */
 export function created(text: string): void

@@ -1,10 +1,9 @@
 import { numeric, floating, range, text, list, collect, bool, verbose, enumeration, Parsed, callerPath, cliPath } from '@gerard2p/mce';
-import { created, updated, ok, error, warn, info } from '@gerard2p/mce/verbose';
+import { created, updated, ok, error, warn, info, log } from '@gerard2p/mce/console';
 import { question, override, confirm } from '@gerard2p/mce/input';
 
 import { copy, write, compile, pathResolver, mkdir, remove } from '@gerard2p/mce/tree-maker/fs';
-import { TreeMaker } from '@gerard2p/mce/tree-maker';
-import { root, cpy, cmp, wrt, dir } from '@gerard2p/mce/tree-maker';
+import { TreeMaker, root, cpy, cmp, wrt, dir } from '@gerard2p/mce/tree-maker';
 import { r, c, z, w, d } from '@gerard2p/mce/tree-maker';
 
 import { spin } from '@gerard2p/mce/spinner';

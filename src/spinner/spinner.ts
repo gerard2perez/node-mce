@@ -2,9 +2,10 @@
  * @module @gerard2p/mce/spinner/spinner
  */
 import chalk from 'chalk'
+import type { WriteStream } from 'tty'
 import { animations } from './animations'
 import { clearColors } from './clear-colors'
-import { Cursor } from './control'
+import { hideCursor, showCursor } from './control'
 import { isTTYSupported } from './istty'
 import { LogSymbols } from './symbols'
 import { wcwidth } from './wcwidth'
@@ -13,7 +14,7 @@ type onlykeys<T> = keyof { [P in keyof T]: P extends string ? P: P }
 export interface  ISpinnerOptions {
     color?: string
     text: string
-    stream?: any
+    stream?: WriteStream
     interval?: number
     hideCursor?: boolean
     enabled?: boolean
@@ -27,7 +28,7 @@ export class Spinner {
     hideCursor: boolean
     options: ISpinnerOptions
     spinner: any
-    stream: any
+    stream: WriteStream
     color: string
     interval: number
     enabled: boolean
@@ -98,7 +99,7 @@ export class Spinner {
 			if (i > 0) {
 				this.stream.moveCursor(0, -1)
 			}
-			this.stream.clearLine()
+			this.stream.clearLine(0)
 			this.stream.cursorTo(0)
 		}
 		this.linesToClear = 0
@@ -114,6 +115,9 @@ export class Spinner {
 		this.stream.cursorTo(0)
 		return this
 	}
+	/**
+	 * @deprecated use spin function instead
+	 */
 	start(text?: string) {
 		/*istanbul ignore next*/
 		if (text) {
@@ -124,7 +128,7 @@ export class Spinner {
 		}
 		/*istanbul ignore else*/
 		if (this.hideCursor) {
-			Cursor.hide(this.stream)
+			hideCursor(this.stream)
 		}
 		this.render()
 		this.id = setInterval(this.render.bind(this), this.interval)
@@ -142,28 +146,47 @@ export class Spinner {
 		this.clear()
 		/*istanbul ignore else*/
 		if (this.hideCursor) {
-			Cursor.show(this.stream)
+			showCursor(this.stream)
 		}
 		// this.enabled = false;
 		return this
 	}
+	/**
+	 * 
+	 * @deprecated
+	 */
 	ok(text?: string) {
 		return this.persist({symbol: LogSymbols.success, text, color: 'green'})
 	}
 	succeed(text?: string) {
 		return this.stopAndPersist({symbol: LogSymbols.success, text, color: 'green'})
 	}
+	/**
+	 * 
+	 * @deprecated
+	 */
 	/*istanbul ignore next*/
 	fail(text?: string) {
 		return this.stopAndPersist({symbol: LogSymbols.error, text, color: 'red'})
 	}
+	/**
+	 * 
+	 * @deprecated
+	 */
 	error(text?: string) {
 		return this.persist({symbol: LogSymbols.error, text, color: 'red'})
 	}
+	/**
+	 * 
+	 * @deprecated
+	 */
 	warn(text?: string) {
 		return this.persist({symbol: LogSymbols.warning, text, color: 'yellow'})
 	}
-
+	/**
+	 * 
+	 * @deprecated
+	 */
 	info(text?: string, newline=true) {
 		return this.persist({symbol: LogSymbols.info, text, color: 'blue'}, newline ? '\n':'')
 	}
@@ -176,6 +199,10 @@ export class Spinner {
 		this.stream.write(send)
 		return this
 	}
+	/**
+	 * 
+	 * @deprecated
+	 */
 	public persist(options: { symbol: LogSymbols, text: string, color: string }, newline: string=undefined) {
 		newline = newline === undefined ? '\n' : ''
 		return this.log`{${options.color||'red'} ${options.symbol}} ${options.text || this.text}${newline}`
