@@ -1,5 +1,6 @@
-    mce add <command>
+    mce add <command> [options]
       Adds a new command to the git project.
+        -h, --help   displays help for the command
 
     mce new <application> [options]
       Alias: n
@@ -11,4 +12,8 @@
                                more than one command use git.
                                Values: git | single
 
+        --dry-run             Executes the program with out touching the disc or
+                               calling shell scripts
+
+        -h, --help            displays help for the command
 

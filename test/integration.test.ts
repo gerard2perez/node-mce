@@ -1,20 +1,16 @@
-jest.mock('@gerard2p/mce/mockable/fs')
 import { findCommands, GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
-import { existsSync, readdirSync, readFileSync } from '@gerard2p/mce/mockable/fs'
 import { mockSpawn } from '@gerard2p/mce/test/spawn'
-
-//@ts-ignore
+jest.mock('@gerard2p/mce/mockable/fs')
+import { existsSync, readdirSync, readFileSync } from '@gerard2p/mce/mockable/fs'
 existsSync.mockReturnValue(false)
-//@ts-ignore
 readFileSync.mockReturnValue('')
-//@ts-ignore
 readdirSync.mockReturnValue([])
 describe('Self Test', () => {
 	beforeAll(() => SetProjectPath('./src'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
-	test('renders help', async() => {
+	test('renders version', async() => {
 		await expect(GitStyle('new --version'))
 				.resolves
 				.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)
@@ -57,7 +53,7 @@ describe('Self Test', () => {
 		await expect(GitStyle('-h'))
 			.resolves
 			.toBe(readLog('all.help.log'))
-    })
+	})
     test('renders command help', async() => {
 		findCommands('new.ts')
 		await expect(GitStyle('new -h'))

@@ -1,6 +1,5 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, text, verbose } from '@gerard2p/mce'
-import { cliPath } from '@gerard2p/mce/tree-maker/fs'
-import { render } from '@gerard2p/mce/tree-maker/render'
+import { cliPath, compile, render } from '@gerard2p/mce/fs'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {
@@ -17,5 +16,5 @@ export const options = {
 export async function action(opt: Parsed<typeof options>) {
 	const path = cliPath('./demo.txt')
 	const target = opt.render ? cliPath(path): undefined
-    return render(cliPath(path), {demo: 'works'}, target)
+    return compile(cliPath(path), {demo: 'works'}, target)
 }

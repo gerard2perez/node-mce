@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 process.env.MCE_DEV = 'true'
-process.env.TEST = 'test'
+process.env.MCE_TEST = 'test'
 process.env.MCE_VERBOSE = '0'
 import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
 import { GitStyle, Reset, SetCommandsLocation, SingleStyle, WithPlugins } from '@gerard2p/mce/test'
@@ -20,8 +20,6 @@ export function Restore() {
 	process.chdir(origin)
 }
 export function findCommands(...files: string[]) {
-	// @ts-ignore
 	existsSync.mockReturnValueOnce(files.length>0)
-	// @ts-ignore
 	readdirSync.mockReturnValueOnce(files)
 }

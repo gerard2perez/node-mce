@@ -1,3 +1,6 @@
+process.env.MCE_TEST = 'test'
 export * from './stdin'
 export * from './stdout'
 export * from './mce'
+export * from './input'
+import './global.jest'

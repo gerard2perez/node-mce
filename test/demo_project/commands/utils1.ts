@@ -2,7 +2,7 @@ import { bool, collect, enumeration, floating, list, numeric, Parsed, range, tex
 import { created, error, info, log, ok, updated, warn } from '@gerard2p/mce/console'
 import { spin } from '@gerard2p/mce/spinner'
 import { pause, resume } from '@gerard2p/mce/spinner/console'
-import { callerPath, cliPath } from '@gerard2p/mce/tree-maker/fs'
+import { callerPath, cliPath } from '@gerard2p/mce/fs'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {

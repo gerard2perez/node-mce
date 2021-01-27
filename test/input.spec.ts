@@ -3,6 +3,7 @@ import { confirm, override, question } from '@gerard2p/mce/input'
 import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
 import { spin, wait } from '@gerard2p/mce/spinner'
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
+import { mockOverride } from '@gerard2p/mce/test'
 describe('test user interactions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => Reset())
@@ -35,20 +36,18 @@ describe('test user interactions', () => {
 	})
 
 	test('ask for folder override', async () => {
-		//@ts-ignore
-		existsSync.mockReturnValue(true)
-		//@ts-ignore
-		readdirSync.mockReturnValue([])
+		mockOverride(false, false)
 		let w = wait(10).then(_ => input.write('n'))
 		await expect(override('Do you want to continue', 'fake_folder', false)).resolves.toBeFalsy()
 		await w
 
+		mockOverride(true, false)
 		w = wait(10).then(_ => input.write('y'))
 		await expect(override('Do you want to continue', 'fake_folder', false)).resolves.toBeTruthy()
 		await w
 		
+		mockOverride(false, true)
 		await expect(override('Do you want to continue', 'fake_folder', true)).resolves.toBeTruthy()
-		//@ts-ignore
 		existsSync.mockReturnValue(false)
 	})
 })

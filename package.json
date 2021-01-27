@@ -10,6 +10,9 @@
   "engines": {
     "node": ">= 10.0.0"
   },
+  "jest": {
+    "globalSetup": "./jest.config.ts"
+  },
   "scripts": {
     "clean": "node incremental",
     "templates": "node cpx \"templates/**/*\"  lib/templates",

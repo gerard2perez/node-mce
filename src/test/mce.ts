@@ -12,7 +12,7 @@ SetStreams(output, input)
 let NODE_MCE: Promise<MCEProgram>
 export function SetCommandsLocation(path: string) {
 	// @ts-ignore
-	NODE_MCE = import('..').then(({MCE}) => {
+	NODE_MCE = import('../index').then(({MCE}) => {
 		return MCE(path) as MCEProgram
 	})
 }

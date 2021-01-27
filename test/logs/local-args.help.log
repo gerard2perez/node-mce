@@ -11,4 +11,5 @@
         -c, --collect     <n>       [Repeatable] A repeatable value
         -b, --bool                  A boolean value
         -v, --verbose               Increase system verbosity
+        -h, --help                  displays help for the command
 
