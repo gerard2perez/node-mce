@@ -512,7 +512,7 @@ export class PackageJSON {
         } catch(ex) {
 			/* istanbul ignore next */
             return this
-        }
+		}
 	}
 	/* istanbul ignore next */
     [inspect.custom]() {

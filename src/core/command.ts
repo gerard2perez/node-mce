@@ -6,7 +6,7 @@ import { UseSourceMaps } from '../@utils/user-sourcemaps'
 import { MainSpinner } from '../spinner'
 import { Argument } from './argument'
 import { HelpRenderer } from './help-renderer'
-import { Option, OptionKind } from './option'
+import { Option, OptionKind, Parser } from './option'
 /**
  * Rendering help need some fixed spaces between tags, short tags, descriptions
  * This function helps to keep track of the maximun length for those sections
@@ -44,6 +44,10 @@ export class Command {
 		this.alias = definition.alias
         this.arguments = this.buildArguments(definition.args)
 		this.options = Object.keys(definition.options).map(tag => definition.options[tag].makeTag(tag, this))
+		if(show_help) {
+			this.unic_shorts.splice(0, 1)
+			this.options.push(new Option<boolean>('-h', 'displays help for the command', Parser.truefalse, undefined, false).makeTag('help', this))
+		}
         this.description = definition.description
 		this.action = definition.action
 		this.verbose = !!definition.options.verbose
@@ -53,7 +57,7 @@ export class Command {
     description = ''
     options: Option<any>[]
 	arguments: Argument[]
-	unic_shorts: string[] = []
+	unic_shorts: string[] = ['-h']
     call(argv: string[]) {
         if (this.showHelp) {
             return this.help()
@@ -112,6 +116,9 @@ export class Command {
 		this.options.forEach(option => _opt_[option.name] = option.find(args))
 		if(this.verbose) {
 			_opt_.verbose = parseInt(process.env.MCE_VERBOSE)
+		}
+		if(_opt_.dryRun) {
+			process.env.MCE_DRY_RUN = 'true'
 		}
 		const final_args = this.arguments.map(a => a.find(args))
 		const nargs = final_args.length + (this.options.length ? 1:0)

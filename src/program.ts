@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
-import { cliPath } from './tree-maker/fs'
+import { cliPath } from './fs'
 let _node_location: string
 let program_location: string
 export function locations(node: string, program: string) {

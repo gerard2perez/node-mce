@@ -37,7 +37,7 @@ function sy(symbol: string) {
 RegisterLogFormatter(rgb)
 RegisterLogFormatter(sy)
 
-function logformatter(text: TemplateStringsArray, ...values: any[]) {
+function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
     let complete = text.reduce((message, part, index) => {
         return `${message}${part}${values[index]||''}`
     }, '')
@@ -64,27 +64,27 @@ export function log(lvl: number, newLine?: boolean) {
 	newLine = newLine !== false
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
 		return (text: TemplateStringsArray, ...values: any[]) => {
-			MainSpinner.log`${logformatter(text, ...values)}${newLine?'\n':''}`
+			MainSpinner.log`${tagcompiler(text, ...values)}${newLine?'\n':''}`
 		}
 			
 	}
 	return () => {}
 }
 export function info(text: TemplateStringsArray, ...values: any[]) {
-	log(2)`{info|sy|cyan} ${logformatter(text, ...values)}`
+	log(2)`{info|sy|cyan} ${tagcompiler(text, ...values)}`
 }
 export function warn(text: TemplateStringsArray, ...values: any[]) {
-	log(1)`{warning|sy|yellow} ${logformatter(text, ...values)}`
+	log(1)`{warning|sy|yellow} ${tagcompiler(text, ...values)}`
 }
 export function error(text: TemplateStringsArray, ...values: any[]) {
-	log(0)`{error|sy|red} ${logformatter(text, ...values)}`
+	log(0)`{error|sy|red} ${tagcompiler(text, ...values)}`
 }
 export function ok(text: TemplateStringsArray, ...values: any[]) {
-	log(0)`{success|sy|green} ${logformatter(text, ...values)}`
+	log(0)`{success|sy|green} ${tagcompiler(text, ...values)}`
 }
 export function updated(text: TemplateStringsArray, ...values: any[]) {
-	log(0)`{updated|sy|blueBright} ${logformatter(text, ...values)}`
+	log(0)`{updated|sy|blueBright} ${tagcompiler(text, ...values)}`
 }
 export function created(text: TemplateStringsArray, ...values: any[]) {
-	log(0)`{success|sy|blueBright} ${logformatter(text, ...values)}`
+	log(0)`{success|sy|blueBright} ${tagcompiler(text, ...values)}`
 }

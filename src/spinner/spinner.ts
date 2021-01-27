@@ -51,7 +51,7 @@ export class Spinner {
 		this.options = Object.assign({
 			text: '',
 			color: 'cyan',
-			stream: process.stderr
+			stream: process.stdout
 		}, options)
 		this.changeSpinner('dots')
 		/*istanbul ignore next*/

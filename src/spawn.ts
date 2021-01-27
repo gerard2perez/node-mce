@@ -2,8 +2,9 @@
 import { SpawnOptions } from 'child_process'
 import cspawn from 'cross-spawn'
 import { WriteStream } from 'tty'
+import { dryRun } from './fs/dry-run'
 import { SpawnStreams } from './mockable/spawn-streams'
-import { spin } from './spinner'
+import { spin, wait } from './spinner'
 /**
  * 
  * @deprecated use exec instead
@@ -56,8 +57,10 @@ export class LiveStream {
 	#arguments: [string, string[], SpawnOptions]
 	output: Buffer = Buffer.allocUnsafe(0)
 	constructor(cmd: string, cmdOptions: string[], /* istanbul ignore next */ options: SpawnOptions = {}) {
-		this.#arguments = [cmd, cmdOptions, {...{stdio: SpawnStreams()}, ...options}]
-		const streams = this.#arguments[2].stdio as any[]
+		options.env = options.env || {}
+		options.env.FORCE_COLOR = options.env.FORCE_COLOR || 'true'
+		this.#arguments = [cmd, cmdOptions, {...{ stdio: SpawnStreams()}, ...options}]
+		const streams = (this.#arguments[2].stdio as any[]).map(stream => stream==='pipe'?undefined:stream)
 		this.stdout = streams[1]
 		this.stderr = streams[2]
 	}
@@ -72,6 +75,18 @@ export class LiveStream {
 	error(/* istanbul ignore next */ onError: StreamEvent = _ => {}) {
 		this.#onError = onError
 		return this
+	}
+	dryRun(result: string, ms_wait = 0) {
+		return dryRun(
+			() => this as LiveStream,
+			() => {
+				return {
+					run() {
+						return wait(ms_wait).then(() => Promise.resolve(Buffer.from(result)))
+					}
+				} as unknown as LiveStream
+			}
+		)()
 	}
 	/**
 	 * Executes the program and captures the output using TTY if stdio is not set.

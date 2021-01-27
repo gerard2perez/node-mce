@@ -1,6 +1,6 @@
 import { existsSync } from '../mockable/fs'
 import { spin } from '../spinner'
-import { remove } from '../tree-maker'
+import { unlink } from '../fs'
 import { confirm } from './confirm'
 
 export async function override(display: string, testdir: string,  state: boolean) {
@@ -11,7 +11,7 @@ export async function override(display: string, testdir: string,  state: boolean
     /*istanbul ignore else*/
     if ( state ) {
         await spin('Cleanig path', async () => {
-            remove(testdir)
+            unlink(testdir)
         })
     }
     return true

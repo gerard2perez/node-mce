@@ -68,6 +68,9 @@ export function collect(...args: [string, string, RegExp|List, List?]) {
 export function bool(short: string, description: string): Option<boolean> {
 	return preOptions(Parser.truefalse, short, description)
 }
+export function dry(description?: string): Option<boolean> {
+	return preOptions(Parser.truefalse, '', description || 'Executes the program with out touching the disc or calling shell scripts')
+}
 export function verbose(desciprtion?: string): Option<number> {
 	return preOptions(Parser.increaseVerbosity, '-v', desciprtion)
 }

@@ -8,5 +8,6 @@ export enum LogSymbols {
 	warning = <any>(isTTYSupported ? '⚠' : '!!'),
 	/** '✖' : '×' */
 	error = <any>(isTTYSupported ? '✖' : '×'),
-	updated = <any>(isTTYSupported ? '✐' : '√')
+	updated = <any>(isTTYSupported ? '✐' : '√'),
+	deleted = <any>(isTTYSupported ? '🗑' : 'x')
 }

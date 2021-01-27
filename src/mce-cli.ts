@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { join, resolve } from 'path'
 import { Command, ICommand, Option, Parser } from './core'
+import { callerPath } from './fs'
 import { existsSync, readdirSync } from './mockable/fs'
 import { locations } from './program'
 import { MainSpinner } from './spinner'
-import { callerPath } from './tree-maker/fs'
 const ext = process.env.MCE_DEV ? 'ts' : /*istanbul ignore next*/'js'
 type CommandMap = {
 	scope: string
@@ -86,7 +86,7 @@ export class MCEProgram {
 		const force_help = !single && args.length ===0
 		this.showVersion = this.common.version.find(args) && args.length <= 1
 		// istanbul ignore else
-		this.showHelp = force_help || this.common.help.find(args) && args.length <= 1// && !single;
+		this.showHelp = force_help || this.common.help.find(args) && args.length <= 1
 		process.env.MCE_VERBOSE = this.common.verbose.find(args)
 		if(this.showVersion)MainSpinner.stream.write(this.version)
 		return this.showVersion
