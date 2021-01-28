@@ -4,45 +4,7 @@ import cspawn from 'cross-spawn'
 import { WriteStream } from 'tty'
 import { dryRun } from './fs/dry-run'
 import { SpawnStreams } from './mockable/spawn-streams'
-import { spin, wait } from './spinner'
-/**
- * 
- * @deprecated use exec instead
- */
-/* istanbul ignore next */
-export function spawn (cmd: string, options: any[], config: SpawnOptions, truefalse=true) {
-    let buffer = ''
-	const store = (chunck) => { buffer+=chunck.toString() }
-	/* istanbul ignore next */
-    return new Promise((resolve, reject) => {
-		const child = cspawn(cmd, options, config)
-        child.on('close', code => {
-            if(truefalse) {
-                resolve(code === 0)
-            } else {
-                if (code === 0) {
-                    resolve(buffer)
-                } else {
-                    reject(`${cmd} ${options.join(' ')}\n` + buffer)
-                }
-            }
-        })
-        child.stdout.on('error', store)
-        child.stderr.on('error', store)
-		child.stdout.on('data', store)
-        child.stderr.on('data', store)
-    })
-}
-/**
- * 
- * @deprecated use spin and exec instead
- */
-// istanbul ignore next
-export function spinSpawn(message: string, cmd: string, options: any[], config: SpawnOptions={}) {
-    return spin(message, async () => {
-		return await spawn(cmd, options, config, true) ? `s) ${cmd} ${options.join(' ')}`:`e) ${cmd} ${options.join(' ')}`
-    })
-}
+import { wait } from './spinner'
 export { cspawn as rawSpawn }
 export function exec(cmd: string, cmdOptions: string[], /* istanbul ignore next */ options: SpawnOptions = {}) {
 	return new LiveStream(cmd, cmdOptions, options)

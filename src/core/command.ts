@@ -126,8 +126,5 @@ export class Command {
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`)
 		return this.action(...final_args, _opt_)
 			.catch(error => debug ? UseSourceMaps(error): Promise.reject(error))
-			.finally(() => {
-				process.stdin.destroy()
-			})
     }
 }

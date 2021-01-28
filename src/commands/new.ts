@@ -1,21 +1,19 @@
-import { bool, enumeration, PackageJSON, Parsed, text, dry } from '..'
+import { exec, bool, enumeration, PackageJSON, Parsed, text, dry, SetSpinnerText } from '..'
 import { error } from '../console'
 import { override } from '../input'
 import { information } from '../program'
-import { exec } from '../spawn'
 import { spin } from '../spinner'
-import { updateTextSpin } from '../spinner/console'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
 function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
-	return function(retVal: T, wait_ms = 0, dryRunReturn = '') {
+	return function(onErrorReturn: T, wait_ms?: number, dryRunReturn = '') {
 		return exec(cmd, cmdOptions, options)
-			.data(chunck => updateTextSpin(chunck.toString()))
+			.data(chunck => SetSpinnerText(chunck.toString()))
 			.error()
 			.dryRun(dryRunReturn, wait_ms)
 			.run()
-			.then(result => result.toString(), _ => retVal)
+			.then(result => result.toString(), _ => onErrorReturn)
 	}
 	
 }
@@ -37,13 +35,13 @@ export const description = 'Creates a new MCE project.'
 export const args = '<application>'
 export  async function action(application: string, opt: Parsed<typeof options>) {
 	nproy = callerPath.bind(null, application)
-	//istanbul ignore if
 	if(!await override('Directory already exist. Do you want to override it', nproy(), opt.force))
 		return
 	await createProjectExtructure(application, opt)
-	// istanbul ignore next
+
 	opt.npm && await spin('Initializing npm', async() => {
-		if ( await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000) === false ) {
+		const npmResult = await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000)
+		if (npmResult === false ) {
 			error`npm installation failed`
 		}
 	})
@@ -58,12 +56,12 @@ export  async function action(application: string, opt: Parsed<typeof options>) 
 async function createProjectExtructure(application: string, opt: Parsed<typeof options>) {
 	let {author} = opt
 	await spin('Creating Files', async () => {
-		/* istanbul ignore else */
+		// istanbul ignore else
 		if(author === 'GIT_OR_NPM_USER') {
-			let git_user: any = await dryExec('git', ['config', 'user.name'], {})('')
-			const git_email: any = await dryExec('git', ['config', 'user.email'], {})('')
+			let git_user: any = await dryExec('git', ['config', 'user.name'], {})('', 0, 'git')
+			const git_email: any = await dryExec('git', ['config', 'user.email'], {})('', 0, 'git@git.com')
 			/* istanbul ignore else */
-			if(!git_user) git_user = await dryExec('npm', ['whoami'], {})('')
+			if(!git_user) git_user = await dryExec('npm', ['whoami'], {})('', 0, '')
 			author = `${git_user.trim()} <${git_email.trim()}>`
 		}
 		const cli = `import { MCE } from "@gerard2p/mce";\n\nMCE(__dirname).${opt.style === Styles.git ? 'subcommand':'command'}(process.argv);`

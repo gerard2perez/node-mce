@@ -1,5 +1,5 @@
 
-import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { mkdirSync, readFileSync, writeFileSync } from '../mockable/fs'
 import { dirname } from 'path'
 import { inspect } from 'util'
 import { mergeDeep } from './merge-deep'
@@ -508,7 +508,7 @@ export class PackageJSON {
     readme?: string
     constructor(private location: string) {
         try {
-			Object.assign(this, JSON.parse(readFileSync(location, { encoding: 'utf-8'})))
+			Object.assign(this, JSON.parse(readFileSync(location, 'utf-8')))
         } catch(ex) {
 			/* istanbul ignore next */
             return this

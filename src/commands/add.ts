@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { error } from '../console'
 import { existsSync } from '../mockable/fs'
-import { callerPath, copy, pathResolver } from '../tree-maker/fs'
+import { callerPath, copy, pathResolver } from '../fs'
 export const description = 'Adds a new command to the git project.'
 export const args = '<command>'
 export  async function action(command: string/*, opt:Parsed<typeof options>*/) {

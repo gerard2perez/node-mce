@@ -8,7 +8,7 @@ export * from './console'
 export { dry, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options'
 export { information } from './program'
 export { exec } from './spawn'
-export { updateTextSpin as SetSpinnerText } from './spinner/console'
+export {  SetSpinnerText } from './spinner/console'
 export { callerPath, cliPath } from './fs'
 export function MCE (localdir?: string) {
 	return new MCEProgram(localdir)

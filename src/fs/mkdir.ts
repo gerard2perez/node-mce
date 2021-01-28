@@ -6,6 +6,7 @@ import { RegisterDryRun } from './decorator'
 
 function _mkdir(this: fs_interface, dir: string, options?: MakeDirectoryOptions) {
 	dir = this.project(dir)
+	// istanbul ignore else
 	if(!existsSync(dir)) {
 		dryRun(mkdirSync)(dir, options)
 	}

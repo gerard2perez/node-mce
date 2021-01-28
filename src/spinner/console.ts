@@ -15,6 +15,6 @@ export const pause = () => {
 export const resume = () => {
     MainSpinner.start()
 }
-export function updateTextSpin(text: string|Buffer) {
+export function SetSpinnerText(text: string|Buffer) {
     MainSpinner.text = text
 }
