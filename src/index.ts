@@ -5,6 +5,7 @@ import { MCEProgram } from './mce-cli'
 
 export { PackageJSON, PackProperties } from './@utils/package-json'
 export * from './console'
+export * from './spinner/control'
 export { dry, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './core/options'
 export { information } from './program'
 export { exec } from './spawn'

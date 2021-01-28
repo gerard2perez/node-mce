@@ -104,14 +104,6 @@ export class MCEProgram {
 			return command.call(args)
 		}
 	}
-	/**
-	 * 
-	 * @deprecated use gitStyle instead
-	 */
-	/* istanbul ignore next */
-	async subcommand<T>(args: string[] = process.argv): Promise<T> {
-		return this.gitStyle<T>(args)
-	}
 	async gitStyle<T=void> (/* istanbul ignore next */ args: string[] = process.argv): Promise<T> {
 		if(this.prepare(args))return
 		this.readCommands('', this.root, 'commands').map(c => this.register(c))
@@ -155,18 +147,9 @@ export class MCEProgram {
 		plugins: []
 	}
 	private commandMapping = new Map<string, ICommand>()
-	/**
-	 * 
-	 * @deprecated use withPlugins instead
-	 */
-	/* istanbul ignore next */
-	public submodules(keyword: string, _args?: string[] ) {
-		this.detectPlugins(keyword).map(c => this.register(c))
-		return this
-	}
 	public withPlugins<T=void>(keyword: string, args?: string[] ) {
 		this.detectPlugins(keyword).map(c => this.register(c))
-		return this.subcommand<T>(args)
+		return this.gitStyle<T>(args)
 	}
 	private detectPlugins(keyword: string): CommandMap[] {
 		// istanbul ignore if

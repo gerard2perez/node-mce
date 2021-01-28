@@ -7,7 +7,6 @@ import { animations } from './animations'
 import { clearColors } from './clear-colors'
 import { hideCursor, showCursor } from './control'
 import { isTTYSupported } from './istty'
-import { LogSymbols } from './symbols'
 import { wcwidth } from './wcwidth'
 const TEXT = Symbol('mce_spinner')
 type onlykeys<T> = keyof { [P in keyof T]: P extends string ? P: P }
@@ -151,45 +150,6 @@ export class Spinner {
 		// this.enabled = false;
 		return this
 	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	ok(text?: string) {
-		return this.persist({symbol: LogSymbols.success, text, color: 'green'})
-	}
-	succeed(text?: string) {
-		return this.stopAndPersist({symbol: LogSymbols.success, text, color: 'green'})
-	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	/*istanbul ignore next*/
-	fail(text?: string) {
-		return this.stopAndPersist({symbol: LogSymbols.error, text, color: 'red'})
-	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	error(text?: string) {
-		return this.persist({symbol: LogSymbols.error, text, color: 'red'})
-	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	warn(text?: string) {
-		return this.persist({symbol: LogSymbols.warning, text, color: 'yellow'})
-	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	info(text?: string, newline=true) {
-		return this.persist({symbol: LogSymbols.info, text, color: 'blue'}, newline ? '\n':'')
-	}
 	public log(text: TemplateStringsArray, ...values: any[]) {
 		const send = `${chalk(text, ...values)}`
 		if (!this.enabled) {
@@ -198,21 +158,5 @@ export class Spinner {
 		this.clear()
 		this.stream.write(send)
 		return this
-	}
-	/**
-	 * 
-	 * @deprecated
-	 */
-	public persist(options: { symbol: LogSymbols, text: string, color: string }, newline: string=undefined) {
-		newline = newline === undefined ? '\n' : ''
-		return this.log`{${options.color||'red'} ${options.symbol}} ${options.text || this.text}${newline}`
-	}
-	private stopAndPersist(options: { symbol: LogSymbols, text: string, color: string }) {
-		this.stop()
-		/*istanbul ignore next*/
-		if (!this.enabled) {
-			return this
-		}
-		return this.persist(options, '')
 	}
 }
