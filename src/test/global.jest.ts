@@ -1,6 +1,6 @@
 export {}
 declare global {
-	interface Function {
+	interface Object {
 		mockReset: () => void
 		mockRestore: () => void
 		mockReturnValueOnce: (value: unknown) => void

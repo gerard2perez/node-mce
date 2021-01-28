@@ -23,5 +23,5 @@ export function logger(mode: Mode, path: string) {
 	const relativeFile = relative(callerPath(), path)
 	const file = basename(normalize(relativeFile))
 	const relativePath = dirname(relativeFile).replace(/\\/gm, posix.sep)
-	log(0)`[{${new Date().toLocaleTimeString()}|grey}] [{${Mode[mode].toUpperCase()}|${mode}}] ${relativePath}/{${mode} ${file}}`
+	log(0)`[{${new Date().toLocaleTimeString()}|grey}] [{${Mode[mode].toUpperCase()}|${mode}}] ${relativePath}/{${file}|${mode}}`
 }
