@@ -1,19 +1,21 @@
 jest.mock('@gerard2p/mce/mockable/fs')
-import { GitStyle, Reset, Restore, SetProjectPath, SingleStyle } from './@utils/loader'
+import { findCommands, GitStyle, Reset, Restore, SetProjectPath, SingleStyle } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
-import { existsSync, readdirSync, readFileSync, writeFileSync } from '@gerard2p/mce/mockable/fs'
-import { dirname, resolve } from 'path'
-readdirSync.mockReturnValue(['utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts'])
+import { existsSync, readFileSync, writeFileSync } from '@gerard2p/mce/mockable/fs'
+import { dirname, join, resolve } from 'path'
 existsSync.mockReturnValue(true)
 describe('Utils functions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
-	beforeEach(() => Reset())
+	beforeEach(() => {
+		Reset()
+		findCommands('utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts')
+	})
 	afterAll(() => Restore())
     test('gets correct paths', async () => {
         const res = await GitStyle('utils')
         expect(res).toEqual({
-            cli: resolve('./'),
-            target: resolve('./'),
+            cli: join(__dirname, 'demo_project'),
+            target: join(__dirname, 'demo_project'),
         })
     })
     test('test verbosity 0', async () => {

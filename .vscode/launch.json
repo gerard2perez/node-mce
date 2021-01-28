@@ -11,7 +11,8 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "test",
-                "--runInBand"
+                "--maxWorkers=1",
+                "--bail"
             ],
             "port": 9229,
             "skipFiles": [

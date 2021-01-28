@@ -1,5 +1,5 @@
 import '../global.jest'
-import { existsSync, lstatSync, readdirSync, unlinkSync } from '../../mockable/fs'
+import { existsSync, lstatSync, readdirSync } from '../../mockable/fs'
 export function mockOverride(status: boolean, force: boolean, tree = []) {
 	if(!force) {
 		existsSync.mockReturnValueOnce(true)

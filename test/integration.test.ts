@@ -2,10 +2,38 @@ import { findCommands, GitStyle, Reset, Restore, SetProjectPath } from './@utils
 import { readLog } from './@utils/log-reader'
 import { mockSpawn } from '@gerard2p/mce/test/spawn'
 jest.mock('@gerard2p/mce/mockable/fs')
-import { existsSync, readdirSync, readFileSync } from '@gerard2p/mce/mockable/fs'
-existsSync.mockReturnValue(false)
-readFileSync.mockReturnValue('')
-readdirSync.mockReturnValue([])
+jest.mock('cross-spawn')
+jest.mock('chokidar')
+jest.mock('glob')
+import { existsSync, readFileSync, unlinkSync, } from '@gerard2p/mce/mockable/fs'
+import * as $tree from '@gerard2p/mce/test/tree-maker'
+import { pack } from '@gerard2p/mce/test/packageJSON'
+import cspawn from 'cross-spawn'
+import { SpawnStreams } from '@gerard2p/mce/mockable/spawn-streams'
+import { input, mockOverride, STDOut } from '@gerard2p/mce/test'
+import { join } from 'path'
+import { wait } from '@gerard2p/mce/spinner'
+function buildTree(optional = true) {
+	$tree.root(
+		$tree.cpy(),
+		$tree.cpy(),
+		$tree.cmp(),
+		$tree.cmp(),
+		$tree.dir(
+			$tree.wrt(),
+			optional && $tree.cpy(),
+			!optional && $tree.dir($tree.cpy())
+		),
+		$tree.dir(
+			$tree.cpy(),
+			$tree.cpy()
+		),
+		$tree.pkg(),
+		$tree.cpy(),
+		$tree.cpy(),
+		$tree.cpy()
+	)
+}
 describe('Self Test', () => {
 	beforeAll(() => SetProjectPath('./src'))
 	beforeEach(() => Reset())
@@ -29,18 +57,42 @@ describe('Self Test', () => {
 			stdout.emit('data', Buffer.from('line3'))
 			return 0
 		})
+		pack()
+		buildTree()
 		await expect(GitStyle('new single_repo -f -s single'))
 			.resolves.toBe(readLog('new.output.log'))
+		expect(cspawn).toBeCalledTimes(4)
+	})
+	test('cancel project override', async() => {
+		findCommands('new.ts')
+		mockOverride(false, false)
+		wait(10).then(_ => input.write('n'))
+		await expect(GitStyle('new single_repo -s single'))
+			.resolves.toBeDefined()
+		expect(cspawn).toBeCalledTimes(0)
+	})
+	test('create a new project (dry run)', async() => {
+		findCommands('new.ts')
+		readFileSync.mockReturnValue(JSON.stringify({}))
+		SpawnStreams.mockReturnValue(['pipe', new STDOut, new STDOut])
+		await expect(GitStyle('new single_repo -fn -s single --dry-run'))
+			.resolves.toBe(readLog('new.output.log'))
+		expect(cspawn).toBeCalledTimes(0)
     })
     test('create a new project multicommand', async() => {
 		findCommands('new.ts')
 		mockSpawn('gerard2p')
 		mockSpawn('gerard2perez@gmail')
-		mockSpawn('true')
 		mockSpawn((stdout, stderr) => {
 			stderr.emit('data', 'fails')
 			return 1
 		})
+		mockSpawn((stdout, stderr) => {
+			stderr.emit('data', 'fails')
+			return 1
+		})
+		pack()
+		buildTree(false)
 		await expect(GitStyle('new git_repo -f -s -n git'))
 				.resolves.toBe(readLog('new-git.output.log'))
     })
@@ -74,11 +126,79 @@ describe('Self Test', () => {
 	})
 	test('adds a dummy command', async () => {
 		findCommands('add.ts')
-		//@ts-ignore
-		existsSync.mockReturnValue(true)
+		existsSync.mockReturnValueOnce(true)
 		await expect(GitStyle('add dummy'))
 			.resolves
 			.toBe(readLog('add.log'))
+	})
+})
+describe('Self Test - Build Command', () => {
+	beforeAll(() => SetProjectPath('./src'))
+	beforeEach(() => Reset())
+	afterAll(() => Restore())
+	test('default commands', async () => {
+		const { sync } = await import('glob')
 
+		findCommands('build')
+		pack({includes: ['**/*.ts']})
+		existsSync.mockReturnValueOnce(true)
+		pack({ bin: { mce: './mce'}})
+		sync.mockReturnValueOnce(['mce'])
+
+		sync.mockReturnValueOnce(['templates/one.ts'])
+		sync.mockReturnValueOnce(['package.json', 'README.md', 'LICENSE'])
+		sync.mockReturnValueOnce(['mce'])
+		sync.mockReturnValueOnce(undefined)
+		mockSpawn('')
+
+		await expect(GitStyle('build additional'))
+			.resolves. toBeDefined()
+
+		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')
+		expect(existsSync).toHaveBeenNthCalledWith(2, './incremental.tsbuildinfo')
+		expect(unlinkSync).toBeCalledWith('./incremental.tsbuildinfo')
+		expect(readFileSync).toHaveBeenNthCalledWith(2, join(__dirname, '../src/package.json'), 'utf-8')
+	})
+	test('watch mode', async () => {
+		const { sync } = await import('glob')
+		const { watch } = await import('chokidar')
+		
+		readFileSync.mockRestore()
+		existsSync.mockRestore()
+		unlinkSync.mockRestore()
+
+		findCommands('build')
+
+		pack({
+			extends: 'tsconfig.build.json',
+			includes: ['**/*.ts']
+		})
+		pack({
+			outDir: './lib'
+		})
+		existsSync.mockReturnValueOnce(false)
+		pack({ bin: { mce: './mce'}})
+		sync.mockReturnValueOnce(['mce'])
+
+		sync.mockReturnValueOnce(['templates/one.ts'])
+		sync.mockReturnValueOnce(['package.json', 'README.md', 'LICENSE'])
+		sync.mockReturnValueOnce(['mce'])
+		sync.mockReturnValueOnce(undefined)
+
+		watch.mockReturnValueOnce({on(){
+			return this
+		}})
+		watch.mockReturnValueOnce({on(){
+			return this
+		}})
+		mockSpawn('')
+		await expect(GitStyle('build additional -w'))
+			.resolves. toBeDefined()
+
+		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')
+		expect(readFileSync).toHaveBeenNthCalledWith(2, join(__dirname, '../src/tsconfig.build.json'), 'utf-8')
+		expect(existsSync).toHaveBeenNthCalledWith(2, './incremental.tsbuildinfo')
+		expect(unlinkSync).not.toBeCalled()
+		expect(readFileSync).toHaveBeenNthCalledWith(3, join(__dirname, '../src/package.json'), 'utf-8')
 	})
 })

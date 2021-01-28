@@ -39,6 +39,9 @@ export async function WithPlugins<T=string>(keyword: string, command: string) {
 		})
 }
 export async function Reset() {
+	process.env.MCE_DRY_RUN = undefined
+	// @ts-ignore
+	jest.resetAllMocks();
 	// @ts-ignore
 	(await NODE_MCE).commandMapping = new Map();
 	// @ts-ignore

@@ -14,5 +14,6 @@
 √ git_repo/incremental.js
 √ git_repo/cpx.js
 √ git_repo/jest.config.js
+× npm installation failed
 × git init
 √ git_repo/.gitignore

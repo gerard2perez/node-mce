@@ -19,7 +19,6 @@ const config: Config.InitialOptions = {
 		},
 	},
 	testPathIgnorePatterns: [
-		'src/commands/build/*',
 		'templates',
 		'node_modules',
 		'coverage',
@@ -30,7 +29,6 @@ const config: Config.InitialOptions = {
 	collectCoverageFrom: ['src/**/*.{ts,tsx}'],
 	coveragePathIgnorePatterns: [
 		'src/verbose',
-		'src/commands/build/*',
 		'/node_modules/',
 		'src/cli.ts',
 		'src/spinner/',

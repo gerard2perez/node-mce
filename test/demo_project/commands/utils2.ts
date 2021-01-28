@@ -1,5 +1,5 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, text, verbose } from '@gerard2p/mce'
-import { cliPath, compile, render } from '@gerard2p/mce/fs'
+import { cliPath, compile } from '@gerard2p/mce/fs'
 export const description = 'A description for your command'
 export const args = ''
 export const options = {

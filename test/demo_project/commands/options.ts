@@ -15,7 +15,7 @@ export const options = {
     verbose: verbose('Increase system verbosity'),
 }
 export async function action(arg1: string, varidac: string[], opt: Parsed<typeof options>) {
-	const chain = expect(makeChainable( (a, b) => 1)(1, 2))
+	const chain = expect(makeChainable( (_a, _b) => 1)(1, 2))
 	chain.toHaveProperty('fn')
 	chain.toHaveProperty('args')
 	return {

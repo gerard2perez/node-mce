@@ -1,6 +1,6 @@
 jest.mock('@gerard2p/mce/mockable/fs')
 import { confirm, override, question } from '@gerard2p/mce/input'
-import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
+import { existsSync } from '@gerard2p/mce/mockable/fs'
 import { spin, wait } from '@gerard2p/mce/spinner'
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { mockOverride } from '@gerard2p/mce/test'
