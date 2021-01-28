@@ -1,14 +1,16 @@
-import { copyFileSync, existsSync, mkdirSync, unlinkSync } from 'fs'
+import { copyFileSync, existsSync, mkdirSync, unlinkSync } from '../../mockable/fs'
 import { basename, dirname, normalize, posix, relative } from 'path'
 import { log } from '../../console'
-import { callerPath } from '../../tree-maker/fs'
+import { callerPath } from '../../fs'
 
 export function copy(from: string, to: string) {
 	const targetOath = dirname(to)
+	// istanbul ignore else
 	if(!existsSync(targetOath)) mkdirSync(targetOath, {recursive: true})
 	copyFileSync(from, to)
 	logger(Mode.cpy, to)
 }
+// istanbul ignore next
 export function unlink(from: string, to: string) {
 	if(existsSync(to)) unlinkSync(to)
 	logger(Mode.rmv, to)

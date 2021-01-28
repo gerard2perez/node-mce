@@ -1,6 +1,6 @@
-import { readFileSync } from 'fs'
+import { readFileSync } from '../../mockable/fs'
 import { mergeDeep } from '../../@utils/merge-deep'
-import { callerPath } from '../../tree-maker/fs'
+import { callerPath } from '../../fs'
 
 export function TSConfig(file: string) {
 	const tsConfig = JSON.parse(readFileSync(callerPath(file), 'utf-8'))

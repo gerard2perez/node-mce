@@ -2,8 +2,14 @@ import { watch } from 'chokidar'
 import { sync } from 'glob'
 import { relative } from 'path'
 import { PackageJSON } from '../../@utils/package-json'
-import { callerPath } from '../../tree-maker/fs'
+import { callerPath } from '../../fs'
 import { copy, unlink } from './copy'
+// istanbul ignore next
+function executeFunction(outDir: string, fn: any) {
+	return function (file: string) {
+		fn(file, callerPath(outDir, file))
+	}
+}
 export function SyncFiles(patterns: string[], outDir = './lib') {
 	const localPackage = new PackageJSON(callerPath('package.json'))
 	const bins = Object.keys(localPackage.bin).map(bin => localPackage.bin[bin]).map(bin => `${sync(bin)}:.`)
@@ -31,28 +37,23 @@ export function SyncFiles(patterns: string[], outDir = './lib') {
 			copy(file, callerPath(outDir, file))
 		}
 	}
-	function targetPath(fn: any) {
-		return function (file: string) {
-			fn(file, callerPath(outDir, file))
-		}
-	}
+	// istanbul ignore next
 	return function KeepInSync() {
 		watch(AllPatterns, {ignoreInitial: true, awaitWriteFinish: {
 			pollInterval: 300,
 			stabilityThreshold: 100
 		}})
-		.on('unlink', targetPath(unlink))
-		.on('change', targetPath(copy))
-		.on('add', targetPath(copy))
+		.on('unlink', executeFunction(outDir, unlink))
+		.on('change', executeFunction(outDir, copy))
+		.on('add', executeFunction(outDir, copy))
 		.on('addDir', (evet) => {
 			console.log('addDir', evet)
-			targetPath(evet)
+			executeFunction(outDir, evet)
 		})
 		.on('unlinkDir', (evet) => {
 			console.log('unlinkDir', evet)
-			targetPath(evet)
+			executeFunction(outDir, evet)
 		})
 		.on('error', e => console.log('[ERROR]', e))
 	}
-	console.log(AllPatterns)
 }
