@@ -11,13 +11,15 @@ export function copy(from: string, to: string) {
 	logger(Mode.cpy, to)
 }
 // istanbul ignore next
-export function unlink(from: string, to: string) {
+export function unlink(to: string) {
 	if(existsSync(to)) unlinkSync(to)
 	logger(Mode.rmv, to)
 }
-enum Mode {
+export enum Mode {
+	add = <any>'yellow',
 	cpy = <any>'green',
-	rmv = <any>'red'
+	rmv = <any>'red',
+	chn = <any>'blue'
 }
 export function logger(mode: Mode, path: string) {
 	const relativeFile = relative(callerPath(), path)
