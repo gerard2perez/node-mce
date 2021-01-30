@@ -9,5 +9,5 @@ export function TSConfig(file: string) {
 		const baseConfig = TSConfig(tsConfig.extends)
 		all = mergeDeep({}, tsConfig, baseConfig)
 	}
-	return all as { outDir: string }
+	return all as { compilerOptions: {outDir: string }  }
 }
