@@ -70,7 +70,7 @@ export class LiveStream {
 				if(code === 0) {
 					resolve(this.output)
 				} else {
-					reject(this.output)
+					reject(this.output.toString())
 				}
 			})
 		})

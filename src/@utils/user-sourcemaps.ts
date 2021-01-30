@@ -39,5 +39,4 @@ export async function UseSourceMaps(error: Error) {
 		const newLine = replacement.replace('$1', `${targetFile}:${res.line}:${res.column}`)
 		error.stack = error.stack.replace(lineText, newLine)
 	}
-	throw error
 }
