@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 jest.mock('../mockable/spawn-streams')
 jest.mock('cross-spawn')
-import './global.jest'
+import './global-jest'
 import { SpawnStreams } from '../mockable/spawn-streams'
 import { STDOut } from './stdout'
 import cspawn from 'cross-spawn'

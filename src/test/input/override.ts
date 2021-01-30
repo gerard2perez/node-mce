@@ -1,4 +1,4 @@
-import '../global.jest'
+import '../global-jest'
 import { existsSync, lstatSync, readdirSync } from '../../mockable/fs'
 export function mockOverride(status: boolean, force: boolean, tree = []) {
 	if(!force) {

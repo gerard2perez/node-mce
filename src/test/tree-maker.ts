@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { writeFileSync, readFileSync, copyFileSync } from '../mockable/fs'
-import '@gerard2p/mce/test/global.jest'
+import './global-jest'
 export function root(...fns: unknown[]) {
 	
 }
