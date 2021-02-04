@@ -5,6 +5,7 @@ const config: Config.InitialOptions = {
 	preset: 'ts-jest',
 	maxWorkers: 1,
 	forceExit: true,
+	setupFilesAfterEnv: ['jest-allure/dist/setup'],
 	moduleNameMapper: {
 		'^@gerard2p/mce$': '<rootDir>/src',
 		'^@gerard2p/mce/(.*)$': '<rootDir>/src/$1',
@@ -32,6 +33,10 @@ const config: Config.InitialOptions = {
 		'/node_modules/',
 		'src/cli.ts',
 		'src/spinner/',
+	],
+	reporters: [
+		'jest-allure',
+		'jest-html-reporters'
 	],
 	coverageReporters: ['html', 'json', 'lcov'],
 }

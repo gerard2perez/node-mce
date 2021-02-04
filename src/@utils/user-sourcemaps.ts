@@ -38,5 +38,6 @@ export async function UseSourceMaps(error: Error) {
 		const targetFile = join(dirname(file), res.source)
 		const newLine = replacement.replace('$1', `${targetFile}:${res.line}:${res.column}`)
 		error.stack = error.stack.replace(lineText, newLine)
+		return error
 	}
 }

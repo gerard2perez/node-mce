@@ -125,9 +125,9 @@ export class Command {
         if (nargs !== this.action.length)
             throw new Error(`Argument count missmatch, your function should have only ${nargs}`)
 		return this.action(...final_args, _opt_)
-			.catch(error => {
-				error = debug ? UseSourceMaps(error) : error
-				console.log(error)
+			.catch(async error => {
+				error = debug ? await UseSourceMaps(error) : error
+				throw error
 			})
     }
 }

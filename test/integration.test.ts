@@ -7,7 +7,7 @@ jest.mock('chokidar')
 jest.mock('glob')
 import { existsSync, readFileSync, unlinkSync, } from '@gerard2p/mce/mockable/fs'
 import * as $tree from '@gerard2p/mce/test/tree-maker'
-import { pack } from '@gerard2p/mce/test/packageJSON'
+import { pack } from '@gerard2p/mce/test/package-json'
 import cspawn from 'cross-spawn'
 import { SpawnStreams } from '@gerard2p/mce/mockable/spawn-streams'
 import { input, mockOverride, STDOut } from '@gerard2p/mce/test'
@@ -140,9 +140,9 @@ describe('Self Test - Build Command', () => {
 		const { sync } = await import('glob')
 
 		findCommands('build')
-		pack({includes: ['**/*.ts']})
+		pack({includes: ['**/*.ts'], compilerOptions: {}})
 		existsSync.mockReturnValueOnce(true)
-		pack({ bin: { mce: './mce'}})
+		pack({ bin: { mce: './mce'}, compilerOptions: {}})
 		sync.mockReturnValueOnce(['mce'])
 
 		sync.mockReturnValueOnce(['templates/one.ts'])
@@ -171,13 +171,16 @@ describe('Self Test - Build Command', () => {
 
 		pack({
 			extends: 'tsconfig.build.json',
-			includes: ['**/*.ts']
+			includes: ['**/*.ts'],
+			compilerOptions: {}
 		})
 		pack({
-			outDir: './lib'
+			compilerOptions: {
+				outDir: './lib'
+			}
 		})
 		existsSync.mockReturnValueOnce(false)
-		pack({ bin: { mce: './mce'}})
+		pack({ bin: { mce: './mce'}, compilerOptions: {}})
 		sync.mockReturnValueOnce(['mce'])
 
 		sync.mockReturnValueOnce(['templates/one.ts'])
@@ -185,10 +188,7 @@ describe('Self Test - Build Command', () => {
 		sync.mockReturnValueOnce(['mce'])
 		sync.mockReturnValueOnce(undefined)
 
-		watch.mockReturnValueOnce({on(){
-			return this
-		}})
-		watch.mockReturnValueOnce({on(){
+		watch.mockReturnValue({on(){
 			return this
 		}})
 		mockSpawn('')
