@@ -99,7 +99,13 @@ function toSrc(file: string, outDir: string) {
 	return './' + join('./src', relative(outDir, file).replace(/.js|.d.ts|.map/, '.ts'))
 }
 export function WatchIncremental(outDir: string, baseDir = './src') {
-	watch('./incremental.tsbuildinfo', {})
+	watch('./incremental.tsbuildinfo', {
+		ignored: 'node_modules',
+		awaitWriteFinish: {
+			pollInterval: 300,
+			stabilityThreshold: 100
+		}
+	})
 		.on('change', detectChanges.bind(undefined, outDir, baseDir))
 		.on('add', createInitialCache)
 	watch(`${baseDir}/**/*.ts`)
