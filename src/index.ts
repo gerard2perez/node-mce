@@ -2,7 +2,7 @@
  * @module @gerard2p/mce
  */
 import { MCEProgram } from './mce-cli'
-
+export { TSConfig, ITSConfig } from './@utils/tsconfig'
 export { PackageJSON, PackProperties } from './@utils/package-json'
 export * from './console'
 export * from './spinner/control'
