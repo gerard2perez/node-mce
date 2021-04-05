@@ -39,17 +39,16 @@ export function SyncFiles(patterns: string[], outDir = './lib') {
 	}
 	// istanbul ignore next
 	return function KeepInSync() {
-		watch(AllPatterns, {ignoreInitial: true, awaitWriteFinish: {
-			pollInterval: 300,
-			stabilityThreshold: 100
-		}})
+		watch(AllPatterns, {
+			ignoreInitial: true, 
+			awaitWriteFinish: {
+				pollInterval: 300,
+				stabilityThreshold: 100
+			}
+		})
 		.on('unlink', executeFunction(outDir, unlink))
 		.on('change', executeFunction(outDir, copy))
 		.on('add', executeFunction(outDir, copy))
-		.on('addDir', (evet) => {
-			console.log('addDir', evet)
-			executeFunction(outDir, evet)
-		})
 		.on('unlinkDir', (evet) => {
 			console.log('unlinkDir', evet)
 			executeFunction(outDir, evet)
