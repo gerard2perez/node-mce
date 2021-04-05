@@ -11,7 +11,7 @@ export enum Parser {
     increaseVerbosity = <any>((_, t) => t+1),
     string = <any>(s => s===true?'':s.toString()),
     truefalse = <any> (s => s),
-    enum = <any>(s => s.toString()),
+    enum = <any>((e, s) => e[s]),
 }
 export enum OptionKind {
     no,

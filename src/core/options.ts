@@ -29,10 +29,11 @@ function preOptions<T>(parser: Parser, option: string, description: string, exp:
 export function enumeration<T extends string[]>(option: string, description: string, options: T, defaults?: T[number]): Option<T[number]>
 export function enumeration<T>(option: string, description: string, options: any, defaults?: T): Option<T>
 export function enumeration(option: string, description: string, options: any, defaults?: any) {
+	const raw = options
 	if(!(options instanceof Array)) {
-		options = Object.keys(options).map(k => options[k]) as any
+		options = Object.keys(options).map(k => options[k]) as (string|number)[]
 	}
-    return preOptions(Parser.enum, option, description, options, defaults)
+    return preOptions((Parser.enum as any).bind(null, raw), option, description, options, defaults)
 }
 export function numeric(option: string, description: string, exp: RegExp, defaults?: number): Option<number>
 export function numeric(option: string, description: string, defaults?: number): Option<number>
