@@ -15,7 +15,7 @@ export function _render(this: fs_interface, source: string, data: unknown) {
 
 function _compile(this: fs_interface, source: string, data: {[p: string]: string}, target: string=source) {
 	target = this.project(target)
-	const compiled = render(source, data)
+	const compiled = render.bind(this)(source, data)
 	dryRun(writeFileSync)(target, compiled)
 	ok`{${target}|highlightBasename}`
 }
