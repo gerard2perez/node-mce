@@ -82,9 +82,6 @@ async function createProjectExtructure(application: string, opt: Parsed<typeof o
 				],
 				author,
 				license: 'MIT',
-				'scripts': {
-					'pkg-files': `node cpx "?(package.json|README.md|LICENSE|${application})"  lib`,
-				},
 				dependencies: {
 					'@gerard2p/mce': `^${information().version}`
 				}
@@ -92,6 +89,7 @@ async function createProjectExtructure(application: string, opt: Parsed<typeof o
 		root(application,
 			cpy('app', application),
 			cpy('tsconfig.json'),
+			cpy('.eslintrc.json'),
 			cmp('LICENSE', {application, year: new Date().getFullYear().toString(), author}),
 			cmp('README.md', {application}),
 			dir('src',
@@ -102,10 +100,9 @@ async function createProjectExtructure(application: string, opt: Parsed<typeof o
 			dir('.vscode',
 				cpy('launch.json'),
 				cpy('settings.json'),
+				cpy('extensions.json'),
 			),
 			pkg(nPack),
-			cpy('incremental.js'),
-			cpy('cpx.js'),
 			cpy('jest.config.js')
 		)
 	})
