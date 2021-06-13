@@ -37,7 +37,7 @@ jobs:
         npm i -g semantic-release
         npm i -g codeclimate-test-reporter
     - name: Test & Cover
-      run: npx jest
+      run: npx jest --bail
     - name: Build
       run: npm run build --if-present
     - name: CodeClimate
