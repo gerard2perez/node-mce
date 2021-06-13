@@ -36,7 +36,7 @@ export class HelpRenderer {
 			}
 			index++
 		})
-		if (parser === Parser.enum) {
+		if ((parser as any).isEnum === Parser.enum) {
 			parts.push(` Values: ${expresion.join(' | ')}`)
 		} else if (parser === Parser.collect) {
 			parts[0] = ` [Repeatable]${parts[0]}`

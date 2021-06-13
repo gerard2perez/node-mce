@@ -31,6 +31,8 @@ const config: Config.InitialOptions = {
 		'src/verbose',
 		'/node_modules/',
 		'src/cli.ts',
+		'src/commands/build/incremental.ts',
+		'src/test/tree-maker.ts',
 		'src/spinner/',
 	],
 	coverageReporters: ['html', 'json', 'lcov'],

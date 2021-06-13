@@ -11,7 +11,12 @@ export enum Parser {
     increaseVerbosity = <any>((_, t) => t+1),
     string = <any>(s => s===true?'':s.toString()),
     truefalse = <any> (s => s),
-    enum = <any>((e, s) => e[s]),
+    enum = <any>((e, s) => {
+		if ( e instanceof Array ) {
+			return e.includes(s) && s
+		}
+		return e[s]
+	}),
 }
 export enum OptionKind {
     no,
@@ -99,6 +104,7 @@ export class Option<T> {
 			const start = args.splice(0, i)
 			const [TAG] = args.splice(0, 1)
 			const [VAL] = args
+			
 			const parser = this.parser as any
 			if (!this.validateValue(this.validation, VAL))
             throw new Error(`Argument '${TAG} ${VAL}' does not match expression '${this.validation}'`)

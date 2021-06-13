@@ -1,6 +1,6 @@
     demo l:args <arg1> [...varidac] [options]
       A description for your command
-        -e, --enumeration <enum>    Define the style of command you will use
+        -e, --enumeration <enum>    Define the style of command you will use [single]
                                      Values: git | single
 
         -n, --number      <n>       A number

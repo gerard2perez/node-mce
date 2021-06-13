@@ -1,6 +1,7 @@
 √ single_repo
 √ single_repo/single_repo
 √ single_repo/tsconfig.json
+√ single_repo/.eslintrc.json
 √ single_repo/LICENSE
 √ single_repo/README.md
 √ single_repo/src
@@ -9,8 +10,7 @@
 √ single_repo/.vscode
 √ single_repo/.vscode/launch.json
 √ single_repo/.vscode/settings.json
+√ single_repo/.vscode/extensions.json
 √ single_repo/package.json
-√ single_repo/incremental.js
-√ single_repo/cpx.js
 √ single_repo/jest.config.js
 √ single_repo/.gitignore

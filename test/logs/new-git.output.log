@@ -1,6 +1,7 @@
 √ git_repo
 √ git_repo/git_repo
 √ git_repo/tsconfig.json
+√ git_repo/.eslintrc.json
 √ git_repo/LICENSE
 √ git_repo/README.md
 √ git_repo/src
@@ -10,9 +11,8 @@
 √ git_repo/.vscode
 √ git_repo/.vscode/launch.json
 √ git_repo/.vscode/settings.json
+√ git_repo/.vscode/extensions.json
 √ git_repo/package.json
-√ git_repo/incremental.js
-√ git_repo/cpx.js
 √ git_repo/jest.config.js
 × npm installation failed
 × git init

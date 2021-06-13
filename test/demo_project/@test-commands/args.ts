@@ -1,8 +1,12 @@
 import { bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
+enum Styles { 
+    git = 'git',
+    single = 'single' 
+}
 export const description = 'A description for your command'
 export const args = '<arg1> [varidac...]'
 export const options = {
-    enumeration: enumeration('-e <enum>', 'Define the style of command you will use', ['git', 'single']),
+    enumeration: enumeration('-e <enum>', 'Define the style of command you will use', Styles, Styles.single),
     number: numeric('-n <n>', 'A number'),
     floating: floating('-f <n>', 'A float number'),
     range: range('-r <a>..<b>', 'A Range of two numbers'),

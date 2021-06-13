@@ -33,7 +33,9 @@ export function enumeration(option: string, description: string, options: any, d
 	if(!(options instanceof Array)) {
 		options = Object.keys(options).map(k => options[k]) as (string|number)[]
 	}
-    return preOptions((Parser.enum as any).bind(null, raw), option, description, options, defaults)
+	const bound = (Parser.enum as any).bind(null, raw)
+	bound.isEnum = Parser.enum
+    return preOptions(bound, option, description, options, defaults)
 }
 export function numeric(option: string, description: string, exp: RegExp, defaults?: number): Option<number>
 export function numeric(option: string, description: string, defaults?: number): Option<number>
