@@ -116,12 +116,12 @@ export class Option<T> {
 	private extractValue(VAL: string, args: string[], i: number, value: T, parser: (...args: any[]) => any, TAG: string) {
 		switch (this.kind) {
 			case OptionKind.required:
-				if (!VAL || VAL.includes('-'))throw new Error(`Missing value for argument ${args[i - 1]}`)
+				if (!VAL || VAL.startsWith('-'))throw new Error(`Missing value for argument ${args[i - 1]}`)
 				value = parser(VAL, value)
 				args.splice(0, 1)
 				break
 			case OptionKind.optional:
-				if (VAL && !VAL.includes('-')) {
+				if (VAL && !VAL.startsWith('-')) {
 					value = parser(VAL, value)
 					args.splice(0, 1)
 				} else {
