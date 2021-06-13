@@ -9,6 +9,6 @@ export  async function action(command: string/*, opt:Parsed<typeof options>*/) {
 	if(existsSync(callerPath('src/commands')))	 {
 		copy(join('src', 'index.ts'), join('src', 'commands', `${command}.ts`))
 	} else {
-		error`this project does not have a commands forlder`
+		error`this project does not have a commands folder`
 	}
 }
