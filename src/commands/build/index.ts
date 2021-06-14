@@ -5,14 +5,14 @@ import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'
 export const options = {
 	watch: bool('-w', 'watches for changes'),
-	tsc: text('-c', 'path to tsc', 'tsc'),
+	tsc: text('-c', 'path to tsc', './node_modules/.bin/tsc'),
 	tsconfig: text('-t', 'selects the tsconfig file', 'tsconfig.json')
 }
 export const args = '...[patterns]'
 export async function action(patterns: string[], opt: Parsed<typeof options>) {
 	const incrementalFile = './incremental.tsbuildinfo'
 	const TSCONFIG = TSConfig(opt.tsconfig, true)
-	const builOptions = [opt.tsc, '--incremental', '--tsBuildInfoFile', incrementalFile, '-p', opt.tsconfig]
+	const builOptions = ['--incremental', '--tsBuildInfoFile', incrementalFile, '-p', opt.tsconfig]
 	if(existsSync(incrementalFile)) unlinkSync(incrementalFile)
 	const { WatchIncremental } = await import('./incremental')
 	const keepWatching = SyncFiles(patterns, TSCONFIG.compilerOptions.outDir)
@@ -21,7 +21,7 @@ export async function action(patterns: string[], opt: Parsed<typeof options>) {
 		builOptions.push('-w')
 		keepWatching()
 	}
-	await exec('npx', builOptions)
+	await exec(opt.tsc, builOptions)
 	// .data(d => log(0)`${d}`)
 	.dryRun('').run()
 	// .then().catch(err => console.log(err.toString()))
