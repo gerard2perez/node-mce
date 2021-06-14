@@ -19,6 +19,10 @@ export class STDOut extends Stream.Writable {
 	}
 	write(chunck: any) {
 		const text: string = chunck.toString().replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+
+		console.log('STDout', text)
+
+
 		this.content += text
 		return true
 	}
