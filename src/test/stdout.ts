@@ -3,7 +3,7 @@ import { Stream } from 'stream'
 export class STDOut extends Stream.Writable {
 	content = ''
 	isFake = true
-	isTTY = true
+	isTTY = false
 	clearLine(){
 		const line = this.content.split('\n')
 		line[line.length -1] = ''
@@ -18,6 +18,7 @@ export class STDOut extends Stream.Writable {
 		// this.persist();
 	}
 	write(chunck: any) {
+		console.log('STDout0')
 		console.log('STDout1', chunck)
 		const text: string = chunck.toString().replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
 

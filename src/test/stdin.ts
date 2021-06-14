@@ -1,7 +1,7 @@
 import { Readable } from 'stream'
 
 export class STDIn extends Readable {
-	isTTY = true
+	isTTY = false
 	constructor() {
 		super()
 	}
