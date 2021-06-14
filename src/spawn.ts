@@ -19,7 +19,7 @@ export class LiveStream {
 	#arguments: [string, string[], SpawnOptions]
 	output: Buffer = Buffer.allocUnsafe(0)
 	constructor(cmd: string, cmdOptions: string[], /* istanbul ignore next */ options: SpawnOptions = {}) {
-		options.env = options.env || {}
+		options.env = options.env || process.env
 		options.env.FORCE_COLOR = options.env.FORCE_COLOR || 'true'
 		this.#arguments = [cmd, cmdOptions, {...{ stdio: SpawnStreams()}, ...options}]
 		const streams = (this.#arguments[2].stdio as any[]).map(stream => stream==='pipe'?undefined:stream)
