@@ -83,7 +83,6 @@ function xor(arr1, arr2) {
 }
 // istanbul ignore next
 function toLib(files: string[], outDir: string) {
-	// console.log(files, outDir)
 	// eslint-disable-next-line prefer-spread
 	const all = [].concat.apply([], 
 		files.map(file => join(outDir, file))

@@ -6,7 +6,6 @@ export class STDIn extends Readable {
 		super()
 	}
 	write(message: string) {
-		console.log('STDin', message)
 		this.push(message+'\n')
 	}
 	_read() {

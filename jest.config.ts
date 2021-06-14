@@ -4,6 +4,12 @@ const config: Config.InitialOptions = {
 	testEnvironment: 'node',
 	preset: 'ts-jest',
 	maxWorkers: 1,
+	globals: {
+        'ts-jest': {
+            'diagnostics': false,
+            'tsConfig': 'tsconfig.json'
+        }
+    },
 	forceExit: true,
 	moduleNameMapper: {
 		'^@gerard2p/mce$': '<rootDir>/src',
@@ -12,10 +18,10 @@ const config: Config.InitialOptions = {
 	modulePathIgnorePatterns: ['<rootDir>/lib/'],
 	coverageThreshold: {
 		global: {
-			branches: 98,
-			functions: 99,
-			lines: 99,
-			statements: 99,
+			branches: 90,
+			functions: 90,
+			lines: 90,
+			statements: 90,
 		},
 	},
 	testPathIgnorePatterns: [
@@ -26,13 +32,16 @@ const config: Config.InitialOptions = {
 	],
 	coverageDirectory: './coverage',
 	collectCoverage: true,
-	collectCoverageFrom: ['src/**/*.{ts,tsx}'],
+	collectCoverageFrom: ['src/**/*.ts'],
 	coveragePathIgnorePatterns: [
+		'test/',
 		'src/verbose',
 		'/node_modules/',
+		'index.ts',
 		'src/cli.ts',
 		'src/commands/build/incremental.ts',
 		'src/test/tree-maker.ts',
+		'src/mockable/fs.ts',
 		'src/spinner/',
 	],
 	coverageReporters: ['html', 'json', 'lcov'],

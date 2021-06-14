@@ -50,7 +50,6 @@ export function SyncFiles(patterns: string[], outDir = './lib') {
 		.on('change', executeFunction(outDir, copy))
 		.on('add', executeFunction(outDir, copy))
 		.on('unlinkDir', (evet) => {
-			console.log('unlinkDir', evet)
 			executeFunction(outDir, evet)
 		})
 		.on('error', e => console.log('[ERROR]', e))

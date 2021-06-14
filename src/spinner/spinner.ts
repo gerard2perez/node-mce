@@ -111,25 +111,19 @@ export class Spinner {
 	 * @deprecated use spin function instead
 	 */
 	start(text?: string) {
-		console.log('SPIN', 0)
 		/*istanbul ignore next*/
 		if (text) {
 			this.text = text
 		}
-		console.log('SPIN', 1, this.isSpinning)
 		if (this.isSpinning) {
 			return this
 		}
-		console.log('SPIN', 2)
 		/*istanbul ignore else*/
 		if (this.hideCursor) {
 			hideCursor(this.stream)
 		}
-		console.log('SPIN', 3)
 		this.render()
-		console.log('SPIN', 4)
 		this.id = setInterval(this.render.bind(this), this.interval)
-		console.log('SPIN', 5)
 		return this
 	}
 
