@@ -3,6 +3,7 @@
  */
 import chalk from 'chalk'
 import type { WriteStream } from 'tty'
+import { streams } from '../system-streams'
 import { animations } from './animations'
 import { clearColors } from './clear-colors'
 import { hideCursor, showCursor } from './control'
@@ -27,7 +28,9 @@ export class Spinner {
     hideCursor: boolean
     options: ISpinnerOptions
     spinner: any
-    stream: WriteStream
+    get stream (): WriteStream {
+		return streams.output
+	}
     color: string
     interval: number
     enabled: boolean
@@ -49,8 +52,7 @@ export class Spinner {
     constructor(options: ISpinnerOptions) {
 		this.options = Object.assign({
 			text: '',
-			color: 'cyan',
-			stream: process.stdout
+			color: 'cyan'
 		}, options)
 		this.changeSpinner('dots')
 		/*istanbul ignore next*/
@@ -60,7 +62,6 @@ export class Spinner {
 		this.color = this.options.color
 		this.hideCursor = this.options.hideCursor !== false
 		this.interval = this.options.interval || this.spinner.interval || 100
-		this.stream = this.options.stream
 		this.id = null
 		this.frameIndex = 0
 		this.enabled = typeof this.options.enabled === 'boolean' ? /*istanbul ignore next*/this.options.enabled : this.stream && this.stream.isTTY
@@ -118,19 +119,25 @@ export class Spinner {
 	 * @deprecated use spin function instead
 	 */
 	start(text?: string) {
+		console.log('SPIN', 0)
 		/*istanbul ignore next*/
 		if (text) {
 			this.text = text
 		}
+		console.log('SPIN', 1)
 		if (!this.enabled || this.isSpinning) {
 			return this
 		}
+		console.log('SPIN', 2)
 		/*istanbul ignore else*/
 		if (this.hideCursor) {
 			hideCursor(this.stream)
 		}
+		console.log('SPIN', 3)
 		this.render()
+		console.log('SPIN', 4)
 		this.id = setInterval(this.render.bind(this), this.interval)
+		console.log('SPIN', 5)
 		return this
 	}
 

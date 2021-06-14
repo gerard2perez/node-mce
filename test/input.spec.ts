@@ -50,4 +50,5 @@ describe('test user interactions', () => {
 		await expect(override('Do you want to continue', 'fake_folder', true)).resolves.toBeTruthy()
 		existsSync.mockReturnValue(false)
 	})
+	test('force fail', () => expect(false).toBeTruthy())
 })
