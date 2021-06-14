@@ -17,7 +17,6 @@ export interface  ISpinnerOptions {
     stream?: WriteStream
     interval?: number
     hideCursor?: boolean
-    enabled?: boolean
     frameIndex?: number
     linesToClear?: number
     spinner?: any
@@ -33,7 +32,6 @@ export class Spinner {
 	}
     color: string
     interval: number
-    enabled: boolean
     frameIndex: number
 	linesToClear: number
 	get isSpinning() {
@@ -64,7 +62,6 @@ export class Spinner {
 		this.interval = this.options.interval || this.spinner.interval || 100
 		this.id = null
 		this.frameIndex = 0
-		this.enabled = typeof this.options.enabled === 'boolean' ? /*istanbul ignore next*/this.options.enabled : this.stream && this.stream.isTTY
 
 		// Set *after* `this.stream`
 		this.text = this.options.text
@@ -89,11 +86,6 @@ export class Spinner {
 	}
 
 	clear() {
-		/*istanbul ignore next*/
-		if (!this.enabled) {
-			return this
-		}
-
 		for (let i = 0; i < this.linesToClear; i++) {
 			/*istanbul ignore next*/
 			if (i > 0) {
@@ -124,8 +116,8 @@ export class Spinner {
 		if (text) {
 			this.text = text
 		}
-		console.log('SPIN', 1)
-		if (!this.enabled || this.isSpinning) {
+		console.log('SPIN', 1, this.isSpinning)
+		if (this.isSpinning) {
 			return this
 		}
 		console.log('SPIN', 2)
@@ -143,10 +135,6 @@ export class Spinner {
 
 	stop() {
 		clearInterval(this.id)
-		/*istanbul ignore next*/
-		if (!this.enabled) {
-			return this
-		}
 		this.id = null
 		this.frameIndex = 0
 		this.clear()
@@ -159,9 +147,6 @@ export class Spinner {
 	}
 	public log(text: TemplateStringsArray, ...values: any[]) {
 		const send = `${chalk(text, ...values)}`
-		if (!this.enabled) {
-			return this
-		}
 		this.clear()
 		this.stream.write(send)
 		return this

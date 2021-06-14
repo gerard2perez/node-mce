@@ -3,7 +3,7 @@ import { Stream } from 'stream'
 export class STDOut extends Stream.Writable {
 	content = ''
 	isFake = true
-	isTTY = false
+	isTTY = true
 	clearLine(){
 		const line = this.content.split('\n')
 		line[line.length -1] = ''
