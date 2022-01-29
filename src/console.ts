@@ -63,7 +63,7 @@ function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
 export function log(lvl: number, newLine?: boolean) {
 	newLine = newLine !== false
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
-		return (text: TemplateStringsArray, ...values: any[]) => {
+		return (text: TemplateStringsArray, ...values: any[]) => { 
 			MainSpinner.log`${tagcompiler(text, ...values)}${newLine?'\n':''}`
 		}
 			
