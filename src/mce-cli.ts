@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { join, resolve } from 'path'
-import { Command, ICommand, Option, Parser } from './core'
+import { Command, ICommand, Option, Parser } from './legacy_core'
 import { callerPath } from './fs'
 import { existsSync, readdirSync } from './mockable/fs'
 import { locations } from './program'
@@ -11,6 +11,9 @@ type CommandMap = {
 	command: string
 	location: string
 }
+/**
+ * @deprecated
+ */
 export class MCEProgram {
 	private showHelp = false
 	private showVersion = false
@@ -38,6 +41,9 @@ export class MCEProgram {
 		this.common.verbose.makeTag(tag.replace(/-/g, ''), this)
 		return this
 	}
+	/**
+	 * @deprecated
+	 */
 	constructor (private root: string) {
 		process.env.MCE_ROOT = root.replace('dist', '').replace('src', '')
 		const { version, bin } = require(resolve(root.replace('src', '').replace('dist', ''), 'package.json'))
@@ -104,6 +110,9 @@ export class MCEProgram {
 			return command.call(args)
 		}
 	}
+	/**
+	 * @deprecated
+	 */
 	async gitStyle<T=void> (/* istanbul ignore next */ args: string[] = process.argv): Promise<T> {
 		if(this.prepare(args))return
 		this.readCommands('', this.root, 'commands').map(c => this.register(c))
@@ -147,6 +156,9 @@ export class MCEProgram {
 		plugins: []
 	}
 	private commandMapping = new Map<string, ICommand>()
+	/**
+	 * @deprecated
+	 */
 	public withPlugins<T=void>(keyword: string, args?: string[] ) {
 		this.detectPlugins(keyword).map(c => this.register(c))
 		return this.gitStyle<T>(args)

@@ -2,10 +2,20 @@
 import chalk from 'chalk'
 import { MainSpinner } from './spinner'
 import { LogSymbols } from './spinner/symbols'
+import { streams } from './system-streams'
 type FormatterFn = (text: string, ...args: any[]) => string
 const Formatters = new Map<string, FormatterFn>()
 export function RegisterLogFormatter(fn: FormatterFn, name?: string) {
 	Formatters.set(name || fn.name, fn)
+}
+const Color = {
+	black: 'black', red: 'red', green: 'green', yellow: 'yellow', blue: 'blue', magenta: 'magenta', cyan: 'cyan', white: 'white',
+	blackBright: 'blackBright', grey: 'grey', gray: 'gray', redBright: 'redBright', greenBright: 'greenBright', yellowBright: 'yellowBright', blueBright: 'blueBright', magentaBright: 'magentaBright', cyanBright: 'cyanBright', whiteBright: 'whiteBright'
+}
+const Decoration = {rest: 'rest', bold: 'bold', dim: 'dim', italic: 'italic', underline: 'underline', inverse: 'inverse', hidden: 'hidden', strikethrough: 'strikethrough', visible: 'visible'}
+const Background = {
+	bgBlack: 'bgBlack', bgRed: 'bgRed', bgGreen: 'bgGreen', bgYellow: 'bgYellow', bgBlue: 'bgBlue', bgMagenta: 'bgMagenta', bgCyan: 'bgCyan', bgWhite: 'bgWhite', bgBlackBright: 'bgBlackBright',
+	bgGray: 'bgGray', bgGrey: 'bgGrey', bgRedBright: 'bgRedBright', bgGreenBright: 'bgGreenBright', bgYellowBright: 'bgYellowBright', bgBlueBright: 'bgBlueBright', bgMagentaBright: 'bgMagentaBright', bgCyanBright: 'bgCyanBright', bgWhiteBright: 'bgWhiteBright'
 }
 const chalkFns = [
     ...['rest', 'bold', 'dim', 'italic', 'underline', 'inverse', 'hidden', 'strikethrough', 'visible'],
@@ -22,6 +32,11 @@ const chalkFns = [
     'bgCyanBright',
     'bgWhiteBright']
 ]
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export type Color = keyof typeof Color
+export type Decoration = keyof typeof Decoration
+export type Background = keyof typeof Background
+
 for( const id of chalkFns) {
     const fn = function(text: string) {
         return chalk[id](text)
@@ -36,6 +51,42 @@ function sy(symbol: string) {
 }
 RegisterLogFormatter(rgb)
 RegisterLogFormatter(sy)
+RegisterLogFormatter( (text: string, spaces = 0) => {
+    return text.padStart(spaces)
+ }, 'padl')
+ RegisterLogFormatter( (text: string, spaces = 0) => {
+     return text.padEnd(spaces)
+  }, 'padr')
+ RegisterLogFormatter( (number_like: string) => {
+     const formatter = new Intl.NumberFormat('es-MX', {
+         style: 'currency',
+         currency: 'MXN',
+       })
+     const float = parseFloat(number_like.toString()) || 0
+     return formatter.format(float) + ' MXN'
+ }, 'currency')
+//  const wordWrap = (size: number) => new RegExp(`(?![^\\n]{1,${size}}$)([^\\n]{1,${size}})\\s|$`, 'g')
+const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
+
+
+ RegisterLogFormatter((text = '', start=0) => {
+	const [width] = streams.output.getWindowSize()
+	const size = width-start
+	let result = (text||'').match(wordWrap(size)) as string[] || [text]
+	result = result.map( (line, i) => {
+		line = line.trim()
+		const spacesNeeded = size - line.length
+		const shoulfFill =  i !== result.length - 1
+		const currentSpaces = (line.match(/\w\b/g)||[]).length - 1
+		if(shoulfFill && spacesNeeded > 0 && currentSpaces > 0) {
+			const insertNSpaces = Math.floor(spacesNeeded / currentSpaces)
+			const leftSpaces = spacesNeeded % currentSpaces
+			line = line.split(' ').map((word, i) => word + ''.padEnd(insertNSpaces+(i<leftSpaces?1:0), ' ')).join(' ')
+		}
+		return line
+	}) as string[]
+	return result ? result.map( (l, i) => (i ? ''.padStart(start) : '') + l).join('\n') : text.padStart(start, ' ')
+ }, 'autowrap')
 
 function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
     let complete = text.reduce((message, part, index) => {
@@ -59,6 +110,9 @@ function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
         exp.lastIndex = result.index + value.length
     }
     return complete
+}
+export function print(text: TemplateStringsArray, ...values: any[]) {
+	streams.output.write(tagcompiler(text, ...values))
 }
 export function log(lvl: number, newLine?: boolean) {
 	newLine = newLine !== false
@@ -88,3 +142,5 @@ export function updated(text: TemplateStringsArray, ...values: any[]) {
 export function created(text: TemplateStringsArray, ...values: any[]) {
 	log(0)`{success|sy|blueBright} ${tagcompiler(text, ...values)}`
 }
+
+

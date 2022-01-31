@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Compile",
+            "runtimeExecutable": "npx",
+            "type": "node",
+            "runtimeArgs": [
+                "ttsc",
+                "./src/brand-new-system.ts",
+                "--experimentalDecorator",
+                "--emitDecoratorMetadata"
+            ]
+        },
+    
+        {
             "type": "node",
             "request": "launch",
             "name": "Jest",

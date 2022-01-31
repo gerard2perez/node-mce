@@ -1,5 +1,5 @@
 import { existsSync, unlinkSync } from '../../mockable/fs'
-import { bool, Parsed, text } from '../../core/options'
+import { bool, Parsed, text } from '../../legacy_core/options'
 import { exec } from '../../spawn'
 import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'

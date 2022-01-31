@@ -1,184 +1,62 @@
-import { MCEProgram } from '../mce-cli'
-import { Command } from './command'
-export type Range = [start: number, end: number]
-export type List = string[]
-export enum Parser {
-	float = <any>((n: string, d: number) => parseFloat(n) || d),
-	int = <any>((n: string, d: number) => parseInt(n) || d),
-	range = <any>((str) =>
-		str
-			.split('..')
-			.map((n) => parseInt(n, 10))
-			.splice(0)),
-	list = <any>((s) => s.split(',')),
-	collect = <any>((val, memo) => {
-		memo.push(val)
-		return memo.splice(0)
-	}),
-	increaseVerbosity = <any>((_, t) => t + 1),
-	string = <any>((s) => s === true ? '' : s.toString()),
-	truefalse = <any>((s) => s),
-	enum = <any>((e, s) => {
-		if (e instanceof Array) {
-			return e.includes(s) && s
-		}
-		return e[s]
-	}),
-}
-export enum OptionKind {
-	no,
-	required,
-	optional,
-	boolean,
-	varidac,
-	verbose,
-}
-export class Option<T> {
+/*
+Copyright (C) 2022 Gerardo Pérez Pérez - All Rights Reserved
+<gerard2perez@outlook.com>
+Unauthorized copying of this file, via any medium is strictly prohibited 
+Proprietary and confidential
+w
+File: option.ts
+Created:  2022-01-30T04:03:09.903Z
+Modified: 2022-01-31T07:20:17.985Z
+*/
+import 'reflect-metadata'
+import { IParameter, mOptions, getMetadata } from './metadata'
+import { GetParser, ValueParsers } from './value-parser'
+
+export class Option {
+	static Get(target: unknown): Option[] {
+		return getMetadata(mOptions, target) || []
+	}
 	name: string
 	tag: string
-	short: string
-	tag_desc: string
-	kind: OptionKind
-	constructor(
-		private option: string,
-		public description: string,
-		public parser: Parser,
-		public validation: string[],
-		public defaults: T
-	) {}
-	makeTag(name: string, command: Command | MCEProgram) {
-		let [short, value = ''] = this.option.split(' ')
-		if (!short.includes('-')) {
-			value = short
-			short = undefined
-		}
-		if (short && short.includes('--')) short = undefined
-		let tag = `--${name}`
-		if (name.length === 1) {
-			tag = `-${name}`
-		}
-		this.tag = tag.replace(/([A-Z])/gm, '-$1').toLowerCase()
-		if (short && command.unic_shorts.includes(short)) {
-			throw new Error(
-				`[${command.name} duplicated short tag ${short}. This is a problem related to the program.`
-			)
-		} else if (short) {
-			command.unic_shorts.push(short)
-		}
-		this.short = short
-		this.tag_desc = Option.getDefaultValueFor(this.parser, value)
-		this.kind = this.getKind(this.tag_desc, this.parser)
-		this.name = name
-		return this
+	defaults: unknown
+	kind: Array<ValueParsers>
+	hasValue: boolean
+	constructor(option: IParameter, public description: string, public short: string, public index) {
+		this.name = option.property
+		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
+		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
+		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
+		this.defaults = option.defaults
+		this.hasValue = k1 !== 'boolean'
 	}
-	private getKind(value: string, parser: Parser): OptionKind {
-		return !value
-			? Parser.truefalse === parser
-				? OptionKind.boolean
-				: Parser.increaseVerbosity === parser
-				? OptionKind.verbose
-				: /* istanbul ignore next */ OptionKind.no
-			: value.includes('<')
-			? OptionKind.required
-			: OptionKind.optional
-	}
-	static getDefaultValueFor(parser: Parser, value: string) {
-		if (!value) {
-			switch (parser) {
-				case Parser.list:
-					value = '<a>,<b>..<n>'
-					break
-				case Parser.string:
-					value = ' '
-					break
-				case Parser.range:
-					value = '<a>..<b>'
-					break
-				case Parser.collect:
-					value = '<c>'
-					break
-				case Parser.int:
-				case Parser.float:
-					value = '<n>'
-					break
-			}
-			if((parser as any).isEnum === Parser.enum) {
-				value = '<e>'
-			}
-		}
-		return value
-	}
-	private has(args: string[]) {
-		const [index = -1] = (
-			[
-				args.includes(this.tag) && args.indexOf(this.tag),
-				this.short &&
-					args.includes(this.short) &&
-					args.indexOf(this.short),
-			] as (boolean | number)[]
-		)
-			.filter((p) => p !== false)
-			.sort()
-		return index as number
-	}
-	find(args: string[]) {
-		let value = this.defaults
-		for (let i = this.has(args); i >= 0; i = this.has(args)) {
-			const start = args.splice(0, i)
-			const [TAG] = args.splice(0, 1)
-			const [VAL] = args
 
-			const parser = this.parser as any
-			if (!this.validateValue(this.validation, VAL))
-				throw new Error(
-					`Argument '${TAG} ${VAL}' does not match expression '${this.validation}'`
-				)
-			value = this.extractValue(VAL, args, i, value, parser, TAG)
-			args.splice(0, 0, ...start)
+	parseValue(value: string) {
+		const [first, second] = this.kind
+		const parser1 = GetParser(first) || (str => str)
+		const parser2 = GetParser(second) || (str => str)
+		let result: unknown = parser1(value)
+		if(result instanceof Array) {
+			result = result.map(d => parser2(d)) as unknown
 		}
-		return value
+		return result || (first === 'boolean' ? false : undefined)
 	}
-	private extractValue(
-		VAL: string,
-		args: string[],
-		i: number,
-		value: T,
-		parser: (...args: any[]) => any,
-		TAG: string
-	) {
-		switch (this.kind) {
-			case OptionKind.required:
-				if (!VAL || VAL.startsWith('-'))
-					throw new Error(
-						`Missing value for argument ${args[i - 1]}`
-					)
-				value = parser(VAL, value)
-				args.splice(0, 1)
-				break
-			case OptionKind.optional:
-				if (VAL && !VAL.startsWith('-')) {
-					value = parser(VAL, value)
-					args.splice(0, 1)
-				} else {
-					value = parser(true, value)
-				}
-				break
-			case OptionKind.boolean:
-				value = parser(true)
-				break
-			case OptionKind.verbose:
-				value = parser(TAG, value)
-				break
+	match(args: string[]) {
+		const results = [...args.filter(t => t===this.tag), ...args.filter(t => t===this.short)]
+		if(this.kind.length===1 && results.length>1) {
+			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
 		}
-		return value
-	}
-	private validateValue(expression: RegExp | Array<string>, val: string) {
-		let matched = true
-		if (expression instanceof RegExp) {
-			matched = expression.exec(val) != null
-		} else if (expression instanceof Array) {
-			matched = expression.includes(val)
+		const values = [] as string[]
+		for(let i = 0; i< results.length; i++) {
+			const index = args.indexOf(results[i])
+			if( this.hasValue ) {
+				const [_, value] = args.splice(index, 2)
+				values.push(value)
+			} else {
+				args.splice(index, 1)
+				values.push('true')
+			}
 		}
-		return matched
+		const complete = values.join(',')
+		return this.parseValue(complete || this.defaults as string)
 	}
 }

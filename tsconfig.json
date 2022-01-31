@@ -7,9 +7,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./lib",
-    "module": "commonjs",
+    "module": "CommonJS",
+    "target": "ES2021",
     "forceConsistentCasingInFileNames": true,
-    "target": "es2018",
     "sourceMap": false,
     "declaration": true,
     "moduleResolution": "node",
@@ -21,7 +21,10 @@
     "paths": {
       "@gerard2p/mce": ["src"],
       "@gerard2p/mce/*": ["src/*"]
-    }
+    },
+    "plugins": [
+      {"transform" : "./metadata-decorators.ts", "after": true}
+    ]
   },
   "include": [
     "src/**/*.ts"

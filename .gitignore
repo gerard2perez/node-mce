@@ -10,3 +10,4 @@ lib
 *.tsbuildinfo
 /cpx.ts
 _*.ts
+copyright.notice
