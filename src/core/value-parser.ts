@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: value-parser.ts
 Created:  2022-01-30T03:33:15.897Z
-Modified: 2022-01-30T22:50:19.781Z
+Modified: 2022-03-14T19:42:30.066Z
 */
 declare global {
 	namespace MCE {
@@ -16,13 +16,16 @@ declare global {
 		}
 	}
 }
+const collectionParser = (str: string) => {
+	return str ? str.replace(/^\[|\]$/gm, '').split(',') : []
+}
 const ValueParsers = {
 	int: (str: string) => parseInt(str),
 	number: (str: string) => parseInt(str),
 	float: (str: string) => parseFloat(str),
-	range: (str: string) => str.split('-').map(n => parseFloat(str)),
-	collection: (str: string) => str.split(','),
-	list: (str: string) => str.split(','),
+	range: (str: string) => str.split('-').map(n => parseFloat(n)),
+	collection: collectionParser,
+	list: collectionParser,
 	boolean: (str: string) => str === 'true'
 }
 type CorceKind = typeof ValueParsers

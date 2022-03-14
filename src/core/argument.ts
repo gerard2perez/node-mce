@@ -6,10 +6,10 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-01-31T07:20:26.984Z
+Modified: 2022-03-14T19:49:14.763Z
 */
 import { ValueParsers, GetParser} from './value-parser'
-import { IParameter, mArguments, getMetadata } from './metadata'
+import { MetadataArgument, mArguments, getMetadata } from './metadata'
 
 export class Argument {
 	static Get(target: unknown): Argument[] {
@@ -17,13 +17,19 @@ export class Argument {
 	}
 	name: string
 	defaults: unknown
+	private oKind: string
 	kind: Array<ValueParsers>
 	rest: boolean
-	constructor(option: IParameter, public description: string, public short: string, public index) {
+	constructor(option: MetadataArgument, public description: string, public index) {
 		this.name = option.property
-		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
+		this.oKind = option.kind
+		let [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
+		if(option.kind.includes('[')) {
+			[_, k2, k1 = 'List'] = option.kind.match(/(.*)\[\]/) || [null, option.kind]
+		}
 		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
 		this.defaults = option.defaults
+		this.rest = option.rest
 	}
 	parseValue(value: string) {
 		const [first, second] = this.kind
@@ -31,11 +37,23 @@ export class Argument {
 		const parser2 = GetParser(second) || (str => str)
 		let result: unknown = parser1(value)
 		if(result instanceof Array) {
-			result = result.map(d => parser2(d)) as unknown
+			result = result.map(d => this.checkValue(parser2(d), value)) as unknown
+		}
+		if(!result && !this.rest) {
+			throw new Error(`Value ${value} does not matches ${this.kind} for argument ${this.name}`)
 		}
 		return result
 	}
 	match(args: string[]) {
+		if(this.rest) {
+			return this.parseValue(args.join(', '))
+		}
 		return this.parseValue( args.shift() || this.defaults as string)
+	}
+	private checkValue(result: unknown, value: unknown ) {
+		if(!result && !this.rest) {
+			throw new Error(`Value '${value}' does not matches ${this.oKind} for argument ${this.name}`)
+		}
+		return result
 	}
 }

@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: metatdata.ts
 Created:  2022-01-30T03:55:36.567Z
-Modified: 2022-01-31T06:12:41.887Z
+Modified: 2022-03-14T19:20:49.800Z
 */
 
 import { ValueParsers } from './value-parser'
@@ -16,21 +16,31 @@ interface IMetadata {
 	arguments: unknown[]
 	parameters: unknown[]
 }
-export interface IParameter {
+export interface MetadataArgument {
 	property: string
 	kind: ValueParsers
 	optional: boolean
 	rest: boolean
 	defaults: unknown
 }
-
-export function mceData(target: unknown, fn: string) {
-	return Reflect.getMetadata('mce:data', target, fn) as Array<IParameter>
+export interface MetadataOption {
+	property: string
+	kind: ValueParsers
+	defaults: unknown
 }
-export function Insert(metadataKey: symbol, value: unknown & {index: number}, target: unknown) {
-	let data: (unknown & {index: number})[] = Reflect.getMetadata(metadataKey, target) || []
+
+export function metaArguments(target: unknown, fn: string) {
+	return Reflect.getMetadata('mce:data', target, fn) as Array<MetadataArgument>
+}
+export function metaOption(target: unknown, property: string) {
+	return Reflect.getMetadata('mce:data', target, property) as MetadataOption
+}
+export function Insert(metadataKey: symbol, value: unknown & {index?: number, name: string}, target: unknown) {
+	let data: (unknown & {index?: number})[] = Reflect.getMetadata(metadataKey, target) || []
 	data.push(value)
-	data = data.sort( (a, b) => a.index - b.index)
+	if(value.index != undefined) {
+		data = data.sort( (a, b) => a.index - b.index)
+	}
 	Reflect.defineMetadata(metadataKey, data, target)
 }
 

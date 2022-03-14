@@ -6,10 +6,10 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-01-31T07:20:17.985Z
+Modified: 2022-03-14T19:38:00.501Z
 */
 import 'reflect-metadata'
-import { IParameter, mOptions, getMetadata } from './metadata'
+import { mOptions, getMetadata, MetadataOption } from './metadata'
 import { GetParser, ValueParsers } from './value-parser'
 
 export class Option {
@@ -20,9 +20,11 @@ export class Option {
 	tag: string
 	defaults: unknown
 	kind: Array<ValueParsers>
+	private oKind: string
 	hasValue: boolean
-	constructor(option: IParameter, public description: string, public short: string, public index) {
+	constructor(option: MetadataOption, public description: string, public short: string) {
 		this.name = option.property
+		this.oKind = option.kind
 		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
 		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
 		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
@@ -36,8 +38,9 @@ export class Option {
 		const parser2 = GetParser(second) || (str => str)
 		let result: unknown = parser1(value)
 		if(result instanceof Array) {
-			result = result.map(d => parser2(d)) as unknown
+			result = result.map(d => this.checkValue(parser2(d), value)) as unknown
 		}
+		
 		return result || (first === 'boolean' ? false : undefined)
 	}
 	match(args: string[]) {
@@ -58,5 +61,11 @@ export class Option {
 		}
 		const complete = values.join(',')
 		return this.parseValue(complete || this.defaults as string)
+	}
+	private checkValue(result: unknown, value: unknown ) {
+		if(!result) {
+			throw new Error(`Value '${value}' does not matches ${this.oKind} for option ${this.name}`)
+		}
+		return result
 	}
 }

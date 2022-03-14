@@ -6,18 +6,17 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:10:54.411Z
-Modified: 2022-01-30T23:08:36.307Z
+Modified: 2022-03-14T18:57:14.032Z
 */
 
-import { Insert, mceData, mOptions } from '../metadata'
+import { Insert, metaOption, mOptions } from '../metadata'
 import { Option } from '../option'
 
-export function opt(description: string): ParameterDecorator
-export function opt(short: string): ParameterDecorator
-export function opt(short: string, description: string): ParameterDecorator
-export function opt(target: unknown, propertyKey: string, parameterIndex: number): void
-export function opt(...args: unknown[]): ParameterDecorator | void {
-	function ParameterDecorator(target: unknown, propertyKey: string, parameterIndex: number) {
+export function opt(description: string): PropertyDecorator
+export function opt(short: string): PropertyDecorator
+export function opt(short: string, description: string): PropertyDecorator
+export function opt(...args: unknown[]): PropertyDecorator {
+	function PropertyDecorator(target: unknown, propertyKey: string) {
 		let short: string
 		let description: string
 		const [arg0='', arg1=''] = args
@@ -32,15 +31,9 @@ export function opt(...args: unknown[]): ParameterDecorator | void {
 		if(short && short.length>2) {
 			throw new Error('Short Tag must be only one character')
 		}
-		const data = mceData(target, propertyKey)[parameterIndex]
-		const option = new Option(data, description, short, parameterIndex )
+		const metadata = metaOption(target, propertyKey)
+		const option = new Option(metadata, description, short )
 		Insert(mOptions, option, target)
 	}
-	switch(args.length) {
-		case 3:
-			ParameterDecorator(args[0], args[1] as string, args[2] as number)
-			break
-		default:
-			return ParameterDecorator
-	}
+	return PropertyDecorator
 }

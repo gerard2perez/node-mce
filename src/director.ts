@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: mce-cli-2.ts
 Created:  2022-01-31T07:37:27.395Z
-Modified: 2022-01-31T07:40:32.313Z
+Modified: 2022-03-14T18:17:11.744Z
 */
 import { ExecuterDirector } from './executer'
 
@@ -22,16 +22,9 @@ type GitStyle = {
 	locals?: boolean
 	plugins?: string
 }
-function MCE(data: GitStyle): Promise<void>
-function MCE(data: SingleCommand): Promise<void>
-async function MCE(data: any) {
+export function Program(data: GitStyle): Promise<void>
+export function Program(data: SingleCommand): Promise<void>
+export async function Program(data: any) {
 	process.env.MCE_ROOT = data.root
 	await ExecuterDirector(!data.single)
 }
-
-MCE({
-	root: __dirname,
-	argv: process.argv,
-	plugins: 'mce',
-	locals: false
-})
