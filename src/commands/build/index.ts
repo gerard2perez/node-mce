@@ -5,7 +5,7 @@ import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'
 export const options = {
 	watch: bool('-w', 'watches for changes'),
-	tsc: text('-c', 'path to tsc', './node_modules/.bin/tsc'),
+	tsc: text('-c', 'path to tsc', './node_modules/.bin/ttsc'),
 	tsconfig: text('-t', 'selects the tsconfig file', 'tsconfig.json')
 }
 export const args = '...[patterns]'

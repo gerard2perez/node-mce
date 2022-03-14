@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-01-31T07:33:39.504Z
+Modified: 2022-03-14T21:21:28.659Z
 */
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
 import { Color, Background, print } from '..'
@@ -31,7 +31,7 @@ export abstract class HelpRenderer {
 	}
 	header(program: string, command: string, _arguments: Argument[], options: Option[]) {
 		const pre = `${program} ${command}`.trim()
-		const args = _arguments.map(arg => `<{${arg.name}|${this.pipe(this.theme.argument)}}>`).join(' ')
+		const args = _arguments.map(arg => `<${arg.rest?'...':''}{${arg.name}|${this.pipe(this.theme.argument)}}>`).join(' ')
 		const opts = options.length ? `{[options]|${this.pipe(this.theme.option.primary)}}` : ''
 		return `{${pre}|${this.pipe(this.theme.command)}} ${args} ${opts}`.trim()
 	}
@@ -85,6 +85,7 @@ export abstract class HelpRenderer {
 		if(description) {
 			help += `{|padl:${indent+1}}{${description}|${this.pipe(this.theme.description.primary)}}\n`
 		}
+		
 		const args_fill = argus.map(opt => opt.name.length).sort().pop() + 3
 		const str_args = argus.filter(f => f.description).map(arg => `{|padl:${indent+3}}${this.arguments(arg, args_fill)}`).join('\n')
 		help += `${str_args}\n\n`
