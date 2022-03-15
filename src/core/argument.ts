@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-14T19:49:14.763Z
+Modified: 2022-03-14T22:20:53.112Z
 */
 import { ValueParsers, GetParser} from './value-parser'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
@@ -17,7 +17,7 @@ export class Argument {
 	}
 	name: string
 	defaults: unknown
-	private oKind: string
+	oKind: string
 	kind: Array<ValueParsers>
 	rest: boolean
 	constructor(option: MetadataArgument, public description: string, public index) {

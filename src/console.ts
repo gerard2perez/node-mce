@@ -43,6 +43,10 @@ for( const id of chalkFns) {
     }
     RegisterLogFormatter(fn, id)
 }
+function cleanColor(text: string) {
+	// eslint-disable-next-line no-control-regex
+	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+}
 function rgb(text: string, r, g, b) {
     return chalk.rgb(r, g, b)(text)
 }
@@ -51,11 +55,15 @@ function sy(symbol: string) {
 }
 RegisterLogFormatter(rgb)
 RegisterLogFormatter(sy)
-RegisterLogFormatter( (text: string, spaces = 0) => {
-    return text.padStart(spaces)
+RegisterLogFormatter( (text: string, _spaces = '0', sym = ' ') => {
+	const spaces = parseInt(_spaces)
+	const colorsLenght = text.length - cleanColor(text).length
+    return text.padStart(spaces + colorsLenght, sym)
  }, 'padl')
- RegisterLogFormatter( (text: string, spaces = 0) => {
-     return text.padEnd(spaces)
+ RegisterLogFormatter( (text: string,  _spaces = '0', sym = ' ') => {
+	const spaces = parseInt(_spaces)
+	const colorsLenght = text.length - cleanColor(text).length
+    return text.padEnd(spaces + colorsLenght, sym)
   }, 'padr')
  RegisterLogFormatter( (number_like: string) => {
      const formatter = new Intl.NumberFormat('es-MX', {
@@ -71,7 +79,7 @@ const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
 
  RegisterLogFormatter((text = '', start=0) => {
 	const [width] = streams.output.getWindowSize()
-	const size = width-start
+	const size =  width-start	
 	let result = (text||'').match(wordWrap(size)) as string[] || [text]
 	result = result.map( (line, i) => {
 		line = line.trim()
@@ -81,20 +89,24 @@ const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
 		if(shoulfFill && spacesNeeded > 0 && currentSpaces > 0) {
 			const insertNSpaces = Math.floor(spacesNeeded / currentSpaces)
 			const leftSpaces = spacesNeeded % currentSpaces
-			line = line.split(' ').map((word, i) => word + ''.padEnd(insertNSpaces+(i<leftSpaces?1:0), ' ')).join(' ')
+			line = line.split(' ')
+				.map((word, i) => word + ''.padEnd(insertNSpaces+(i<leftSpaces?1:0), ' '))
+				.join(' ').trimEnd()
 		}
 		return line
 	}) as string[]
-	return result ? result.map( (l, i) => (i ? ''.padStart(start) : '') + l).join('\n') : text.padStart(start, ' ')
+	return result ? result.map( (l, i) => (i ? ''.padStart(start, ' ') : '') + l).join('\r\n') : text.padStart(start, ' ')
  }, 'autowrap')
 
 function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
     let complete = text.reduce((message, part, index) => {
         return `${message}${part}${values[index]||''}`
     }, '')
-    const exp = /\{([^}]*)\}/mg
+    const exp = /\{([^}{]*)\}/gm
     let result: RegExpExecArray
-    // eslint-disable-next-line no-cond-assign
+    
+	while(complete.includes('{'))
+	// eslint-disable-next-line no-cond-assign
     while (result = exp.exec(complete)) {
         const [full, fnWithPipes] = result
         let [value, ...pipesWithArgs] = fnWithPipes.split('|')
@@ -108,7 +120,7 @@ function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
         }
         complete = complete.replace(full, value)
         exp.lastIndex = result.index + value.length
-    }
+	}
     return complete
 }
 export function print(text: TemplateStringsArray, ...values: any[]) {

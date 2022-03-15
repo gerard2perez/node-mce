@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-14T21:28:06.512Z
+Modified: 2022-03-14T22:10:35.980Z
 */
 import { basename } from 'path'
 import { cliPath } from '.'
@@ -15,10 +15,10 @@ import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
 import { Argument, Command, Insert, mArguments, mOptions, opt, Option } from './core'
-import { log, print } from './console'
+import { print } from './console'
 type Ctor =  new () => Command
 async function LoadModule(path: string): Promise<Ctor|undefined> {
-	return await import(path).then(m => {
+	return await import(path + '.js').then(m => {
 		if(m.default) {
 			return m.default
 		} else {
@@ -79,7 +79,9 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 			)
 			return nclass
 		}
-	}).catch(_ => undefined)
+	}).catch(_ => {
+		throw _
+	})
 }
 export async function ExecuterDirector(subcommands: boolean) {
 	let [_, __, requestedCMD, ...programArgs] = process.argv
@@ -87,7 +89,7 @@ export async function ExecuterDirector(subcommands: boolean) {
 	if(!subcommands) {
 		programArgs = [requestedCMD, ...programArgs]
 	} else {
-		commandCtr = await LoadModule(`./commands/${requestedCMD}`)
+		commandCtr = await LoadModule(cliPath('commands', requestedCMD))
 	}
 	const help = new Option(
 		{ kind: 'boolean', defaults: undefined, property: 'help' },
@@ -102,9 +104,10 @@ export async function ExecuterDirector(subcommands: boolean) {
 			const commands = readdirSync(cliPath('commands')).filter(p => p.includes('.js')).map(p => p.replace('.js', ''))
 			bcommands = (await Promise.all(
 				commands
-					.map(command => LoadModule(`./commands/${command}`))
+					.map(command => LoadModule(cliPath('commands', command)))
 					
-			)).filter(c => c)
+		
+					)).filter(c => c)
 		}
 		hRenderer.render('mce', bcommands.map(b => new b()), !subcommands)
 	} else {

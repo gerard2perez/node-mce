@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:10:54.411Z
-Modified: 2022-03-14T18:57:14.032Z
+Modified: 2022-03-15T01:06:32.651Z
 */
 
 import { Insert, metaOption, mOptions } from '../metadata'
@@ -15,7 +15,8 @@ import { Option } from '../option'
 export function opt(description: string): PropertyDecorator
 export function opt(short: string): PropertyDecorator
 export function opt(short: string, description: string): PropertyDecorator
-export function opt(...args: unknown[]): PropertyDecorator {
+export function opt(target: unknown, propertyKey: string| symbol ): void
+export function opt(...args: unknown[]): PropertyDecorator | void {
 	function PropertyDecorator(target: unknown, propertyKey: string) {
 		let short: string
 		let description: string
