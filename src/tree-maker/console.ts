@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import { basename, dirname, posix } from 'path'
-import { RegisterLogFormatter } from '../console'
+import { RegisterLogFormatter } from '../formatters'
 
 export function highlightBasename(path: string, primary = 'green', secondary = 'white') {
     const directory = chalk[secondary](dirname(path).replace(/\\/gm, posix.sep)+'/').replace('./', '')

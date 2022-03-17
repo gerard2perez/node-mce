@@ -6,10 +6,11 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-17T03:19:53.471Z
+Modified: 2022-03-17T05:56:42.510Z
 */
+import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
-import { Color, Background, write } from '..'
+import { Color, Background } from '../formatters'
 export interface HelpTheme {
 	description: {
 		primary: [Color, Background?],
