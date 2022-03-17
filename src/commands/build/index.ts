@@ -2,7 +2,7 @@ import { bool, Parsed, text } from '../../legacy_core/options'
 import { exec } from '../../spawn'
 import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'
-import { log } from '../../console'
+import { log, print } from '../../console'
 let firstReport = false
 export const options = {
 	watch: bool('-w', 'watches for changes'),
@@ -22,12 +22,11 @@ export async function action(patterns: string[], opt: Parsed<typeof options>) {
 		keepWatching()
 	}
 	await exec(opt.tsc, builOptions)
-	// .data(d => log(0)`${d}`)
 	.dryRun('').data(ev => {
 		const lines = ev.toString().split(/[\r\n]/gm)
 		lines.filter(f => f).forEach(line => reportLine(line))
-		
 	}).run()
+	
 }
 function reportLine(line: string) {
 	const [file, error=''] = line.split(' error ')
@@ -36,8 +35,17 @@ function reportLine(line: string) {
 		const [_, TS, desc] = /.*(TS.*:) (.*)/gm.exec(error) || []
 		const [__, source, row, column] =  /(.*)\(([0-9]*),([0-9]*).*/gm.exec(file) || []
 		log(0)`{|padl:10} {${source}|cyan}:{${row}|yellow}:{${column}|yellow} - {error|red} {${TS}|grey} ${desc}`
+	} else if(line.startsWith('[MCE]') ) {
+		let message = line
+		const [_, KIND, MESSAGE] = /\[MCE]\[(.*)](.*)/g.exec(line)
+		switch(KIND) {
+			case 'WRN':
+				message = `[{MCE|yellow}] {warning|sy|yellow} {${MESSAGE}|yellow|bold}`
+				break
+		}
+		print`[{${date}|grey}] ${message}`
 	} else if (line.includes('Watching for file changes') && !firstReport) {
 		firstReport = true
-		log(0)`[{${date}|grey}] [DONE]`
+		print`[{${date}|grey}] [READY]`
 	}
 }

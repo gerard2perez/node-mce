@@ -101,7 +101,7 @@ export default function (/*opts?: Opts*/) {
 				return fd.getName() === 'action' && fd.isExported()
 			})
 			if(hasExportedAction.length) {
-				console.warn(`This kind of module is deprecated, please migrate to class module. At ${sourceFile.fileName}`)
+				ts.sys.write(`[MCE][WRN] This kind of module is deprecated, please migrate to class module. At ${sourceFile.fileName}\n\n`)
 			}
 			const decoratedParameters = source
 				.getDescendantsOfKind(tsm.SyntaxKind.Parameter)

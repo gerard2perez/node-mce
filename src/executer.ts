@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-17T03:25:06.163Z
+Modified: 2022-03-17T04:00:05.333Z
 */
 import { basename } from 'path'
 import { cliPath } from '.'
@@ -92,12 +92,10 @@ export async function ExecuterDirector(subcommands: boolean) {
 	const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
 	if(!subcommands) {
 		programArgs = [requestedCMD, ...programArgs]
+	} else {
+		commandCtr = await LoadModule(cliPath('commands', requestedCMD))
 	}
 	const helpRequested = help.match(programArgs)
-
-	console.log(programArgs)
-		
-	// commandCtr = await LoadModule(cliPath('commands', requestedCMD))
 	
 	
 	if(help.match(programArgs) || !commandCtr) {
