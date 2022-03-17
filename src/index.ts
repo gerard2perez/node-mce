@@ -11,8 +11,10 @@ export * from './formatters'
 export { dry, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from './legacy_core/options'
 export { information } from './program'
 export { exec } from './spawn'
-export {  SetSpinnerText } from './spinner/console'
+export { SetSpinnerText } from './spinner/console'
 export { callerPath, cliPath } from './fs'
+export * from './director'
+export * from './core'
 /**
  * @deprecated
  * @param localdir 
