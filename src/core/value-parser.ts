@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: value-parser.ts
 Created:  2022-01-30T03:33:15.897Z
-Modified: 2022-03-14T19:42:30.066Z
+Modified: 2022-03-16T19:03:54.991Z
 */
 declare global {
 	namespace MCE {
@@ -40,6 +40,7 @@ export type ValueParsers = keyof Parsers
 type ValueParser = (str: string) => unknown
 
 export function RegisterParser(name: string, parser: ValueParser) {
+	name = name.toLocaleLowerCase()
 	if(ValueParsers[name]) {
 		throw new Error(`Parser ${name}, already exists`)
 	} else {

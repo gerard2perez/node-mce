@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-14T22:10:35.980Z
+Modified: 2022-03-16T03:07:51.663Z
 */
 import { basename } from 'path'
 import { cliPath } from '.'
@@ -15,10 +15,10 @@ import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
 import { Argument, Command, Insert, mArguments, mOptions, opt, Option } from './core'
-import { print } from './console'
+import { write } from './console'
 type Ctor =  new () => Command
 async function LoadModule(path: string): Promise<Ctor|undefined> {
-	return await import(path + '.js').then(m => {
+	return await import(path).then(m => {
 		if(m.default) {
 			return m.default
 		} else {
@@ -32,7 +32,7 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 				}
 			}
 			const nclass = inFly[fname]
-			print`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
+			write`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
 
 			const ocmd = new OldCommand('mce', basename(path), m, false)
 			for(const oArg of ocmd.arguments) {
@@ -84,6 +84,8 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 	})
 }
 export async function ExecuterDirector(subcommands: boolean) {
+	//TODO: create VERBOSE option
+	process.env.MCE_VERBOSE = 0 as any
 	let [_, __, requestedCMD, ...programArgs] = process.argv
 	let commandCtr: Ctor
 	if(!subcommands) {
@@ -138,6 +140,6 @@ export async function ExecuterDirector(subcommands: boolean) {
 			final_args.push((Command as any)._legacyOptions)
 		}
 		// eslint-disable-next-line prefer-spread
-		await Command.action.apply(Command, final_args)
+		await Command.action.apply(Command, [].concat.apply([], final_args))
 	}
 }

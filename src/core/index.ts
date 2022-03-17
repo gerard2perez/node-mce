@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: index.ts
 Created:  2022-01-30T04:17:13.518Z
-Modified: 2022-01-31T06:34:04.931Z
+Modified: 2022-03-15T01:17:40.415Z
 */
 
 export * from './decorators/alias'
@@ -20,3 +20,4 @@ export * from './option'
 export * from './types'
 export * from './value-parser'
 export * from './help'
+export * from '../console'

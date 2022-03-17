@@ -43,7 +43,7 @@ for( const id of chalkFns) {
     }
     RegisterLogFormatter(fn, id)
 }
-function cleanColor(text: string) {
+export function cleanColor(text: string) {
 	// eslint-disable-next-line no-control-regex
 	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
 }
@@ -65,13 +65,13 @@ RegisterLogFormatter( (text: string, _spaces = '0', sym = ' ') => {
 	const colorsLenght = text.length - cleanColor(text).length
     return text.padEnd(spaces + colorsLenght, sym)
   }, 'padr')
- RegisterLogFormatter( (number_like: string) => {
-     const formatter = new Intl.NumberFormat('es-MX', {
+ RegisterLogFormatter( (number_like: string, currency = 'MXN') => {
+     const formatter = new Intl.NumberFormat('es', {
          style: 'currency',
-         currency: 'MXN',
+         currency: currency.toUpperCase(),
        })
-     const float = parseFloat(number_like.toString()) || 0
-     return formatter.format(float) + ' MXN'
+     const float = parseFloat(cleanColor(number_like.toString())) || 0
+     return number_like.replace(float.toString(), formatter.format(float))
  }, 'currency')
 //  const wordWrap = (size: number) => new RegExp(`(?![^\\n]{1,${size}}$)([^\\n]{1,${size}})\\s|$`, 'g')
 const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
@@ -123,8 +123,14 @@ function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
 	}
     return complete
 }
-export function print(text: TemplateStringsArray, ...values: any[]) {
+export function compileText(text: TemplateStringsArray, ...values: any[]) {
+	return tagcompiler(text, ...values)
+}
+export function write(text: TemplateStringsArray, ...values: any[]) {
 	streams.output.write(tagcompiler(text, ...values))
+}
+export function print(text: TemplateStringsArray, ...values: any[]) {
+	streams.output.write(tagcompiler(text, ...values)+'\n')
 }
 export function log(lvl: number, newLine?: boolean) {
 	newLine = newLine !== false

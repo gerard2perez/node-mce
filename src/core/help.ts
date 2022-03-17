@@ -6,11 +6,10 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-15T01:01:32.768Z
+Modified: 2022-03-16T17:57:24.157Z
 */
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
-import { Color, Background, print } from '..'
-import { opt } from './decorators/option'
+import { Color, Background, write } from '..'
 export interface HelpTheme {
 	description: {
 		primary: [Color, Background?],
@@ -77,7 +76,7 @@ export abstract class HelpRenderer {
 	}
 	render(program: string, commands: Command[], single = false) {
 		const help = commands.map(command => this.renderCommand(program, command, single && commands.length === 1))
-		print`${help.join('\n')}\n`
+		write`${help.join('\n')}\n`
 	}
 	
 	renderCommand(program: string, command: Command, single = false) {
