@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-16T17:57:24.157Z
+Modified: 2022-03-17T03:19:53.471Z
 */
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
 import { Color, Background, write } from '..'
@@ -85,8 +85,7 @@ export abstract class HelpRenderer {
 		const alias = getMetadata(mAlias, command)
 		const argus = Argument.Get(command)
 		const options = Option.Get(command)// getMetadata<Option[]>(mOptions, command)
-
-		let help = `{|padl:${indent}}${this.header(program, single ? '' : command.constructor.name, argus, options)}\n`
+		let help = `{|padl:${indent}}${this.header(program, single ? '' : Command.getName(command), argus, options)}\n`
 		if(alias) {
 			help += `{|padl:${indent+1}}{Alias:|${this.pipe(this.theme.description.primary)}} {${alias}|${this.pipe(this.theme.command)}}\n`
 		}

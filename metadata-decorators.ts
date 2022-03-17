@@ -97,7 +97,12 @@ export default function (/*opts?: Opts*/) {
 			const project = new Project({})
 			const source = project.addSourceFileAtPath(sourceFile.fileName)
 
-
+			const hasExportedAction = source.getDescendantsOfKind(tsm.SyntaxKind.FunctionDeclaration).filter(fd => {
+				return fd.getName() === 'action' && fd.isExported()
+			})
+			if(hasExportedAction.length) {
+				console.warn(`This kind of module is deprecated, please migrate to class module. At ${sourceFile.fileName}`)
+			}
 			const decoratedParameters = source
 				.getDescendantsOfKind(tsm.SyntaxKind.Parameter)
 				.filter((param) => param.getDecorators().some(decorator => decorator.getName() === 'arg'))
@@ -116,7 +121,6 @@ export default function (/*opts?: Opts*/) {
 					return foundHere.find((st) => (st as any).name.text === classNameKey)
 				})
 				for(const propertyData of propertiesByClass[classNameKey]) {
-					console.log(propertyData)
 					statements.splice(
 						index + 1,
 						0,
@@ -124,7 +128,6 @@ export default function (/*opts?: Opts*/) {
 					)
 				}
 				for (const method of Object.keys(parametersByClassAndMethod[classNameKey])) {
-					console.log(`insert ${classNameKey} at ${index+1}`)
 					statements.splice(
 						index + 1,
 						0,

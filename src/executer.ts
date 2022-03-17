@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-16T03:07:51.663Z
+Modified: 2022-03-17T03:25:06.163Z
 */
 import { basename } from 'path'
 import { cliPath } from '.'
@@ -14,16 +14,16 @@ import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
-import { Argument, Command, Insert, mArguments, mOptions, opt, Option } from './core'
-import { write } from './console'
+import { Argument, Command, Insert, mArguments, mOptions, Option } from './core'
+import 'reflect-metadata'
 type Ctor =  new () => Command
 async function LoadModule(path: string): Promise<Ctor|undefined> {
+	const fname = basename(path)
 	return await import(path).then(m => {
-		if(m.default) {
-			return m.default
-		} else {
-			const fname = basename(path)
-			const inFly = {
+		const { action, default: compileClass } = m
+		if( action ) {
+			// write`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
+			const {[fname]: runtimeClass} = {
 				[fname]: class extends Command {
 					public _legacyOptions = {}
 					async action(...args: any[]) {
@@ -31,9 +31,6 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 					}
 				}
 			}
-			const nclass = inFly[fname]
-			write`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
-
 			const ocmd = new OldCommand('mce', basename(path), m, false)
 			for(const oArg of ocmd.arguments) {
 				const nArg = new Argument({
@@ -43,7 +40,7 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 					rest: oArg.kind === OptionKind.varidac,
 					property: oArg.name
 				}, null, ocmd.arguments.indexOf(oArg))
-				Insert( mArguments, nArg, nclass.prototype )
+				Insert( mArguments, nArg, runtimeClass.prototype )
 			}
 			for(const oOpt of ocmd.options) {
 				const meta = {
@@ -66,7 +63,7 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 						break
 				}
 				const nArg = new Option(meta, oOpt.tag_desc, oOpt.short)
-				Insert( mOptions, nArg, nclass.prototype )
+				Insert( mOptions, nArg, runtimeClass.prototype )
 			}
 			Insert(
 				mOptions,
@@ -75,10 +72,14 @@ async function LoadModule(path: string): Promise<Ctor|undefined> {
 					'',
 					'-h'
 				),
-				nclass.prototype
+				runtimeClass.prototype
 			)
-			return nclass
+			return runtimeClass
 		}
+		return compileClass
+	}).then(module => {
+		Reflect.defineMetadata(Command, fname, module.prototype)
+		return module
 	}).catch(_ => {
 		throw _
 	})
@@ -88,22 +89,23 @@ export async function ExecuterDirector(subcommands: boolean) {
 	process.env.MCE_VERBOSE = 0 as any
 	let [_, __, requestedCMD, ...programArgs] = process.argv
 	let commandCtr: Ctor
+	const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
 	if(!subcommands) {
 		programArgs = [requestedCMD, ...programArgs]
-	} else {
-		commandCtr = await LoadModule(cliPath('commands', requestedCMD))
 	}
-	const help = new Option(
-		{ kind: 'boolean', defaults: undefined, property: 'help' },
-		'',
-		'-h'
-	)
+	const helpRequested = help.match(programArgs)
+
+	console.log(programArgs)
+		
+	// commandCtr = await LoadModule(cliPath('commands', requestedCMD))
+	
+	
 	if(help.match(programArgs) || !commandCtr) {
 		const hRenderer = new DefaultHelpRenderer(DefaultTheme)
 
 		let bcommands: Ctor[] = [commandCtr]
 		if(!commandCtr) {
-			const commands = readdirSync(cliPath('commands')).filter(p => p.includes('.js')).map(p => p.replace('.js', ''))
+			const commands = readdirSync(cliPath('commands')).filter(p => p.endsWith('.js')).map(p => p.replace('.js', ''))
 			bcommands = (await Promise.all(
 				commands
 					.map(command => LoadModule(cliPath('commands', command)))
