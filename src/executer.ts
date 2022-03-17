@@ -6,84 +6,15 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-17T04:00:05.333Z
+Modified: 2022-03-17T04:33:05.478Z
 */
-import { basename } from 'path'
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
-import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
-import { Argument, Command, Insert, mArguments, mOptions, Option } from './core'
-import 'reflect-metadata'
-type Ctor =  new () => Command
-async function LoadModule(path: string): Promise<Ctor|undefined> {
-	const fname = basename(path)
-	return await import(path).then(m => {
-		const { action, default: compileClass } = m
-		if( action ) {
-			// write`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
-			const {[fname]: runtimeClass} = {
-				[fname]: class extends Command {
-					public _legacyOptions = {}
-					async action(...args: any[]) {
-						await m.action(...args)
-					}
-				}
-			}
-			const ocmd = new OldCommand('mce', basename(path), m, false)
-			for(const oArg of ocmd.arguments) {
-				const nArg = new Argument({
-					defaults: undefined,
-					kind: oArg.type as any,
-					optional: oArg.kind === OptionKind.optional,
-					rest: oArg.kind === OptionKind.varidac,
-					property: oArg.name
-				}, null, ocmd.arguments.indexOf(oArg))
-				Insert( mArguments, nArg, runtimeClass.prototype )
-			}
-			for(const oOpt of ocmd.options) {
-				const meta = {
-					defaults: oOpt.defaults,
-					kind: undefined,
-					property: oOpt.name,
-				}
-				switch(oOpt.parser) {
-					case Parser.list:
-						meta.kind = 'List<string>'
-						break
-					case Parser.collect:
-						meta.kind = 'Collection<string>'
-						break
-					case Parser.truefalse:
-						meta.kind = 'boolean'
-						break
-					default:
-						meta.kind = 'string'
-						break
-				}
-				const nArg = new Option(meta, oOpt.tag_desc, oOpt.short)
-				Insert( mOptions, nArg, runtimeClass.prototype )
-			}
-			Insert(
-				mOptions,
-				new Option(
-					{kind: 'boolean', defaults: undefined, property: 'help'},
-					'',
-					'-h'
-				),
-				runtimeClass.prototype
-			)
-			return runtimeClass
-		}
-		return compileClass
-	}).then(module => {
-		Reflect.defineMetadata(Command, fname, module.prototype)
-		return module
-	}).catch(_ => {
-		throw _
-	})
-}
+import { Argument, Option } from './core'
+import { Ctor, LoadModule } from './module-loader'
+
 export async function ExecuterDirector(subcommands: boolean) {
 	//TODO: create VERBOSE option
 	process.env.MCE_VERBOSE = 0 as any
@@ -92,11 +23,9 @@ export async function ExecuterDirector(subcommands: boolean) {
 	const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
 	if(!subcommands) {
 		programArgs = [requestedCMD, ...programArgs]
-	} else {
+	} else if(programArgs.length > 1) {
 		commandCtr = await LoadModule(cliPath('commands', requestedCMD))
 	}
-	const helpRequested = help.match(programArgs)
-	
 	
 	if(help.match(programArgs) || !commandCtr) {
 		const hRenderer = new DefaultHelpRenderer(DefaultTheme)
