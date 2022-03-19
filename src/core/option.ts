@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-19T02:37:53.128Z
+Modified: 2022-03-19T04:13:08.500Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -29,7 +29,7 @@ export class Option {
 		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
 		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
 		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
-		this.defaults = option.defaults
+		this.defaults =  option.defaults || (k1 === 'boolean' ? 'false' : option.defaults)
 		this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
 		this.allowMulti = option.allowMulti
 	}
