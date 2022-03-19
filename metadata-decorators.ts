@@ -120,6 +120,7 @@ export default function (/*opts?: Opts*/) {
 					const foundHere = [...findByType(st, ts.SyntaxKind.ClassExpression), ...findByType(st, ts.SyntaxKind.ClassDeclaration)]
 					return foundHere.find((st) => (st as any).name.text === classNameKey)
 				})
+				if(propertiesByClass[classNameKey])
 				for(const propertyData of propertiesByClass[classNameKey]) {
 					statements.splice(
 						index + 1,
