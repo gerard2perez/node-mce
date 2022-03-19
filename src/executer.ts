@@ -6,16 +6,15 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-19T00:53:53.458Z
+Modified: 2022-03-19T02:40:33.197Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
-import { Argument, Option, error, Command, exit, tagcompiler, cleanColor } from './core'
+import { Argument, Option, error, Command, exit } from './core'
 import { LoadModule } from './module-loader'
 import { basename } from 'path'
-import { Trie } from './dt/trie'
 import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 process.env.MCE_VERBOSE = 0 as any
@@ -35,7 +34,6 @@ async function checkCompletition(commands: string[]) {
 	}
 	return false
 }
-//TODO: create VERBOSE option
 export async function ExecuterDirector(subcommands: boolean) {
 	try {
 		let commadFileNames = findCommands(cliPath('commands'))
@@ -46,7 +44,10 @@ export async function ExecuterDirector(subcommands: boolean) {
 		}
 		
 		const commandName = basename(_cmdName)
-		const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
+		const help = new Option({ kind: 'boolean', defaults: 'false', property: 'help' }, '', '-h' )
+		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbosity', allowMulti: true }, '', '-v' )
+		process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
+
 		const helpRequested = help.match(preArguments)
 		const isSubcommands = commadFileNames.length > 0
 		let [requestedCMD, ...programArgs] = preArguments
@@ -68,7 +69,6 @@ export async function ExecuterDirector(subcommands: boolean) {
 		await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
 		await UseSourceMaps(err)
-		// console.log(err)
 		exit(3)`{warning|ico|red|bold} ${err.stack}\n`
 	}
 }

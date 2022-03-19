@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: verbose.ts
 Created:  2022-03-17T05:46:01.690Z
-Modified: 2022-03-17T05:49:59.746Z
+Modified: 2022-03-19T02:35:55.736Z
 */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { MainSpinner } from '../spinner'

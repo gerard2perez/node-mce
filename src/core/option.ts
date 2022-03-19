@@ -6,12 +6,12 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-18T22:17:45.237Z
+Modified: 2022-03-19T02:37:53.128Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
 import { GetParser, ValueParsers } from './value-parser'
-
+//TODO: I don't like way verbosity is parsed maybe I need options to configure this kind of data
 export class Option {
 	static Get(target: unknown): Option[] {
 		return getMetadata(mOptions, target) || []
@@ -22,6 +22,7 @@ export class Option {
 	kind: Array<ValueParsers>
 	private oKind: string
 	hasValue: boolean
+	private allowMulti: boolean
 	constructor(option: MetadataOption, public description: string, public short: string) {
 		this.name = option.property
 		this.oKind = option.kind
@@ -29,23 +30,26 @@ export class Option {
 		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
 		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
 		this.defaults = option.defaults
-		this.hasValue = k1 !== 'boolean'
+		this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
+		this.allowMulti = option.allowMulti
 	}
 
 	parseValue(value: string) {
 		const [first, second] = this.kind
 		const parser1 = GetParser(first) || (str => str)
 		const parser2 = GetParser(second) || (str => str)
+		
 		let result: unknown = parser1(value)
 		if(result instanceof Array) {
 			result = result.map(d => this.checkValue(parser2(d), value)) as unknown
 		}
 		
-		return result || (first === 'boolean' ? false : undefined)
+		return (first === 'boolean' ? false : undefined) || result
 	}
 	match<T = unknown>(args: string[]) {
 		const results = [...args.filter(t => t===this.tag), ...args.filter(t => t===this.short)]
-		if(this.kind.length===1 && results.length>1) {
+		
+		if(this.kind.length===1 && results.length > 1 && !this.allowMulti) {
 			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
 		}
 		const values = [] as string[]

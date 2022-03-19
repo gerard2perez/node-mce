@@ -6,16 +6,10 @@ Proprietary and confidential
 w
 File: metatdata.ts
 Created:  2022-01-30T03:55:36.567Z
-Modified: 2022-03-14T19:20:49.800Z
+Modified: 2022-03-19T02:36:32.141Z
 */
 
 import { ValueParsers } from './value-parser'
-interface IMetadata {
-	alias: string
-	description: string
-	arguments: unknown[]
-	parameters: unknown[]
-}
 export interface MetadataArgument {
 	property: string
 	kind: ValueParsers
@@ -27,6 +21,7 @@ export interface MetadataOption {
 	property: string
 	kind: ValueParsers
 	defaults: unknown
+	allowMulti?: boolean
 }
 
 export function metaArguments(target: unknown, fn: string) {

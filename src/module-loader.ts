@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-17T04:31:50.102Z
+Modified: 2022-03-19T02:36:15.888Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
@@ -18,7 +18,6 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 	return await import(path).then(m => {
 		const { action, default: compileClass } = m
 		if( action ) {
-			// write`{warning|sy|red} {This kind of module is deprecated, please migrate to class module|yellow}\n\n`
 			const {[fname]: runtimeClass} = {
 				[fname]: class extends Command {
 					public _legacyOptions = {}

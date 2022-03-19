@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: value-parser.ts
 Created:  2022-01-30T03:33:15.897Z
-Modified: 2022-03-18T22:19:57.562Z
+Modified: 2022-03-19T02:35:18.886Z
 */
 declare global {
 	namespace MCE {
@@ -20,6 +20,7 @@ const collectionParser = (str: string) => {
 	return str ? str.replace(/^\[|\]$/gm, '').split(',') : []
 }
 const ValueParsers = {
+	verbosity: str => str ? str.split(',').length : 0,
 	string: str => str,
 	int: (str: string) => parseInt(str),
 	number: (str: string) => parseInt(str),
@@ -37,7 +38,7 @@ type Coerce<T = CorceKind> = {
 interface Parsers extends MCE.ValueParsers, Coerce {
 	
 }
-export type ValueParsers = keyof Parsers
+export type ValueParsers = keyof Parsers | `List<${keyof Parsers}>`
 type ValueParser = (str: string) => unknown
 
 export function RegisterParser(name: string, parser: ValueParser) {
