@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-19T03:03:55.857Z
+Modified: 2022-03-19T03:19:33.391Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -19,7 +19,7 @@ import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 process.env.MCE_VERBOSE = 0 as any
 function findCommands(path: string) {
-	return readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.js')).map(p => p.replace('.js', ''))
+	return readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.ts')).map(p => p.replace('.js', ''))
 }
 async function checkCompletition(commands: string[]) {
 	const [_, _ptcmd, fullcommand = '', ...preArguments] = process.argv
@@ -39,9 +39,9 @@ export async function ExecuterDirector(subcommands: boolean) {
 		let commadFileNames = findCommands(cliPath('commands'))
 		const [_, _cmdName, ...preArguments] = process.argv
 		
-		if(await checkCompletition(commadFileNames)) {
-			process.exit(0)
-		}
+		// if(await checkCompletition(commadFileNames)) {
+		// 	process.exit(0)
+		// }
 		
 		const commandName = basename(_cmdName)
 		const help = new Option({ kind: 'boolean', defaults: 'false', property: 'help' }, '', '-h' )
@@ -68,7 +68,7 @@ export async function ExecuterDirector(subcommands: boolean) {
 		}
 		await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
-		// await UseSourceMaps(err)
+		await UseSourceMaps(err)
 		exit(3)`{warning|ico|red|bold} ${err.stack}\n`
 	}
 }
