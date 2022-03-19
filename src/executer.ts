@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-19T00:46:35.720Z
+Modified: 2022-03-19T00:53:53.458Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -20,10 +20,10 @@ import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 process.env.MCE_VERBOSE = 0 as any
 function findCommands(path: string) {
-	return readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.js')).map(p => p.replace('.js', ''))
+	return readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.js')).map(p => p.replace('.js', ''))
 }
 async function checkCompletition(commands: string[]) {
-	const [_, _ptcmd, fullcommand, ...preArguments] = process.argv
+	const [_, _ptcmd, fullcommand = '', ...preArguments] = process.argv
 	const [_cmdName, suncommand] = fullcommand.split(' ')	
 	const completeOpt = new Option({ kind: 'string', defaults: undefined, property: 'complete' }, '', '' )
 	const indexOpt = new Option({ kind: 'number', defaults: undefined, property: 'index' }, '', '' )
