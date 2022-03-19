@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-19T03:19:33.391Z
+Modified: 2022-03-19T08:11:00.297Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -29,7 +29,7 @@ async function checkCompletition(commands: string[]) {
 	const _index = indexOpt.match<number>(preArguments)
 	const complete = completeOpt.match<string>(preArguments)
 	if(fullcommand && _index) {
-		await subCommandCompletition(complete, suncommand, commands)
+		await subCommandCompletition(_cmdName, complete, suncommand, commands)
 		return true
 	}
 	return false
@@ -39,9 +39,9 @@ export async function ExecuterDirector(subcommands: boolean) {
 		let commadFileNames = findCommands(cliPath('commands'))
 		const [_, _cmdName, ...preArguments] = process.argv
 		
-		// if(await checkCompletition(commadFileNames)) {
-		// 	process.exit(0)
-		// }
+		if(await checkCompletition(commadFileNames)) {
+			process.exit(0)
+		}
 		
 		const commandName = basename(_cmdName)
 		const help = new Option({ kind: 'boolean', defaults: 'false', property: 'help' }, '', '-h' )

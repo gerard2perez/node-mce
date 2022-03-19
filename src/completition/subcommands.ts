@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: subcommands.ts
 Created:  2022-03-18T23:47:40.659Z
-Modified: 2022-03-19T00:40:02.458Z
+Modified: 2022-03-19T08:10:55.683Z
 */
 
 import { DefaultHelpRenderer } from '../@utils/help.renderer'
@@ -15,7 +15,7 @@ import { Command, Option, cleanColor, tagcompiler } from '../core'
 import { Trie } from '../dt/trie'
 import { cliPath } from '../fs'
 import { LoadModule } from '../module-loader'
-async function completeCommands(input: string, commands: string[]) {
+async function completeCommands(cmd: string, input: string, commands: string[]) {
 	const autocompleter = new Trie()
 	commands.forEach(cmd => autocompleter.insert(cmd))
 	const possibilities = (autocompleter.search(input).valueOf(input) || [commands.find(c => c===input)]).filter(f => f)
@@ -28,8 +28,8 @@ async function completeCommands(input: string, commands: string[]) {
 			// return Command.getName(ctr.prototype)
 			return {
 				command: Command.getName(ctr.prototype),
-				header: cleanColor(tagcompiler`${hRenderer.header('hello', commands.length===0, build)}`),
-				help: cleanColor(tagcompiler`${hRenderer.generateHelp('hello', build)}`)
+				header: cleanColor(tagcompiler`${hRenderer.header(cmd, commands.length===0, build)}`),
+				help: cleanColor(tagcompiler`${hRenderer.generateHelp(cmd, build)}`)
 			}
 		})
 		console.log(JSON.stringify(toRender))
@@ -52,11 +52,11 @@ async function completeArgumentsFor(requestedCMD: string, input: string) {
 	}))
 	console.log(JSON.stringify(toRender))
 }
-export async function subCommandCompletition(completitionText: string, requestedCMD: string, commands: string[]) {
+export async function subCommandCompletition(cmd: string, completitionText: string, requestedCMD: string, commands: string[]) {
 
 	if(requestedCMD) {
 		await completeArgumentsFor(requestedCMD, completitionText)
 	} else {
-		await completeCommands(completitionText, commands)
+		await completeCommands(cmd, completitionText, commands)
 	}
 }
