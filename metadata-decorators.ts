@@ -120,19 +120,24 @@ export default function (/*opts?: Opts*/) {
 					const foundHere = [...findByType(st, ts.SyntaxKind.ClassExpression), ...findByType(st, ts.SyntaxKind.ClassDeclaration)]
 					return foundHere.find((st) => (st as any).name.text === classNameKey)
 				})
-				if(propertiesByClass[classNameKey])
-				for(const propertyData of propertiesByClass[classNameKey]) {
-					statements.splice(
-						index + 1,
-						0,
-						DecorateMethod(ctx, classNameKey, propertyData.property, propertyData)
-					)
-				}
 				for (const method of Object.keys(parametersByClassAndMethod[classNameKey])) {
 					statements.splice(
 						index + 1,
 						0,
 						DecorateMethod(ctx, classNameKey, method, parametersByClassAndMethod[classNameKey][method])
+					)
+				}
+			}
+			for (const classNameKey of Object.keys(propertiesByClass)) {
+				const index = statements.findIndex( st => {
+					const foundHere = [...findByType(st, ts.SyntaxKind.ClassExpression), ...findByType(st, ts.SyntaxKind.ClassDeclaration)]
+					return foundHere.find((st) => (st as any).name.text === classNameKey)
+				})
+				for(const propertyData of propertiesByClass[classNameKey]) {
+					statements.splice(
+						index + 1,
+						0,
+						DecorateMethod(ctx, classNameKey, propertyData.property, propertyData)
 					)
 				}
 			}

@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-19T02:47:27.417Z
+Modified: 2022-03-19T03:03:55.857Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -68,7 +68,7 @@ export async function ExecuterDirector(subcommands: boolean) {
 		}
 		await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
-		await UseSourceMaps(err)
+		// await UseSourceMaps(err)
 		exit(3)`{warning|ico|red|bold} ${err.stack}\n`
 	}
 }
