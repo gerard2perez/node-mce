@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-17T05:56:42.510Z
+Modified: 2022-03-18T22:54:34.764Z
 */
 import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
@@ -33,10 +33,12 @@ export abstract class HelpRenderer {
 	protected pipe(pallete: [Color, Background?]) {
 		return pallete.join('|')
 	}
-	header(program: string, command: string, _arguments: Argument[], options: Option[]) {
-		const pre = `${program} ${command}`.trim()
+	header(program: string, single: boolean, command: Command) {
+		const _arguments: Argument[] = Argument.Get(command)
+		const _options: Option[] =   Option.Get(command)
+		const pre = `${program} ${single ? '' : Command.getName(command)}`.trim()
 		const args = _arguments.map(arg => `${arg.rest?'...':''}{${arg.name}|${this.pipe(this.theme.argument.primary)}}{:${arg.oKind}|${this.pipe(this.theme.argument.secondary)}}`).join(' ')
-		const opts = options.length ? `{[options]|${this.pipe(this.theme.option.primary)}}` : ''
+		const opts = _options.length ? `{[options]|${this.pipe(this.theme.option.primary)}}` : ''
 		return `{${pre}|${this.pipe(this.theme.command)}} ${args} ${opts}`.trim()
 	}
 	arguments(argument: Argument, fill: number) {
@@ -76,17 +78,23 @@ export abstract class HelpRenderer {
 		}
 	}
 	render(program: string, commands: Command[], single = false) {
-		const help = commands.map(command => this.renderCommand(program, command, single && commands.length === 1))
+		const help = commands.map(command => this.generateHelp(program, command, single && commands.length === 1))
 		write`${help.join('\n')}\n`
 	}
-	
-	renderCommand(program: string, command: Command, single = false) {
+	/**
+	 * Return and uncompiled command help
+	 * @param program 
+	 * @param command 
+	 * @param single 
+	 * @returns 
+	 */
+	generateHelp(program: string, command: Command, single = false) {
 		const indent = 0
 		const description = getMetadata(mDescription, command)
 		const alias = getMetadata(mAlias, command)
 		const argus = Argument.Get(command)
-		const options = Option.Get(command)// getMetadata<Option[]>(mOptions, command)
-		let help = `{|padl:${indent}}${this.header(program, single ? '' : Command.getName(command), argus, options)}\n`
+		const options = Option.Get(command)
+		let help = `{|padl:${indent}}${this.header(program, single, command)}\n`
 		if(alias) {
 			help += `{|padl:${indent+1}}{Alias:|${this.pipe(this.theme.description.primary)}} {${alias}|${this.pipe(this.theme.command)}}\n`
 		}

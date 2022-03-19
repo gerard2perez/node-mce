@@ -6,47 +6,70 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-17T05:28:59.240Z
+Modified: 2022-03-19T00:38:46.886Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
-import { Argument, Option, error, Command, exit } from './core'
+import { Argument, Option, error, Command, exit, tagcompiler, cleanColor } from './core'
 import { LoadModule } from './module-loader'
 import { basename } from 'path'
+import { Trie } from './dt/trie'
+import { subCommandCompletition } from './completition/subcommands'
+import { UseSourceMaps } from './@utils/user-sourcemaps'
 process.env.MCE_VERBOSE = 0 as any
 function findCommands(path: string) {
 	return readdirSync(path).filter(p => p.endsWith('.js')).map(p => p.replace('.js', ''))
 }
+async function checkCompletition(commands: string[]) {
+	const [_, _ptcmd, fullcommand, ...preArguments] = process.argv
+	const [_cmdName, suncommand] = fullcommand.split(' ')	
+	const completeOpt = new Option({ kind: 'string', defaults: undefined, property: 'complete' }, '', '' )
+	const indexOpt = new Option({ kind: 'number', defaults: undefined, property: 'index' }, '', '' )
+	const _index = indexOpt.match<number>(preArguments)
+	const complete = completeOpt.match<string>(preArguments)
+	if(fullcommand && _index) {
+		await subCommandCompletition(complete, suncommand, commands)
+		return true
+	}
+	return false
+}
 //TODO: create VERBOSE option
 export async function ExecuterDirector(subcommands: boolean) {
-	let commadFileNames = findCommands(cliPath('commands'))
-	const [_, _cmdName, ...preArguments] = process.argv
-	const commandName = basename(_cmdName)
-	const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
-	const helpRequested = help.match(preArguments)
-	const isSubcommands = commadFileNames.length > 0
-	let [requestedCMD, ...programArgs] = preArguments
-	if(!isSubcommands) {
-		programArgs = [requestedCMD, ...programArgs]
-		requestedCMD = commadFileNames[0]
-	}
-	if(requestedCMD && !commadFileNames.includes(requestedCMD)) {
-		error`The requested command '{${requestedCMD}|cyan}' does not exists`
-		exit(1)`\n  Options: ${commadFileNames.join('  ')}\n`
-	}
-	if(helpRequested) {
-		const hRenderer = new DefaultHelpRenderer(DefaultTheme)
-		commadFileNames = requestedCMD ? [requestedCMD] : commadFileNames
-		const commands = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
-		hRenderer.render(commandName, commands.map(b => new b()), !subcommands)
-		exit(2)``
-	}
 	try {
+		let commadFileNames = findCommands(cliPath('commands'))
+		const [_, _cmdName, ...preArguments] = process.argv
+		
+		if(await checkCompletition(commadFileNames)) {
+			process.exit(0)
+		}
+		
+		const commandName = basename(_cmdName)
+		const help = new Option({ kind: 'boolean', defaults: undefined, property: 'help' }, '', '-h' )
+		const helpRequested = help.match(preArguments)
+		const isSubcommands = commadFileNames.length > 0
+		let [requestedCMD, ...programArgs] = preArguments
+		if(!isSubcommands) {
+			programArgs = [requestedCMD, ...programArgs]
+			requestedCMD = commadFileNames[0]
+		}
+		if(requestedCMD && !commadFileNames.includes(requestedCMD)) {
+			error`The requested command '{${requestedCMD}|cyan}' does not exists`
+			exit(1)`\n  Options: ${commadFileNames.join('  ')}\n`
+		}
+		if(helpRequested) {
+			const hRenderer = new DefaultHelpRenderer(DefaultTheme)
+			commadFileNames = requestedCMD ? [requestedCMD] : commadFileNames
+			const commands = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
+			hRenderer.render(commandName, commands.map(b => new b()), !subcommands)
+			exit(2)``
+		}
 		await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
-		exit(3)`{warning|ico|red|bold} ${err.message}\n`
+		await UseSourceMaps(err)
+		// console.log(err)
+		exit(3)`{warning|ico|red|bold} ${err.stack}\n`
 	}
 }
 

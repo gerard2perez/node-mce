@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-14T19:38:00.501Z
+Modified: 2022-03-18T22:17:45.237Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -43,7 +43,7 @@ export class Option {
 		
 		return result || (first === 'boolean' ? false : undefined)
 	}
-	match(args: string[]) {
+	match<T = unknown>(args: string[]) {
 		const results = [...args.filter(t => t===this.tag), ...args.filter(t => t===this.short)]
 		if(this.kind.length===1 && results.length>1) {
 			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
@@ -60,7 +60,7 @@ export class Option {
 			}
 		}
 		const complete = values.join(',')
-		return this.parseValue(complete || this.defaults as string)
+		return this.parseValue(complete || this.defaults as string) as T
 	}
 	private checkValue(result: unknown, value: unknown ) {
 		if(!result) {

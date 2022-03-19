@@ -6,14 +6,15 @@ export async function UseSourceMaps(error: Error) {
 	const showMCE = process.env.MCE_TRACE_SHOWMCE === 'true'
 	const stack = error.stack.split('\n')
 	const parsed = stack.filter(line => {
-		if(!showMCE && line.search(/@gerard2p.mce/)>-1) {
-			error.stack = error.stack.replace(`${line}\n`, '')
-		}
-		// istanbul ignore if
-		if(!showInternal && line.includes('internal/')) {
-			error.stack = error.stack.replace(`${line}\n`, '')
-		}
-		return !line.includes('internal/') && line.includes('at ')
+		return line.search(/@gerard2p.mce/) > -1
+		// if(!showMCE && line.search(/@gerard2p.mce/)>-1) {
+		// 	error.stack = error.stack.replace(`${line}\n`, '')
+		// }
+		// // istanbul ignore if
+		// if(!showInternal && line.includes('internal/')) {
+		// 	error.stack = error.stack.replace(`${line}\n`, '')
+		// }
+		// return !line.includes('internal/') && line.includes('at ') && line.search(/@gerard2p.mce/) > -1
 	})
 	.map(lineText => {
 		const matches = lineText.match(/.* \(?(.*):([0-9]*):([0-9]*)/)
@@ -30,6 +31,7 @@ export async function UseSourceMaps(error: Error) {
 		const mapFile = `${file}.map`
 		if(!existsSync(mapFile)) continue
 		const sourceMap = readFileSync(`${file}.map`, 'utf-8')
+		
 		const consumer = await new SourceMapConsumer(sourceMap)
 		const res = consumer.originalPositionFor({
 			line: parseInt(line),
@@ -37,7 +39,7 @@ export async function UseSourceMaps(error: Error) {
 		})
 		const targetFile = join(dirname(file), res.source)
 		const newLine = replacement.replace('$1', `${targetFile}:${res.line}:${res.column}`)
+		
 		error.stack = error.stack.replace(lineText, newLine)
-		return error
 	}
 }

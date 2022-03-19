@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: value-parser.ts
 Created:  2022-01-30T03:33:15.897Z
-Modified: 2022-03-16T19:03:54.991Z
+Modified: 2022-03-18T22:19:57.562Z
 */
 declare global {
 	namespace MCE {
@@ -20,6 +20,7 @@ const collectionParser = (str: string) => {
 	return str ? str.replace(/^\[|\]$/gm, '').split(',') : []
 }
 const ValueParsers = {
+	string: str => str,
 	int: (str: string) => parseInt(str),
 	number: (str: string) => parseInt(str),
 	float: (str: string) => parseFloat(str),
