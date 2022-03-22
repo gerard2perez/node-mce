@@ -7,7 +7,7 @@ const config: Config.InitialOptions = {
 	globals: {
         'ts-jest': {
             'diagnostics': false,
-            'tsConfig': 'tsconfig.json'
+            'tsconfig': 'tsconfig.json'
         }
     },
 	forceExit: true,
@@ -34,6 +34,13 @@ const config: Config.InitialOptions = {
 	collectCoverage: true,
 	collectCoverageFrom: ['src/**/*.ts'],
 	coveragePathIgnorePatterns: [
+		'src/core',
+		'src/completition',
+		'src/dt',
+		'src/formatters',
+		'src/executer.ts',
+		'src/director.ts',
+		'src/module-loader',
 		'test/',
 		'src/verbose',
 		'/node_modules/',

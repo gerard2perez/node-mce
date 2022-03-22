@@ -141,7 +141,6 @@ export default function (/*opts?: Opts*/) {
 					)
 				}
 			}
-			// console.log('ended')
 			return ctx.factory.updateSourceFile(sourceFile, [...statements])
 		}
 	}

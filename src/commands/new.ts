@@ -15,7 +15,6 @@ function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
 			.run()
 			.then(result => result.toString(), _ => onErrorReturn)
 	}
-	
 }
 
 enum Styles {

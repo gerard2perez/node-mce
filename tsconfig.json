@@ -1,4 +1,8 @@
 {
+  "ts-node": {
+    "compiler": "ttypescript",
+    "swc": true
+  },
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./lib",

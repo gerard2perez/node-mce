@@ -2,7 +2,8 @@ import { bool, Parsed, text } from '../../legacy_core/options'
 import { exec } from '../../spawn'
 import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'
-import { log, print } from '../../console'
+import { print } from '../../console'
+import { existsSync, unlinkSync } from '../../mockable/fs'
 let firstReport = false
 export const options = {
 	watch: bool('-w', 'watches for changes'),
@@ -14,6 +15,7 @@ export async function action(patterns: string[], opt: Parsed<typeof options>) {
 	const incrementalFile = './incremental.tsbuildinfo'
 	const TSCONFIG = TSConfig(opt.tsconfig, true)
 	const builOptions = ['--incremental', '--tsBuildInfoFile', incrementalFile, '-p', opt.tsconfig]
+	if(existsSync(incrementalFile)) unlinkSync(incrementalFile)
 	const { WatchIncremental } = await import('./incremental')
 	const keepWatching = SyncFiles(patterns, TSCONFIG.compilerOptions.outDir)
 	if(opt.watch) {
@@ -34,7 +36,7 @@ function reportLine(line: string) {
 	if(line.includes(' error ')) {
 		const [_, TS, desc] = /.*(TS.*:) (.*)/gm.exec(error) || []
 		const [__, source, row, column] =  /(.*)\(([0-9]*),([0-9]*).*/gm.exec(file) || []
-		log(0)`{|padl:10} {${source}|cyan}:{${row}|yellow}:{${column}|yellow} - {error|red} {${TS}|grey} ${desc}`
+		print`{|padl:10} {${source}|cyan}:{${row}|yellow}:{${column}|yellow} - {error|red} {${TS}|grey} ${desc}`
 	} else if(line.startsWith('[MCE]') ) {
 		let message = line
 		const [_, KIND, MESSAGE] = /\[MCE]\[(.*)](.*)/g.exec(line)
