@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T00:48:22.454Z
+Modified: 2022-03-23T17:06:18.519Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -54,7 +54,6 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 			print`${pack.version}`
 			return pack.version
 		}
-		
 		process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
 
 		const helpRequested = help.match(preArguments)
@@ -73,12 +72,11 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 			commadFileNames = requestedCMD ? [requestedCMD] : commadFileNames
 			const commands = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
 			hRenderer.render(commandName, commands.map(b => new b()), commadFileNames.length > 1)
-			exit(2)``
+		} else {
+			const finelResult = await hydrateCommand(requestedCMD, programArgs)
+			return finelResult
 		}
-		const finelResult = await hydrateCommand(requestedCMD, programArgs)
-		return finelResult
 	} catch(err) {
-		console.log(err)
 		await UseSourceMaps(err)
 		print`{warning|ico|red|bold} ${err.stack}`
 	}
@@ -91,9 +89,9 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 	const mappedOptions = options.map((opt, idx) => ({ index: idx, tag: opt.name, value: opt.match(programArgs) }))
 	const iligalOptions = programArgs.filter(parg => parg.includes('-', 0))
 	if (iligalOptions.length) {
-		throw new Error(`This command does not support this optinos: ${iligalOptions.join(', ')}`)
+		throw new Error(`This command does not support this options: ${iligalOptions.join(', ')}`)
 	}
-	const mappedArguments = argus.map(opt => ({ index: opt.index, tag: opt.name, value: opt.match(programArgs) }))
+	const mappedArguments = argus.map(argument => ({ index: argument.index, tag: argument.name, value: argument.match(programArgs) }))
 	const final_args = [...mappedArguments].sort((a, b) => a.index - b.index).map(arg => arg.value)
 	applyLegacyFixtures(mappedOptions, Command, final_args)
 	// eslint-disable-next-line prefer-spread

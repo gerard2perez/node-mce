@@ -5,7 +5,7 @@
   },
   "compilerOptions": {
     "resolveJsonModule": true,
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "outDir": "./lib",
     "module": "CommonJS",
     "target": "ES2021",
@@ -21,12 +21,6 @@
     "plugins": [
       {"transform" : "./metadata-decorators.ts", "after": true}
     ],
-    "paths": {
-      "~core": [
-        "src/core"
-      ]
-    }
-    
   },
   "include": [
     "src/**/*.ts"

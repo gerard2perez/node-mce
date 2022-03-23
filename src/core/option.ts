@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-23T00:12:05.159Z
+Modified: 2022-03-23T16:48:28.548Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -47,12 +47,20 @@ export class Option {
 		return (first === 'boolean' ? false : undefined) || result
 	}
 	match<T = unknown>(args: string[]) {
-		const results = [...args.filter(t => t===this.tag), ...args.filter(t => t===this.short)]
+		const results = []
+		for(let i=0; i<args.length; i++) {
+			const tag = args[i]
+			if(tag ===this.tag || tag === this.short) {
+				results.push(tag)
+			} else if( this.decompressTags(tag, i, args) ) {
+				results.push(args[i])
+			}
+		}
 		if(this.kind.length===1 && results.length > 1 && !this.allowMulti) {
 			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
 		}
 		const values = [] as string[]
-		for(let i = 0; i< results.length; i++) {
+		for(let i = 0; i < results.length; i++) {
 			const index = args.indexOf(results[i])
 			if( this.hasValue ) {
 				const [_, value] = args.splice(index, 2)
@@ -64,6 +72,27 @@ export class Option {
 		}
 		const complete = values.join(',')
 		return this.parseValue(complete || this.defaults as string) as T
+	}
+	private decompressTags(tag: string, index: number, tags: string[]) {
+		if(!this.short || !tag.includes('-')) return false
+		// console.log({n: this.name, s: this.short})
+		const expp = new RegExp(`(${this.short[1]})`, 'g')
+		const found  = tag.match(expp) || []
+		for(let i = 0; i < found.length; i ++) {
+			tag = tag.replace(this.short[1], '')
+			if(!this.hasValue) {
+				tags.splice(index, 1, tag)
+				tags.splice(index, 0, this.short)
+				index++
+			} else {
+				tags.splice(index, 1, tag)
+				const [value] = tags.splice(index + 1, 1)
+				tags.splice(index, 0, this.short)
+				tags.splice(index+1, 0, value)
+				index+=2
+			}
+		}
+		return found.length>0
 	}
 	private checkValue(result: unknown, value: unknown ) {
 		if(!result) {

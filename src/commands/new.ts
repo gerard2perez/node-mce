@@ -91,7 +91,7 @@ export default class NewCommand extends Command {
 	@opt('f', 'Overrides target directory') force: boolean
 	@opt('n', 'Install npm dependencies') npm: boolean
 	@opt('s', 'Define the style of command you will use. If you need more than one command use git.') style = Styles.single
-	@opt dryRun = false
+	@opt dryRun: boolean
 	async action( @arg application: string ) {
 		nproy = callerPath.bind(null, application)
 		if(!await override('Directory already exist. Do you want to override it', nproy(), this.force))
