@@ -6,12 +6,12 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-23T18:29:16.383Z
+Modified: 2022-03-23T21:30:40.099Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
 import { GetParser, ValueParsers } from './value-parser'
-//TODO: I don't like way verbosity is parsed maybe I need options to configure this kind of data
+
 export class Option {
 	static Get(target: unknown): Option[] {
 		return getMetadata(mOptions, target) || []
@@ -20,7 +20,7 @@ export class Option {
 	tag: string
 	defaults: unknown
 	kind: Array<ValueParsers>
-	private oKind: string
+	oKind: string
 	hasValue: boolean
 	private allowMulti: boolean
 	constructor(option: MetadataOption, public description: string, public short: string) {

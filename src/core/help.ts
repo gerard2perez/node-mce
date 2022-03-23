@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-18T22:54:34.764Z
+Modified: 2022-03-23T21:30:22.810Z
 */
 import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
@@ -50,24 +50,28 @@ export abstract class HelpRenderer {
 		const primary = this.pipe(this.theme.option.primary)
 		const secondary = this.pipe(this.theme.option.secondary)
 		const dprimary = this.pipe(this.theme.description.primary)
-		let defautls = option.defaults ? `{Default:|${secondary}}{${option.defaults}|red}\n` : '' 
+		let defData = `${option.defaults||''}`
+		defData = defData ? `{Default:|${secondary}} {${option.defaults}|red}` : ''
 		const short = option.short ? `{${option.short}|${primary}}{,|${secondary}} `: ''
-	
-		if(option.description) {
-			defautls = `{|padl:${indent+padtoDesc+shotTagLen}}${defautls}`
+		if(defData) {
+			defData = `\n{|padl:${indent+padtoDesc+shotTagLen}}${defData}\n`
 		}
-		
+		if(option.oKind ==='boolean' && option.defaults !== 'true') defData = ''
 		let namedTag = `{${option.tag}|${secondary}}`
 		if(option.hasValue) {
-			namedTag = `${namedTag} {<${option.name}>|${dprimary}}`
+			if(option.oKind === 'range') {
+				namedTag = `${namedTag} {<a>..<b>|${dprimary}}`
+
+			} else if(option.oKind === 'verbosity' || option.oKind === 'boolean') {
+				namedTag = `${namedTag}`
+			} else {
+				namedTag = `${namedTag} {<${option.name}>|${dprimary}}`
+			}
 		}
 		const line1 = `{${short}|padl:${shotTagLen}}{${namedTag}|padr:${padtoDesc}}`
-		const desc = option.description ? `{${option.description||''}|autowrap:${indent+padtoDesc+shotTagLen}|${secondary}}\n` : ''
-		// return [
-		// 	`${line1}` + desc + `${defautls}`,
-			
-		// ].filter(f => f).map(line => 
-		return `{|padl:${indent}}${line1}${desc}${defautls}`
+		const desc = option.description ? `{${option.description||''}|autowrap:${indent+padtoDesc+shotTagLen}|${secondary}}` : ''
+		
+		return `{|padl:${indent}}${line1}${desc}${defData}`
 	}
 	command(program: string, command?: string) {
 
@@ -88,27 +92,26 @@ export abstract class HelpRenderer {
 	 * @param single 
 	 * @returns 
 	 */
-	generateHelp(program: string, command: Command, single = false) {
-		const indent = 0
+	generateHelp(program: string, command: Command, single = false, ident = 4) {
 		const description = getMetadata(mDescription, command)
 		const alias = getMetadata(mAlias, command)
 		const argus = Argument.Get(command)
 		const options = Option.Get(command)
-		let help = `{|padl:${indent}}${this.header(program, single, command)}\n`
+		let help = `{|padl:${ident}}${this.header(program, single, command)}\n`
 		if(alias) {
-			help += `{|padl:${indent+1}}{Alias:|${this.pipe(this.theme.description.primary)}} {${alias}|${this.pipe(this.theme.command)}}\n`
+			help += `{|padl:${ident+1}}{Alias:|${this.pipe(this.theme.description.primary)}} {${alias}|${this.pipe(this.theme.command)}}\n`
 		}
 		if(description) {
-			help += `{|padl:${indent+1}}{${description}|${this.pipe(this.theme.description.primary)}}\n`
+			help += `{|padl:${ident+2}}{${description}|${this.pipe(this.theme.description.primary)}}\n`
 		}
 		
 		const args_fill = argus.map(opt => opt.name.length).sort().pop() + 3
-		const str_args = argus.filter(f => f.description).map(arg => `{|padl:${indent+3}}${this.arguments(arg, args_fill)}`).join('\n')
+		const str_args = argus.filter(f => f.description).map(arg => `{|padl:${ident+3}}${this.arguments(arg, args_fill)}`).join('\n')
 		if(str_args.length) {
 			help += `${str_args}\n`
 		}
-		const fill = options.map(opt => opt.tag.length + (opt.hasValue ? opt.name.length + 2 + 1 : 0)).sort().shift() + 2
-		const str_options = options.map(option => this.options(option, indent+3, fill)).join('\n')
+		const [fill] = options.map(opt => opt.tag.length + (opt.hasValue ? opt.tag.length : 0)).sort((a, b) => b - a)
+		const str_options = options.map(option => this.options(option, ident+4, fill)).join('\n')
 		help += `${str_options}`
 		return help
 	}

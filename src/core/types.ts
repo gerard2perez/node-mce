@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: types.ts
 Created:  2022-01-30T03:33:26.342Z
-Modified: 2022-03-19T02:34:56.972Z
+Modified: 2022-03-23T21:18:20.593Z
 */
 
 export type Range = [start: number, end: number]
@@ -14,4 +14,4 @@ export type Float = number
 export type Int = number
 export type Collection<T> = Array<T>
 export type List<T> = Array<T>
-export type Verbosisty = number
+export type Verbosity = number

@@ -6,11 +6,11 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-23T18:09:29.720Z
+Modified: 2022-03-23T21:21:59.491Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
-import { Argument, Command, Insert, mArguments, mOptions, Option } from './core'
+import { Argument, Command, Insert, mArguments, mDescription, mOptions, Option } from './core'
 import 'reflect-metadata'
 export type Ctor =  new () => Command
 export async function LoadModule(path: string): Promise<Ctor|undefined> {
@@ -44,18 +44,21 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 					property: oOpt.name,
 				}
 				applyKindFixtures(oOpt, meta)
-				const nArg = new Option(meta, oOpt.tag_desc, oOpt.short)
+				const nArg = new Option(meta, oOpt.description, oOpt.short)
 				Insert( mOptions, nArg, runtimeClass.prototype )
 			}
-			// Insert(
-			// 	mOptions,
-			// 	new Option(
-			// 		{kind: 'boolean', defaults: undefined, property: 'help'},
-			// 		'',
-			// 		'-h'
-			// 	),
-			// 	runtimeClass.prototype
-			// )
+			if(ocmd.description) {
+				Reflect.defineMetadata(mDescription, ocmd.description, runtimeClass)
+			}
+			Insert(
+				mOptions,
+				new Option(
+					{kind: 'boolean', defaults: undefined, property: 'help'},
+					'Displays help for the command',
+					'-h'
+				),
+				runtimeClass.prototype
+			)
 			return runtimeClass
 		}
 		return compileClass
@@ -69,6 +72,9 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 
 function applyKindFixtures(oOpt: OldOption<any>, meta: { defaults: any; kind: any; property: string }) {
 	switch (oOpt.parser) {
+		case Parser.increaseVerbosity:
+			meta.kind = 'verbosity'
+			break
 		case Parser.int:
 			meta.kind = 'int'
 			break

@@ -30,7 +30,6 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
-		'test/arguments.spec.ts',
 		'test/input.spec.ts',
 		'test/integration.spec.ts',
 		'test/plugins.spec.ts'

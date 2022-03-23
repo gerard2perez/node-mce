@@ -15,18 +15,18 @@ export async function SingleStyle(command: string) {
     output.clear()
 	readdirSync.mockReset()
 	readdirSync.mockReturnValueOnce([])
-    const result = await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {single: true})
+    const result = await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {single: true})
     return output.content || result
 }
 export async function GitStyle(command: string) {
 	output.clear()
-	const result = await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {locals: true})
+	const result = await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {locals: true})
 	return output.content || result
 }
 export async function WithPlugins(keyword: string, command: string) {
 
 	output.clear()
-	await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {locals: true, plugins: 'mce'})
+	await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {locals: true, plugins: 'mce'})
 	return output.content
 }
 export async function Reset() {
