@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T17:06:18.519Z
+Modified: 2022-03-23T17:49:10.480Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -17,6 +17,7 @@ import { LoadModule } from './module-loader'
 import { basename } from 'path'
 import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
+import { locations } from './program'
 process.env.MCE_VERBOSE = 0 as any
 function findCommands(path: string) {
 	const res = readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.ts')).map(p => p.replace('.js', '').replace('.ts', ''))
@@ -39,6 +40,7 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 	try {
 		let commadFileNames = findCommands(cliPath('commands'))
 		const [_, _cmdName, ...preArguments] = argv
+		locations(_, _cmdName)
 		// if(await checkCompletition(commadFileNames, argv)) {
 		// 	console.log('existsdasd')
 		// 	process.exit(0)
@@ -94,8 +96,7 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 	const mappedArguments = argus.map(argument => ({ index: argument.index, tag: argument.name, value: argument.match(programArgs) }))
 	const final_args = [...mappedArguments].sort((a, b) => a.index - b.index).map(arg => arg.value)
 	applyLegacyFixtures(mappedOptions, Command, final_args)
-	// eslint-disable-next-line prefer-spread
-	return await Command.action.apply(Command, [].concat.apply([], final_args))
+	return await Command.action(...final_args)
 }
 
 function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value: unknown }[], Command: Command, final_args: unknown[]) {
@@ -112,5 +113,8 @@ function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value:
 	}, Command)
 	if ((Command as any)._legacyOptions) {
 		final_args.push((Command as any)._legacyOptions)
+	} else {
+		// eslint-disable-next-line prefer-spread
+		final_args = [].concat.apply([], final_args)
 	}
 }

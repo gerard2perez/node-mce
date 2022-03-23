@@ -33,7 +33,6 @@ const config: Config.InitialOptions = {
 		'test/arguments.spec.ts',
 		'test/input.spec.ts',
 		'test/integration.spec.ts',
-		'test/options.spec.ts',
 		'test/plugins.spec.ts'
 	],
 	coverageDirectory: './coverage',

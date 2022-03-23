@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-23T00:11:15.700Z
+Modified: 2022-03-23T17:37:00.754Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
@@ -60,15 +60,15 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 				const nArg = new Option(meta, oOpt.tag_desc, oOpt.short)
 				Insert( mOptions, nArg, runtimeClass.prototype )
 			}
-			Insert(
-				mOptions,
-				new Option(
-					{kind: 'boolean', defaults: undefined, property: 'help'},
-					'',
-					'-h'
-				),
-				runtimeClass.prototype
-			)
+			// Insert(
+			// 	mOptions,
+			// 	new Option(
+			// 		{kind: 'boolean', defaults: undefined, property: 'help'},
+			// 		'',
+			// 		'-h'
+			// 	),
+			// 	runtimeClass.prototype
+			// )
 			return runtimeClass
 		}
 		return compileClass
