@@ -1,5 +1,12 @@
 {
     "extends": "../tsconfig.json",
-    "include": ["**/*"]
+    "include": ["**/*"],
+    "compilerOptions": {
+      "paths": {
+        "@gerard2p/mce": ["src"],
+        "@gerard2p/mce/*": ["src/*"]
+      },
+    },
+    
   }
   

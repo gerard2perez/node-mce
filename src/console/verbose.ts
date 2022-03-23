@@ -6,13 +6,13 @@ Proprietary and confidential
 
 File: verbose.ts
 Created:  2022-03-17T05:46:01.690Z
-Modified: 2022-03-19T02:35:55.736Z
+Modified: 2022-03-23T00:59:35.616Z
 */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { MainSpinner } from '../spinner'
 import { tagcompiler } from './tag-compiler'
 
-export function verbose(lvl: number, newLine?: boolean) {
+export function verbosity(lvl: number, newLine?: boolean) {
 	newLine = newLine !== false
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
 		return (text: TemplateStringsArray, ...values: any[]) => { 
@@ -21,7 +21,3 @@ export function verbose(lvl: number, newLine?: boolean) {
 	}
 	return () => {}
 }
-/**
- * @deprecated use verbose insted
- */
-export const log = verbose

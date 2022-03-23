@@ -1,4 +1,3 @@
-import type { MCEProgram } from '../mce-cli'
 import { Command } from './command'
 export type Range = [start: number, end: number]
 export type List = string[]
@@ -46,7 +45,7 @@ export class Option<T> {
 		public validation: string[],
 		public defaults: T
 	) {}
-	makeTag(name: string, command: Command | MCEProgram) {
+	makeTag(name: string, command: Command) {
 		let [short, value = ''] = this.option.split(' ')
 		if (!short.includes('-')) {
 			value = short

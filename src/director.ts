@@ -4,27 +4,30 @@ Copyright (C) 2022 Gerardo Pérez Pérez - All Rights Reserved
 Unauthorized copying of this file, via any medium is strictly prohibited 
 Proprietary and confidential
 
-File: mce-cli-2.ts
+File: director.ts
 Created:  2022-01-31T07:37:27.395Z
-Modified: 2022-03-14T18:17:11.744Z
+Modified: 2022-03-23T00:09:11.140Z
 */
 import { ExecuterDirector } from './executer'
 
 type SingleCommand = {
-	root: string
-	argv: string[]
+	// root: string
 	single: true
 }
 
 type GitStyle = {
-	root: string
-	argv: string[]
+	// root: string
 	locals?: boolean
 	plugins?: string
 }
-export function Program(data: GitStyle): Promise<void>
-export function Program(data: SingleCommand): Promise<void>
-export async function Program(data: any) {
-	process.env.MCE_ROOT = data.root
-	await ExecuterDirector(!data.single)
+
+export class Program {
+	constructor(root: string) {
+		process.env.MCE_ROOT = root
+	}
+	async execute<T=unknown>(argv: string[], data: GitStyle): Promise<T>
+	async execute<T=unknown>(argv: string[], data: SingleCommand): Promise<T>
+	async execute<T=unknown>(argv: string[], _data: any) {
+		return await ExecuterDirector(argv) as T
+	}
 }

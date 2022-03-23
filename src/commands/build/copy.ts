@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, unlinkSync } from '../../mockable/fs'
 import { basename, dirname, normalize, posix, relative } from 'path'
-import { log } from '../../console'
+import { print } from '../../console'
 import { callerPath } from '../../fs'
 
 export function copy(from: string, to: string) {
@@ -25,5 +25,5 @@ export function logger(mode: Mode, path: string) {
 	const relativeFile = relative(callerPath(), path)
 	const file = basename(normalize(relativeFile))
 	const relativePath = dirname(relativeFile).replace(/\\/gm, posix.sep)
-	log(0)`[{${new Date().toLocaleTimeString()}|grey}] [{${Mode[mode].toUpperCase()}|${mode}}] ${relativePath}/{${file}|${mode}}`
+	print`[{${new Date().toLocaleTimeString()}|grey}] [{${Mode[mode].toUpperCase()}|${mode}}] ${relativePath}/{${file}|${mode}}`
 }

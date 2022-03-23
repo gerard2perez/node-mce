@@ -1,53 +1,32 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import type { MCEProgram } from '../mce-cli'
 import { SetStreams } from '../system-streams'
 import { STDIn } from './stdin'
 import { STDOut } from './stdout'
-
-process.env.MCE_DEV = 'true'
 export const output = new STDOut
 export const input = new STDIn
 SetStreams(output, input)
-
-let NODE_MCE: Promise<MCEProgram>
+import { Program } from '../director'
+let NODE_MCE: Program
 export function SetCommandsLocation(path: string) {
-	// @ts-ignore
-	NODE_MCE = import('../index').then(({MCE}) => {
-		return MCE(path) as MCEProgram
-	})
+	NODE_MCE = new Program(path)
+	return NODE_MCE
 }
-
 export async function SingleStyle(command: string) {
     output.clear()
-    await (await NODE_MCE).command(command.split(' '))
-    return output.content
+    const result = await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {single: true})
+    return output.content || result
 }
-export async function GitStyle<T=string>(command: string) {
+export async function GitStyle(command: string) {
 	output.clear()
-	return (await NODE_MCE)
-		.gitStyle<T>(command.split(' '))
-		.then(result => {
-			return output.content || result
-		})
+	const result = await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {locals: true})
+	return output.content || result
 }
-export async function WithPlugins<T=string>(keyword: string, command: string) {
+export async function WithPlugins(keyword: string, command: string) {
+
 	output.clear()
-	return (await NODE_MCE)
-		.withPlugins<T>(keyword, command.split(' '))
-		.then(result => {
-			return output.content || result
-		})
+	await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {locals: true, plugins: 'mce'})
+	return output.content
 }
 export async function Reset() {
 	process.env.MCE_DRY_RUN = undefined
-	// @ts-ignore
-	jest.resetAllMocks();
-	// @ts-ignore
-	(await NODE_MCE).commandMapping = new Map();
-	// @ts-ignore
-	(await NODE_MCE).commands_map = {
-		_owned: [],
-		_local: [],
-		plugins: []
-	}
+	jest.resetAllMocks()
 }

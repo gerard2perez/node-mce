@@ -1,12 +1,12 @@
 import { dryRun } from './dry-run'
 import { existsSync, lstatSync, readdirSync, unlinkSync } from '../mockable/fs'
-import { log } from '../console'
 import { RegisterDryRun } from './decorator'
 import { join } from 'path'
+import { print } from '../console'
 function __unlink(dir: string, recursive = true) {
 	dir = this.project(dir)
 	if ( _unlink(dir, recursive) ) {
-		log(0)`{deleted|sy|blue} {${dir}|highlightBasename}`
+		print`{deleted|sy|blue} {${dir}|highlightBasename}`
 	}
 	
 }

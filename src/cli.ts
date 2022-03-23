@@ -1,10 +1,5 @@
-import { MCE } from './index'
-MCE(__dirname).gitStyle(process.argv)
-
-// import { Program } from './director'
-// Program({
-// 	root: __dirname,
-// 	argv: process.argv,
-// 	plugins: 'mce',
-// 	locals: false
-// })
+import { Program } from './director'
+new Program(__dirname).execute(process.argv, {
+	plugins: 'mce',
+	locals: false
+})

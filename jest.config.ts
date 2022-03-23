@@ -1,4 +1,5 @@
 import type { Config } from '@jest/types'
+process.env.MCE_TEST = 'test'
 const config: Config.InitialOptions = {
 	verbose: true,
 	testEnvironment: 'node',
@@ -7,7 +8,7 @@ const config: Config.InitialOptions = {
 	globals: {
         'ts-jest': {
             'diagnostics': false,
-            'tsconfig': 'tsconfig.json'
+            'tsconfig': 'test/tsconfig.json'
         }
     },
 	forceExit: true,
@@ -29,6 +30,11 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
+		'test/arguments.spec.ts',
+		'test/input.spec.ts',
+		'test/integration.spec.ts',
+		'test/options.spec.ts',
+		'test/plugins.spec.ts'
 	],
 	coverageDirectory: './coverage',
 	collectCoverage: true,

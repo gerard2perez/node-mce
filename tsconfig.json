@@ -4,6 +4,7 @@
     "swc": true
   },
   "compilerOptions": {
+    "resolveJsonModule": true,
     "baseUrl": "./",
     "outDir": "./lib",
     "module": "CommonJS",
@@ -17,13 +18,15 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "esModuleInterop": true,
-    "paths": {
-      "@gerard2p/mce": ["src"],
-      "@gerard2p/mce/*": ["src/*"]
-    },
     "plugins": [
       {"transform" : "./metadata-decorators.ts", "after": true}
-    ]
+    ],
+    "paths": {
+      "~core": [
+        "src/core"
+      ]
+    }
+    
   },
   "include": [
     "src/**/*.ts"

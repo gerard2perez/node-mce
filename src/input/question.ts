@@ -1,5 +1,5 @@
 import { createInterface, moveCursor } from 'readline'
-import { log } from '../console'
+import { write } from '../console'
 import { MainSpinner } from '../spinner'
 import { streams } from '../system-streams'
 export function question (display: string): Promise<string> {
@@ -11,7 +11,7 @@ export function question (display: string): Promise<string> {
 	const SpinnerWorking = MainSpinner.isSpinning
     if (SpinnerWorking) {
 		MainSpinner.stop()
-		log(-1, false)`{info|sy} ${MainSpinner.text} - `
+		write`{info|sy} ${MainSpinner.text} - `
     }
     return new Promise(resolve => rl.question(`${display} `, (answer) => {
         moveCursor(streams.output, 0, -1)

@@ -1,4 +1,3 @@
-import { exec, bool, enumeration, PackageJSON, Parsed, text, dry, SetSpinnerText } from '..'
 import { error } from '../console'
 import { override } from '../input'
 import { information } from '../program'
@@ -6,6 +5,10 @@ import { spin } from '../spinner'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
+import { arg, Command, opt, Options } from '../core'
+import { PackageJSON } from '../@utils/package-json'
+import { exec } from '../spawn'
+import { SetSpinnerText } from '../spinner/console'
 function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
 	return function(onErrorReturn: T, wait_ms?: number, dryRunReturn = '') {
 		return exec(cmd, cmdOptions, options)
@@ -23,36 +26,12 @@ enum Styles {
 }
 export const alias = 'n'
 export const options = {
-	author: text('-a', 'Author of the package', 'GIT_OR_NPM_USER'),
-	force: bool('-f', 'Overrides target directory'),
-	npm: bool('-n', 'Install npm dependencies'),
-	style: enumeration('-s <style>', 'Define the style of command you will use. If you need more than one command use git.', Styles, Styles.single),
-	dryRun: dry()
+	
 }
 let nproy
 export const description = 'Creates a new MCE project.'
-export const args = '<application>'
-export  async function action(application: string, opt: Parsed<typeof options>) {
-	nproy = callerPath.bind(null, application)
-	if(!await override('Directory already exist. Do you want to override it', nproy(), opt.force))
-		return
-	await createProjectExtructure(application, opt)
 
-	opt.npm && await spin('Initializing npm', async() => {
-		const npmResult = await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000)
-		if (npmResult === false ) {
-			error`npm installation failed`
-		}
-	})
-	await spin('Initializing git', async() => {
-		const initResult = await dryExec('git', ['init'], {cwd: nproy()})(false, 1000)
-		if ( initResult === false ) {
-			error`git init`
-		}
-		copy('gitignore', `${application}/.gitignore`)
-	})
-}
-async function createProjectExtructure(application: string, opt: Parsed<typeof options>) {
+async function createProjectExtructure(application: string, opt: Options<NewCommand>) {
 	let {author} = opt
 	await spin('Creating Files', async () => {
 		// istanbul ignore else
@@ -105,4 +84,32 @@ async function createProjectExtructure(application: string, opt: Parsed<typeof o
 			cpy('jest.config.js')
 		)
 	})
+}
+
+export default class NewCommand extends Command {
+	@opt('a', 'Author of the package') author = 'GIT_OR_NPM_USER'
+	@opt('f', 'Overrides target directory') force: boolean
+	@opt('n', 'Install npm dependencies') npm: boolean
+	@opt('s', 'Define the style of command you will use. If you need more than one command use git.') style = Styles.single
+	@opt dryRun = false
+	async action( @arg application: string ) {
+		nproy = callerPath.bind(null, application)
+		if(!await override('Directory already exist. Do you want to override it', nproy(), this.force))
+			return
+		await createProjectExtructure(application, this)
+
+		this.npm && await spin('Initializing npm', async() => {
+			const npmResult = await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000)
+			if (npmResult === false ) {
+				error`npm installation failed`
+			}
+		})
+		await spin('Initializing git', async() => {
+			const initResult = await dryExec('git', ['init'], {cwd: nproy()})(false, 1000)
+			if ( initResult === false ) {
+				error`git init`
+			}
+			copy('gitignore', `${application}/.gitignore`)
+		})
+	}
 }

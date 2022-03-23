@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-19T04:13:08.500Z
+Modified: 2022-03-23T00:12:05.159Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -48,7 +48,6 @@ export class Option {
 	}
 	match<T = unknown>(args: string[]) {
 		const results = [...args.filter(t => t===this.tag), ...args.filter(t => t===this.short)]
-		
 		if(this.kind.length===1 && results.length > 1 && !this.allowMulti) {
 			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
 		}
@@ -73,3 +72,6 @@ export class Option {
 		return result
 	}
 }
+export type Options<T> = Pick<T, {
+	[P in keyof T]: T[P] extends ((...args: unknown[]) => unknown) ? never : P
+}[keyof T]>

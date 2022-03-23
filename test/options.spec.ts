@@ -5,7 +5,7 @@ describe('Options Parsing', () => {
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
     test('get defaults options', async () => {
-        const res = await GitStyle<unknown>('options file.js')
+        const res = await GitStyle('options file.js')
         expect(res).toEqual({
             arg1: 'file.js',
             varidac: [],

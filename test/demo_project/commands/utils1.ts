@@ -1,4 +1,4 @@
-import { pause, resume, created, error, info, log, ok, updated, warn, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
+import { verbosity, pause, resume, created, error, info, ok, updated, warn, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
 import { spin } from '@gerard2p/mce/spinner'
 import { callerPath, cliPath } from '@gerard2p/mce/fs'
 export const description = 'A description for your command'
@@ -25,8 +25,8 @@ export async function action(_opt: Parsed<typeof options>) {
         resume()
         created`chochis.ts`
 		updated`chochis.ts`
-		log(3)`test`
-		log(3)`test 2`
+		verbosity(3)`test`
+		verbosity(3)`test 2`
     })
 	return {
         cli: cliPath(),

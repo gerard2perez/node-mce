@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-19T03:19:29.593Z
+Modified: 2022-03-23T00:11:15.700Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
@@ -22,7 +22,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 				[fname]: class extends Command {
 					public _legacyOptions = {}
 					async action(...args: any[]) {
-						await m.action(...args)
+						return await m.action(...args)
 					}
 				}
 			}
