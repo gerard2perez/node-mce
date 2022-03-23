@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: value-parser.ts
 Created:  2022-01-30T03:33:15.897Z
-Modified: 2022-03-23T00:03:06.947Z
+Modified: 2022-03-23T18:19:11.621Z
 */
 declare global {
 	namespace MCE {
@@ -23,10 +23,16 @@ const collectionParser = (str: string|unknown[]) => {
 const ValueParsers = {
 	verbosity: str => str ? str.split(',').length : 0,
 	string: str => str,
-	int: (str: string) => parseInt(str),
-	number: (str: string) => parseInt(str),
-	float: (str: string) => parseFloat(str),
-	range: (str: string) => str.split('-').map(n => parseFloat(n)),
+	int: (str: string) => parseInt(str) || undefined,
+	number: (str: string) => parseFloat(str) || undefined,
+	float: (str: string) => parseFloat(str) || undefined,
+	range: (str: string|unknown[]) => {
+		if( str instanceof Array) {
+			return str
+		} else {
+			return str ? str.split('..').map(n => parseFloat(n)) : []
+		}
+	},
 	collection: collectionParser,
 	list: collectionParser,
 	boolean: (str: string) => str === 'true'

@@ -23,81 +23,81 @@ describe('Options Parsing', () => {
             }
         })
     })
-    // test('parses options values', async () => {
-    //     const res = await GitStyle(
-	// 		'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
-	// 		)
-    //     expect(res).toEqual({
-    //         arg1: 'file.js',
-    //         varidac: [
-    //             'var2'
-    //         ],
-    //         opt: {
-    //             enumeration: 'single',
-    //             number: 10,
-    //             floating: 1.258,
-    //             range: [2, 55],
-	// 			text: 'demo',
-	// 			text_def: 'def',
-    //             bool: true,
-    //             list: [ 'h1', 'h2', 'h5'],
-    //             collect: [
-    //                 'h3', 'h6'
-    //             ],
-    //             verbose: 1
-    //         }
-    //     })
-	// })
-	// test('parses options set string to undefined', async () => {
-	// 	const res = await GitStyle(
-	// 		'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
-	// 		)
-	// 	expect(res).toEqual({
-	// 		arg1: 'file.js',
-	// 		varidac: [
-	// 			'var2'
-	// 		],
-	// 		opt: {
-	// 			enumeration: 'single',
-	// 			number: 10,
-	// 			floating: 1.258,
-	// 			range: [2, 55],
-	// 			text: 'demo',
-	// 			text_def: '',
-	// 			bool: true,
-	// 			list: [ 'h1', 'h2', 'h5'],
-	// 			collect: [
-	// 				'h3', 'h6'
-	// 			],
-	// 			verbose: 1
-	// 		}
-	// 	})
-	// })
-    // test('parses options values with symbol =', async () => {
-    //     const res = await GitStyle(
-    //         'options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
-    //         )
-    //     expect(res).toEqual({
-    //         arg1: 'file.js',
-    //         varidac: [
-    //             'var2'
-    //         ],
-    //         opt: {
-    //             enumeration: 'single',
-    //             number: 5,
-    //             floating: 12.58,
-    //             range: [2, 55],
-	// 			text: 'demo',
-	// 			text_def: 'def',
-    //             bool: true,
-    //             list: [ 'h10', 'h21'],
-    //             collect: [
-    //                 'h30', 'h3', 'h6'
-    //             ],
-    //             verbose: 0
-    //         }
-    //     })
-    // })
+    test('parses options values', async () => {
+        const res = await GitStyle(
+			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
+			)
+        expect(res).toEqual({
+            arg1: 'file.js',
+            varidac: [
+                'var2'
+            ],
+            opt: {
+                enumeration: 'single',
+                number: 10,
+                floating: 1.258,
+                range: [2, 55],
+				text: 'demo',
+				text_def: 'def',
+                bool: true,
+                list: [ 'h1', 'h2', 'h5'],
+                collect: [
+                    'h3', 'h6'
+                ],
+                verbose: 1
+            }
+        })
+	})
+	test('parses options set string to undefined', async () => {
+		const res = await GitStyle(
+			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
+			)
+		expect(res).toEqual({
+			arg1: 'file.js',
+			varidac: [
+				'var2'
+			],
+			opt: {
+				enumeration: 'single',
+				number: 10,
+				floating: 1.258,
+				range: [2, 55],
+				text: 'demo',
+				text_def: 'def',
+				bool: true,
+				list: [ 'h1', 'h2', 'h5'],
+				collect: [
+					'h3', 'h6'
+				],
+				verbose: 1
+			}
+		})
+	})
+    test('parses options values with symbol =', async () => {
+        const res = await GitStyle(
+            'options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
+            )
+        expect(res).toEqual({
+            arg1: 'file.js',
+            varidac: [
+                'var2'
+            ],
+            opt: {
+                enumeration: 'single',
+                number: 5,
+                floating: 12.58,
+                range: [2, 55],
+				text: 'demo',
+				text_def: 'def',
+                bool: true,
+                list: [ 'h10', 'h21'],
+                collect: [
+                    'h30', 'h3', 'h6'
+                ],
+                verbose: 0
+            }
+        })
+    })
     // test('parses options values with short tags', async () => {
     //     const res = await GitStyle(
     //         'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'

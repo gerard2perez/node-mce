@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-23T17:21:18.706Z
+Modified: 2022-03-23T18:29:16.383Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -52,7 +52,7 @@ export class Option {
 			const tag = args[i]
 			if(tag ===this.tag || tag === this.short) {
 				results.push(tag)
-			} else if( this.decompressTags(tag, i, args) ) {
+			} else if(tag && this.decompressTags(tag, i, args) ) {
 				results.push(args[i])
 			}
 		}
@@ -74,8 +74,7 @@ export class Option {
 		return this.parseValue(complete || this.defaults as string) as T
 	}
 	private decompressTags(tag: string, index: number, tags: string[]) {
-		if(!this.short || !tag.includes('-')) return false
-		// console.log({n: this.name, s: this.short})
+		if(!this.short || !tag.includes('-') || tag.includes('--')) return false
 		const expp = new RegExp(`(${this.short[1]})`, 'g')
 		const found  = tag.match(expp) || []
 		for(let i = 0; i < found.length; i ++) {

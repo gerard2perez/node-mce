@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-23T17:41:31.338Z
+Modified: 2022-03-23T18:09:36.626Z
 */
 import { ValueParsers, GetParser} from './value-parser'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
@@ -25,6 +25,8 @@ export class Argument {
 	constructor(option: MetadataArgument, public description: string, public index) {
 		this.name = option.property
 		this.oKind = option.kind
+		this.rest = option.rest
+
 		let [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
 		if(option.kind.includes('[')) {
 			[_, k2, k1 = 'List'] = option.kind.match(/(.*)\[\]/) || [null, option.kind]
@@ -32,7 +34,7 @@ export class Argument {
 		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
 		this.defaults = option.defaults || (option.rest ? [] : undefined)
 		this.required = !this.defaults
-		this.rest = option.rest
+		
 	}
 	parseValue(value: string) {
 		const [first, second] = this.kind

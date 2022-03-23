@@ -6,13 +6,13 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T17:49:10.480Z
+Modified: 2022-03-23T18:05:07.191Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
-import { Argument, Option, error, Command, exit, print } from './core'
+import { Argument, Option, error, Command, exit, print, opt } from './core'
 import { LoadModule } from './module-loader'
 import { basename } from 'path'
 import { subCommandCompletition } from './completition/subcommands'
@@ -48,7 +48,7 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		
 		const commandName = basename(_cmdName)
 		const help = new Option({ kind: 'boolean', defaults: 'false', property: 'help' }, '', '-h' )
-		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbosity', allowMulti: true }, '', '-v' )
+		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
 		const version = new Option({kind: 'boolean', defaults: 'false', property: 'version'}, '', '')
 		
 		if(version.match(preArguments)) {
@@ -101,6 +101,7 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 
 function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value: unknown }[], Command: Command, final_args: unknown[]) {
 	mappedOptions.reduce((command, option) => {
+		if(option.tag === 'verbose') option.value = parseInt(process.env.MCE_VERBOSE)
 		if(option.tag === 'dryRun') {
 			process.env.MCE_DRY_RUN = 'true'
 		}

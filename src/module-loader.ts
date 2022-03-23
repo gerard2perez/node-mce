@@ -6,10 +6,10 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-23T17:37:00.754Z
+Modified: 2022-03-23T18:09:29.720Z
 */
 import { basename } from 'path'
-import { Command as OldCommand, OptionKind, Parser} from './legacy_core'
+import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
 import { Argument, Command, Insert, mArguments, mOptions, Option } from './core'
 import 'reflect-metadata'
 export type Ctor =  new () => Command
@@ -30,7 +30,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 			for(const oArg of ocmd.arguments) {
 				const nArg = new Argument({
 					defaults: undefined,
-					kind: oArg.type as any,
+					kind: oArg.kind === OptionKind.varidac ? `${oArg.type}[]` : oArg.type as any,
 					optional: oArg.kind === OptionKind.optional,
 					rest: oArg.kind === OptionKind.varidac,
 					property: oArg.name
@@ -43,20 +43,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 					kind: undefined,
 					property: oOpt.name,
 				}
-				switch(oOpt.parser) {
-					case Parser.list:
-						meta.kind = 'List<string>'
-						break
-					case Parser.collect:
-						meta.kind = 'Collection<string>'
-						break
-					case Parser.truefalse:
-						meta.kind = 'boolean'
-						break
-					default:
-						meta.kind = 'string'
-						break
-				}
+				applyKindFixtures(oOpt, meta)
 				const nArg = new Option(meta, oOpt.tag_desc, oOpt.short)
 				Insert( mOptions, nArg, runtimeClass.prototype )
 			}
@@ -78,4 +65,30 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 	}).catch(_ => {
 		throw _
 	})
+}
+
+function applyKindFixtures(oOpt: OldOption<any>, meta: { defaults: any; kind: any; property: string }) {
+	switch (oOpt.parser) {
+		case Parser.int:
+			meta.kind = 'int'
+			break
+		case Parser.float:
+			meta.kind = 'float'
+			break
+		case Parser.range:
+			meta.kind = 'range'
+			break
+		case Parser.list:
+			meta.kind = 'List<string>'
+			break
+		case Parser.collect:
+			meta.kind = 'Collection<string>'
+			break
+		case Parser.truefalse:
+			meta.kind = 'boolean'
+			break
+		default:
+			meta.kind = 'string'
+			break
+	}
 }
