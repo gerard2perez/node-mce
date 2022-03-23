@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T18:05:07.191Z
+Modified: 2022-03-23T18:37:40.550Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -39,7 +39,7 @@ async function checkCompletition(commands: string[], argv: string[]) {
 export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 	try {
 		let commadFileNames = findCommands(cliPath('commands'))
-		const [_, _cmdName, ...preArguments] = argv
+		const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
 		locations(_, _cmdName)
 		// if(await checkCompletition(commadFileNames, argv)) {
 		// 	console.log('existsdasd')
