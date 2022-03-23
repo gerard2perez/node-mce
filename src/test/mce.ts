@@ -1,4 +1,5 @@
 import { SetStreams } from '../system-streams'
+import { readdirSync } from '../mockable/fs'
 import { STDIn } from './stdin'
 import { STDOut } from './stdout'
 export const output = new STDOut
@@ -12,6 +13,8 @@ export function SetCommandsLocation(path: string) {
 }
 export async function SingleStyle(command: string) {
     output.clear()
+	readdirSync.mockReset()
+	readdirSync.mockReturnValueOnce([])
     const result = await NODE_MCE.execute(['node', 'mce', ...command.split(' ')], {single: true})
     return output.content || result
 }

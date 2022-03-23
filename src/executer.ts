@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T18:53:32.161Z
+Modified: 2022-03-23T19:44:41.159Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -59,10 +59,11 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
 
 		const helpRequested = help.match(preArguments)
-		const isSubcommands = commadFileNames.length > 0
+		const isSubcommands = commadFileNames.length > 1
 		let [requestedCMD, ...programArgs] = preArguments
 		if(!isSubcommands) {
-			programArgs = [requestedCMD, ...programArgs]
+			programArgs = [requestedCMD, ...programArgs].filter(f => f)
+			commadFileNames.push('../index')
 			requestedCMD = commadFileNames[0]
 		}
 		if(requestedCMD && !commadFileNames.includes(requestedCMD)) {
@@ -72,8 +73,8 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		if(helpRequested) {
 			const hRenderer = new DefaultHelpRenderer(DefaultTheme)
 			commadFileNames = requestedCMD ? [requestedCMD] : commadFileNames
-			const commands = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
-			hRenderer.render(commandName, commands.map(b => new b()), commadFileNames.length > 1)
+			const commandCtrs = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
+			hRenderer.render(commandName, commandCtrs.map(b => new b()), commadFileNames.length > 1)
 		} else {
 			const finelResult = await hydrateCommand(requestedCMD, programArgs)
 			return finelResult

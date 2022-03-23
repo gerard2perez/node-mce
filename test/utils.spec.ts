@@ -40,9 +40,19 @@ describe('Utils functions', () => {
 			.resolves.toBeDefined()
 		expect(writeFileSync).toBeCalledTimes(1)
 		expect(writeFileSync).toBeCalledWith(resolve(dirname(__dirname), 'test/demo_project', './demo.txt'), 'works')
-		await expect(GitStyle('utils2 -vvv')).resolves.toBeDefined()
     })
-    test('executes a single command', async () => {
+	test('executes a single command', async () => {
+		Reset()
+		findCommands('single.ts')
+        await GitStyle('-v')
+		findCommands('single')
+		await GitStyle('-h')
+		findCommands('single')
+		await GitStyle('')
+		findCommands('single')
+		await GitStyle('--version')
+    })
+    test('executes a single command legacy', async () => {
         await SingleStyle('-v')
 		await SingleStyle('-h')
 		await SingleStyle('')
