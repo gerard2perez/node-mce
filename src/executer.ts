@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T18:37:40.550Z
+Modified: 2022-03-23T18:53:32.161Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -80,7 +80,11 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		}
 	} catch(err) {
 		await UseSourceMaps(err)
-		print`{warning|ico|red|bold} ${err.stack}`
+		if(process.env.MCE_THROW_ERROR === 'true') {
+			throw err
+		} else {
+			print`{warning|ico|red|bold} ${err.stack}`
+		}
 	}
 }
 
