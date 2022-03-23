@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-23T16:48:28.548Z
+Modified: 2022-03-23T17:21:18.706Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from './metadata'
@@ -80,12 +80,15 @@ export class Option {
 		const found  = tag.match(expp) || []
 		for(let i = 0; i < found.length; i ++) {
 			tag = tag.replace(this.short[1], '')
-			if(!this.hasValue) {
+			if(tag !== '-') {
 				tags.splice(index, 1, tag)
+			} else {
+				tags.splice(index, 1)
+			}
+			if(!this.hasValue) {
 				tags.splice(index, 0, this.short)
 				index++
 			} else {
-				tags.splice(index, 1, tag)
 				const [value] = tags.splice(index + 1, 1)
 				tags.splice(index, 0, this.short)
 				tags.splice(index+1, 0, value)
