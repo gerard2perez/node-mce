@@ -6,9 +6,9 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-23T18:09:36.626Z
+Modified: 2022-03-23T21:59:38.844Z
 */
-import { ValueParsers, GetParser} from './value-parser'
+import { ValueParsers, GetParser} from './options/parsers'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
 import { ARGUMENT_ERROR, MCError } from '../@utils/mce-error'
 

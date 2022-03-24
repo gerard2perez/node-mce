@@ -21,8 +21,13 @@ function DecorateMethod(
 	ctx: ts.TransformationContext,
 	classy: string,
 	method: string,
-	params: unknown[]
+	data: unknown[]
 ) {
+	
+	const body = JSON.stringify(data)
+	// ctx.factory.create
+	// console.log(body.().getText())
+
 	return ctx.factory.createExpressionStatement(
 		ctx.factory.createCallExpression(
 			ctx.factory.createIdentifier('__decorate'),
@@ -39,9 +44,7 @@ function DecorateMethod(
 								ctx.factory.createStringLiteral(
 									'mce:data'
 								),
-								ctx.factory.createIdentifier(
-									JSON.stringify(params)
-								),
+								ctx.factory.createIdentifier(body)
 							]
 						),
 					],
@@ -58,8 +61,20 @@ function DecorateProperty(
 	ctx: ts.TransformationContext,
 	classy: string,
 	propertyKey: string,
-	params: unknown[]
+	data: any
 ) {
+	const { parser, kind, isEnum, defaults, ...params }  = data
+	const objBody = {...params, 'defaults': '_defaults', 'kind': '_kind'}
+	if(!defaults) delete objBody.defaults
+	let body = JSON.stringify(objBody)
+	body = body.replace('"_defaults"', defaults)
+	if(isEnum) {
+		
+		body = body.replace('"_kind"', `"enum", enum: ${kind}`)
+	} else {
+		// body = body.replace('_defaults', defaults)
+		body = body.replace('_kind', kind)
+	}
 	return ctx.factory.createExpressionStatement(
 		ctx.factory.createCallExpression(
 			ctx.factory.createIdentifier('__decorate'),
@@ -76,9 +91,7 @@ function DecorateProperty(
 								ctx.factory.createStringLiteral(
 									'mce:data'
 								),
-								ctx.factory.createIdentifier(
-									JSON.stringify(params)
-								),
+								ctx.factory.createIdentifier(body),
 							]
 						),
 					],
@@ -137,7 +150,7 @@ export default function (/*opts?: Opts*/) {
 					statements.splice(
 						index + 1,
 						0,
-						DecorateMethod(ctx, classNameKey, propertyData.property, propertyData)
+						DecorateProperty(ctx, classNameKey, propertyData.property, propertyData)
 					)
 				}
 			}
@@ -197,11 +210,13 @@ function FindAllProperties(propertiesDecorated: PropertyDeclaration[]) {
 
 		//Gets the typoe as string
 		const type = getFullType(propertyDcl)
-
+		const isEnum = propertyDcl.getType().isEnum()
 		//Fills the mce_data
 		classes[classy].push({
+			isEnum,
 			property: propertyDcl.getName(),
 			kind: type,
+			parser: isEnum ? `str => ${type}[str]` : undefined,
 			// optional: propertyDcl.isOptional(),
 			defaults: propertyDcl.hasInitializer()
 				? propertyDcl.getInitializer().getText()
@@ -213,9 +228,12 @@ function FindAllProperties(propertiesDecorated: PropertyDeclaration[]) {
 }
 
 function getFullType(propertyDcl: PropertyDeclaration | ParameterDeclaration) {
-	return (
+	const apparentType = propertyDcl.getType().getApparentType()
+	const type = (
 		propertyDcl.getText().split(':')[1] ||
-		propertyDcl.getType().getApparentType().getText()
+		apparentType.getText()
 	).trim().split('=')[0].trim()
+
+	return type
 }
 

@@ -5,7 +5,7 @@ import { spin } from '../spinner'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
-import { arg, Command, opt, Options } from '../core'
+import { arg, Collection, Command, opt, Options, Verbosity } from '../core'
 import { PackageJSON } from '../@utils/package-json'
 import { exec } from '../spawn'
 import { SetSpinnerText } from '../spinner/console'
@@ -24,12 +24,12 @@ enum Styles {
 	git = 'git',
 	single= 'single'
 }
-export const alias = 'n'
-export const options = {
+// export const alias = 'n'
+// export const options = {
 	
-}
+// }
 let nproy
-export const description = 'Creates a new MCE project.'
+// export const description = 'Creates a new MCE project.'
 
 async function createProjectExtructure(application: string, opt: Options<NewCommand>) {
 	let {author} = opt
@@ -89,9 +89,12 @@ async function createProjectExtructure(application: string, opt: Options<NewComm
 export default class NewCommand extends Command {
 	@opt('a', 'Author of the package') author = 'GIT_OR_NPM_USER'
 	@opt('f', 'Overrides target directory') force: boolean
-	@opt('n', 'Install npm dependencies') npm: boolean
+	@opt('n', 'Install npm dependencies') npm  = true
 	@opt('s', 'Define the style of command you will use. If you need more than one command use git.') style = Styles.single
+	@opt('a') age = 15
+	@opt('c') collect: Collection<number> = []
 	@opt dryRun: boolean
+	@opt verbose: Verbosity
 	async action( @arg application: string ) {
 		nproy = callerPath.bind(null, application)
 		if(!await override('Directory already exist. Do you want to override it', nproy(), this.force))
@@ -111,5 +114,7 @@ export default class NewCommand extends Command {
 			}
 			copy('gitignore', `${application}/.gitignore`)
 		})
+	return 0
 	}
+	
 }

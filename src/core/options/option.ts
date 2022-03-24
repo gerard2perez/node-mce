@@ -6,11 +6,11 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-23T21:30:40.099Z
+Modified: 2022-03-24T03:35:10.580Z
 */
 import 'reflect-metadata'
-import { mOptions, getMetadata, MetadataOption } from './metadata'
-import { GetParser, ValueParsers } from './value-parser'
+import { mOptions, getMetadata, MetadataOption } from '../metadata'
+import { GetParser, GetTagParser, ValueParsers } from './parsers'
 
 export class Option {
 	static Get(target: unknown): Option[] {
@@ -19,7 +19,7 @@ export class Option {
 	name: string
 	tag: string
 	defaults: unknown
-	kind: Array<ValueParsers>
+	private kind: Array<ValueParsers>
 	oKind: string
 	hasValue: boolean
 	private allowMulti: boolean
@@ -33,15 +33,16 @@ export class Option {
 		this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
 		this.allowMulti = option.allowMulti
 	}
+	tagParsers() {
+		return GetTagParser(this.kind[1] || this.kind[0])
+	}
 
 	parseValue(value: string) {
 		const [first, second] = this.kind
-		const parser1 = GetParser(first) || (str => str)
-		const parser2 = GetParser(second) || (str => str)
-		
+		const parser1 = GetParser(first)
 		let result: unknown = parser1(value)
 		if(result instanceof Array) {
-			result = result.map(d => this.checkValue(parser2(d), value)) as unknown
+			result = result.map(d => this.checkValue(GetParser(second)(d), value)) as unknown
 		}
 		
 		return (first === 'boolean' ? false : undefined) || result

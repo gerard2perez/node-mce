@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: theme.ts
 Created:  2022-01-31T06:35:35.132Z
-Modified: 2022-03-14T22:22:40.874Z
+Modified: 2022-03-24T04:05:45.757Z
 */
 
 import { HelpTheme } from '../core'
@@ -16,7 +16,7 @@ export const DefaultTheme: HelpTheme = {
 		primary: ['white'],
 		secondary: ['gray']
 	},
-	command: ['yellow'],
+	command: {primary: ['yellow'], secondary: undefined},
 	argument: {
 		primary: ['green'],
 		secondary: ['gray']
