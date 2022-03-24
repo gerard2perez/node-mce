@@ -59,7 +59,7 @@ export class Option<T> {
 		this.tag = tag.replace(/([A-Z])/gm, '-$1').toLowerCase()
 		if (short && command.unic_shorts.includes(short)) {
 			throw new Error(
-				`[${command.name} duplicated short tag ${short}. This is a problem related to the program.`
+				`[${command.name} Duplicated short tag ${short}. This is a problem related to the program.`
 			)
 		} else if (short) {
 			command.unic_shorts.push(short)

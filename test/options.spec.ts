@@ -52,7 +52,7 @@ describe('Options Parsing', () => {
 	})
 	test('parses options set string to undefined', async () => {
 		const res = await GitStyle(
-			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose -d'
+			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
 			)
 		expect(res).toEqual({
 			arg1: 'file.js',

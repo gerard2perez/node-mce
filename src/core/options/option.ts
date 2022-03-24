@@ -6,8 +6,9 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-24T07:42:22.680Z
+Modified: 2022-03-24T09:49:24.430Z
 */
+import { MCError, MISSING_VALUE_OPTION } from '../../@utils/mce-error'
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from '../metadata'
 import { GetDefaultParser, GetParser, GetTagParser, ValueParsers } from './parsers'
@@ -75,6 +76,9 @@ export class Option {
 			const index = args.indexOf(results[i])
 			if( this.hasValue ) {
 				const [_, value] = args.splice(index, 2)
+				if(!value || value.startsWith('-') /*&& this.defaults === undefined*/) {
+					throw new MCError(MISSING_VALUE_OPTION, `Missing value for option: ${this.name}`)
+				}
 				values.push(value)
 			} else {
 				args.splice(index, 1)
