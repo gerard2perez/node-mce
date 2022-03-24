@@ -4,9 +4,9 @@ process.env.MCE_TEST = 'test'
 process.env.MCE_VERBOSE = '0'
 export { input, output } from '@gerard2p/mce/test'
 import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
-import { GitStyle, Reset, SetCommandsLocation, SingleStyle, WithPlugins } from '@gerard2p/mce/test'
+import { Execute, Reset, SetCommandsLocation } from '@gerard2p/mce/test'
 import { join, resolve } from 'path'
-export { SingleStyle, GitStyle, Reset, WithPlugins }
+export { Reset, Execute }
 
 const origin = join(__dirname, '../../')
 SetCommandsLocation('./test/demo_project')

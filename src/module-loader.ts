@@ -6,14 +6,14 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-24T09:12:29.102Z
+Modified: 2022-03-24T19:01:38.254Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
 import { Argument, Command, Insert, mArguments, mDescription, mOptions, Option } from './core'
 import 'reflect-metadata'
 export type Ctor =  new () => Command
-export async function LoadModule(path: string): Promise<Ctor|undefined> {
+export async function LoadModule(path: string, forcedName?: string): Promise<Ctor|undefined> {
 	const fname = basename(path)
 	return await import(path).then(m => {
 		const { action, default: compileClass } = m
@@ -65,7 +65,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 		}
 		return compileClass
 	}).then(module => {
-		Reflect.defineMetadata(Command, fname, module.prototype)
+		Reflect.defineMetadata(Command, forcedName || fname, module.prototype)
 		return module
 	}).catch(_ => {
 		throw _

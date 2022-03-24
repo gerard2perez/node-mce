@@ -6,23 +6,26 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-24T09:49:18.909Z
+Modified: 2022-03-24T20:27:24.503Z
 */
-import { cliPath } from '.'
+import { callerPath, cliPath, PackageJSON } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
 import { DefaultTheme } from './@utils/theme'
 import { readdirSync } from './mockable/fs'
-import { Argument, Option, error, Command, exit, print, opt } from './core'
+import { Argument, Option, Command, print } from './core'
 import { LoadModule } from './module-loader'
-import { basename } from 'path'
+import { basename, join } from 'path'
 import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 import { locations } from './program'
 import { ARGUMENT_COUNT_ERROR, MCError } from './@utils/mce-error'
 process.env.MCE_VERBOSE = 0 as any
-function findCommands(path: string) {
+const pathMapping = new Map<string, string>()
+function findCommands(path: string, prefix = '') {
 	const res = readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.ts')).map(p => p.replace('.js', '').replace('.ts', ''))
-	return res
+	for(const filePath of res) {
+		pathMapping.set(prefix+basename(filePath), join(path, filePath))
+	}
 }
 async function checkCompletition(commands: string[], argv: string[]) {
 	const [_, _ptcmd, fullcommand = '', ...preArguments] = argv
@@ -37,48 +40,69 @@ async function checkCompletition(commands: string[], argv: string[]) {
 	}
 	return false
 }
-export async function ExecuterDirector(argv: string[]): Promise<unknown> {
+function LoadPlugins(keyword: string) {
 	try {
-		let commadFileNames = findCommands(cliPath('commands'))
-		const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
-		locations(_, _cmdName)
+		const {dependencies, devDependencies} = new PackageJSON(callerPath('package.json'))
+		const packages = Object.keys({...dependencies, ...devDependencies})
+		for(let i=0; i< packages.length; i++) {
+			const { keywords = [], name } = new PackageJSON(callerPath('node_modules', packages[i], 'package.json'))
+			if(keywords.includes(keyword)) {
+				const commandsPath = callerPath('node_modules', packages[i], '@commands')
+				//TODO: find commands must return a fully qualified path
+				findCommands(commandsPath, packages[i]+':')
+			}
+		}
+		
+	} catch (_err) {
+		void 0
+	}
+}
+async function versionRequested(preArguments: string[]) {
+	const version = new Option({kind: 'boolean', defaults: false, property: 'version'}, '', '')
+	if(version.match(preArguments)) {
+		const pack = await import(cliPath('package.json').replace('src', '').replace('dist', ''))
+		print`${pack.version}`
+		return pack.version
+	}
+	return undefined
+}
+async function renderHelp(requestedCMD: string, commandName: string, preArguments: string[]) {
+	const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
+	const helpRequested: boolean = help.match(preArguments)
+	if(helpRequested) {
+		const hRenderer = new DefaultHelpRenderer(DefaultTheme)
+		const commadFileNames = requestedCMD ? [[requestedCMD, pathMapping.get(requestedCMD)]] as [string, string][] : Array.from(pathMapping.entries())
+		const commandCtrs = await Promise.all(commadFileNames.map(([forceName, requestedCMD]) => LoadModule(requestedCMD, forceName)))
+		hRenderer.render(commandName, commandCtrs.map(b => new b()), commadFileNames.length > 1)
+		return true
+	}
+	return false
+}
+export async function ExecuterDirector(argv: string[], locals?: string, plugins?: string): Promise<unknown> {
+	const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
+	locations(_, _cmdName)
+	const commandName = basename(_cmdName)
+	const version = await versionRequested( preArguments ) 
+	if(version) return version
+
+	try {
+		findCommands(cliPath('commands'))
+		if(plugins) {
+			LoadPlugins(plugins)
+		}
+		if(locals) {
+			findCommands(callerPath(`@${locals}`), 'l:')
+		}
 		// if(await checkCompletition(commadFileNames, argv)) {
-		// 	console.log('existsdasd')
 		// 	process.exit(0)
 		// }
-		const commandName = basename(_cmdName)
-		const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
-		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
-		const version = new Option({kind: 'boolean', defaults: false, property: 'version'}, '', '')
-		
-		if(version.match(preArguments)) {
-			const pack = await import(cliPath('package.json').replace('src', '').replace('dist', ''))
-			print`${pack.version}`
-			return pack.version
-		}
-		process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
+		const { requestedCMD, programArgs } = findRequestedCommand(preArguments)
 
-		const helpRequested = help.match(preArguments)
-		const isSubcommands = commadFileNames.length > 1
-		let [requestedCMD, ...programArgs] = preArguments
-		if(!isSubcommands) {
-			programArgs = [requestedCMD, ...programArgs].filter(f => f)
-			commadFileNames.push('../index')
-			requestedCMD = commadFileNames[0]
-		}
-		if(requestedCMD && !commadFileNames.includes(requestedCMD)) {
-			error`The requested command '{${requestedCMD}|cyan}' does not exists`
-			exit(1)`\n  Options: ${commadFileNames.join('  ')}\n`
-		}
-		if(helpRequested) {
-			const hRenderer = new DefaultHelpRenderer(DefaultTheme)
-			commadFileNames = requestedCMD ? [requestedCMD] : commadFileNames
-			const commandCtrs = await Promise.all(commadFileNames.map(requestedCMD => LoadModule(cliPath('commands', requestedCMD))))
-			hRenderer.render(commandName, commandCtrs.map(b => new b()), commadFileNames.length > 1)
-		} else {
-			const finelResult = await hydrateCommand(requestedCMD, programArgs)
-			return finelResult
-		}
+		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
+		process.env.MCE_VERBOSE = verbosity.match(programArgs).toString()
+
+		return await renderHelp(requestedCMD, commandName, programArgs)
+			|| await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
 		await UseSourceMaps(err)
 		if(process.env.MCE_THROW_ERROR === 'true') {
@@ -88,11 +112,25 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		}
 	}
 }
+function findRequestedCommand( preArguments: string[] ) {
+	const multiCommands = pathMapping.size > 1
+		let [requestedCMD, ...programArgs] = preArguments
+		if(!multiCommands) {
+			programArgs = [requestedCMD, ...programArgs].filter(f => f)
+			pathMapping.set('index', '../index')
+			requestedCMD = 'index'
+		}
+		if(requestedCMD && !pathMapping.has(requestedCMD)) {
+			throw new MCError(0, `The requested command '{${requestedCMD}|cyan}' does not exists\n  Options: ${Array.from(pathMapping.keys()).join('  ')}\n`)
+		}
+		return { requestedCMD, programArgs}
+}
 
 async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
-	const Command = new (await LoadModule(cliPath('commands', requestedCMD)))
+	const Command = new (await LoadModule( pathMapping.get(requestedCMD)))
 	const options = Option.Get(Command)
 	const argus = Argument.Get(Command)
+
 	const mappedOptions = options.map((opt, idx) => ({ index: idx, tag: opt.name, value: opt.match(programArgs) }))
 	const iligalOptions = programArgs.filter(parg => parg.includes('-', 0))
 	if (iligalOptions.length) {
@@ -131,3 +169,4 @@ function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value:
 		return false
 	}
 }
+

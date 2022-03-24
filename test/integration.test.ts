@@ -1,4 +1,4 @@
-import { findCommands, GitStyle, Reset, Restore, SetProjectPath } from './@utils/loader'
+import { findCommands, Execute, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 import { mockSpawn } from '@gerard2p/mce/test/spawn'
 jest.mock('@gerard2p/mce/mockable/fs')
@@ -38,12 +38,12 @@ describe('Self Test', () => {
 	beforeAll(() => SetProjectPath('./src'))
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
-	test('renders version', async() => {
-		findCommands('new.ts')
-		await expect(GitStyle('new --version'))
-				.resolves
-				.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)
-    })
+	// test('renders version', async() => {
+	// 	findCommands('new.ts')
+	// 	await expect(Execute('new --version'))
+	// 			.resolves
+	// 			.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)
+    // })
     // test('create a new project', async() => {
 	// 	findCommands('new.ts')
 	// 	mockSpawn((stdout, stderr) => {
@@ -60,7 +60,7 @@ describe('Self Test', () => {
 	// 	})
 	// 	pack()
 	// 	buildTree()
-	// 	await expect(GitStyle('new single_repo -f -s single'))
+	// 	await expect(Execute('new single_repo -f -s single'))
 	// 		.resolves.toBe(readLog('new.output.log'))
 	// 	expect(cspawn).toBeCalledTimes(4)
 	// })
@@ -68,7 +68,7 @@ describe('Self Test', () => {
 	// 	findCommands('new.ts')
 	// 	mockOverride(false, false)
 	// 	wait(10).then(_ => input.write('n'))
-	// 	await expect(GitStyle('new single_repo -s single'))
+	// 	await expect(Execute('new single_repo -s single'))
 	// 		.resolves.toBeDefined()
 	// 	expect(cspawn).toBeCalledTimes(0)
 	// })
@@ -76,7 +76,7 @@ describe('Self Test', () => {
 	// 	findCommands('new.ts')
 	// 	readFileSync.mockReturnValue(JSON.stringify({}))
 	// 	SpawnStreams.mockReturnValue(['pipe', new STDOut, new STDOut])
-	// 	await expect(GitStyle('new single_repo -fn -s single --dry-run'))
+	// 	await expect(Execute('new single_repo -fn -s single --dry-run'))
 	// 		.resolves.toBe(readLog('new.output.log'))
 	// 	expect(cspawn).toBeCalledTimes(0)
     // })
@@ -94,41 +94,41 @@ describe('Self Test', () => {
 	// 	})
 	// 	pack()
 	// 	buildTree(false)
-	// 	await expect(GitStyle('new git_repo -f -s -n git'))
+	// 	await expect(Execute('new git_repo -f -s -n git'))
 	// 			.resolves.toBe(readLog('new-git.output.log'))
     // })
     // test('command does not exist', async() => {
-	// 	await expect(GitStyle('trim'))
+	// 	await expect(Execute('trim'))
 	// 			.resolves.toBe('Command does not exists\n')
 	// })
     // test('renders all help', async() => {
 	// 	findCommands('new.ts', 'add.ts')
-	// 	await expect(GitStyle('-h'))
+	// 	await expect(Execute('-h'))
 	// 		.resolves
 	// 		.toBe(readLog('all.help.log'))
 	// })
     // test('renders command help', async() => {
 	// 	findCommands('new.ts')
-	// 	await expect(GitStyle('new -h'))
+	// 	await expect(Execute('new -h'))
 	// 		.resolves
 	// 		.toBe(readLog('new.help.log'))
 	// })
 	// test('renders help for add command', async () => {
 	// 	findCommands('add.ts')
-	// 	await expect(GitStyle('add -h'))
+	// 	await expect(Execute('add -h'))
 	// 		.resolves
 	// 		.toBe(readLog('add.help.log'))
 	// })
 	// test('adds a dummy command fails', async () => {
 	// 	findCommands('add.ts')
-	// 	await expect(GitStyle('add dummy'))
+	// 	await expect(Execute('add dummy'))
 	// 		.resolves
 	// 		.toBe(readLog('add.fail.log'))
 	// })
 	// test('adds a dummy command', async () => {
 	// 	findCommands('add.ts')
 	// 	existsSync.mockReturnValueOnce(true)
-	// 	await expect(GitStyle('add dummy'))
+	// 	await expect(Execute('add dummy'))
 	// 		.resolves
 	// 		.toBe(readLog('add.log'))
 	// })
@@ -152,7 +152,7 @@ describe('Self Test', () => {
 // 		sync.mockReturnValueOnce(undefined)
 // 		mockSpawn('')
 
-// 		await expect(GitStyle('build additional'))
+// 		await expect(Execute('build additional'))
 // 			.resolves. toBeDefined()
 
 // 		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')
@@ -193,7 +193,7 @@ describe('Self Test', () => {
 // 			return this
 // 		}})
 // 		mockSpawn('')
-// 		await expect(GitStyle('build additional -w'))
+// 		await expect(Execute('build additional -w'))
 // 			.resolves. toBeDefined()
 
 // 		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')

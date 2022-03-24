@@ -1,6 +1,9 @@
-import { Reset, Restore, SetProjectPath, WithPlugins } from './@utils/loader'
+import { Reset, Restore, SetProjectPath, Execute } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
-
+const options = {
+	plugins: 'test-commands',
+	locals: 'test-commands',
+}
 describe('Self Test #2', () => {
 	beforeAll(() => {
 		jest.unmock('@gerard2p/mce/mockable/fs')
@@ -14,23 +17,23 @@ describe('Self Test #2', () => {
 		jest.mock('@gerard2p/mce/mockable/fs')
 	})
 	test('Can load local commands using the plugin namespace', async() => {
-		await expect(WithPlugins('test-commands', 'l:args -h'))
+		await expect(Execute('l:args -h', options))
 			.resolves
 			.toBe(readLog('local-args.help.log'))
 	})
 	test('Catches error and parses SourceMap', async () => {
-		await expect(WithPlugins('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
-		await expect(WithPlugins('test-commands', 'module:sourcemap -s')).rejects.toThrow('from spinner')
+		await expect(Execute('module:sourcemap', options)).rejects.toThrow('from main context')
+		await expect(Execute('module:sourcemap -s', options)).rejects.toThrow('from spinner')
 		// process.env.MCE_TRACE = 'true'
-		// await expect(WithPlugins('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
-		// await expect(WithPlugins('test-commands', 'module:sourcemap -s')).rejects.toThrow('from spinner')
+		// await expect(Execute('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
+		// await expect(Execute('test-commands', 'module:sourcemap -s')).rejects.toThrow('from spinner')
 		// process.env.MCE_TRACE_SHOWINTERNAL = 'true'
 		// process.env.MCE_TRACE_SHOWMCE = 'true'
-		// await expect(WithPlugins('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
+		// await expect(Execute('test-commands', 'module:sourcemap')).rejects.toThrow('from main context')
 	})
-	// test('test commands in folders', async () => {
-	// 	await expect(WithPlugins('test-commands', 'module:complex'))
-	// 		.resolves
-	// 		.toEqual({opt: true})
-	// })
+	test('test commands in folders', async () => {
+		await expect(Execute('module:complex', options))
+			.resolves
+			.toEqual({opt: true})
+	})
 })

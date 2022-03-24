@@ -25,8 +25,6 @@ function DecorateMethod(
 ) {
 	
 	const body = JSON.stringify(data)
-	// ctx.factory.create
-	// console.log(body.().getText())
 
 	return ctx.factory.createExpressionStatement(
 		ctx.factory.createCallExpression(

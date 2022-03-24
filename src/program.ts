@@ -1,3 +1,4 @@
+import { PackageJSON } from './@utils/package-json'
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { cliPath } from './fs'
@@ -21,18 +22,22 @@ export interface IPackage {
 	main: string
 	version: string
 	installation_dir: string
+	dependencies: Record<string, string>
+	devDependencies: Record<string, string>
 }
-export function information() {
-	const packageInformation = JSON.parse(readFileSync(cliPath('package.json'), 'utf-8')) as IPackage
-	const installationPaath = dirname(program_location)
+export function information(location = cliPath('package.json')) {
+	const packageInformation = new PackageJSON(location)
+	const installationPath = dirname(program_location)
 	for(const key of Object.keys(packageInformation.bin)) {
-		packageInformation.bin[key] =  join(installationPaath, packageInformation.bin[key])
+		packageInformation.bin[key] =  join(installationPath, packageInformation.bin[key])
     }
     return {
         name: packageInformation.name, 
         bin: packageInformation.bin,
         main: packageInformation.main,
 		version: packageInformation.version,
-		installation_dir: installationPaath
+		installation_dir: installationPath,
+		dependencies: packageInformation.dependencies,
+		devDependencies: packageInformation.devDependencies
     } as IPackage
 }

@@ -5,13 +5,13 @@ const config: Config.InitialOptions = {
 	testEnvironment: 'node',
 	preset: 'ts-jest',
 	maxWorkers: 1,
+	forceExit: true,
 	globals: {
         'ts-jest': {
             'diagnostics': false,
             'tsconfig': 'test/tsconfig.json'
         }
     },
-	forceExit: true,
 	moduleNameMapper: {
 		'^@gerard2p/mce$': '<rootDir>/src',
 		'^@gerard2p/mce/(.*)$': '<rootDir>/src/$1',
@@ -30,8 +30,6 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
-		'test/integration.test.ts',
-		'test/plugins.spec.ts'
 	],
 	coverageDirectory: './coverage',
 	collectCoverage: true,

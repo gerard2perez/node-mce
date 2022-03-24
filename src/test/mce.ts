@@ -1,5 +1,4 @@
 import { SetStreams } from '../system-streams'
-import { readdirSync } from '../mockable/fs'
 import { STDIn } from './stdin'
 import { STDOut } from './stdout'
 export const output = new STDOut
@@ -7,27 +6,15 @@ export const input = new STDIn
 SetStreams(output, input)
 import { Program } from '../director'
 let NODE_MCE: Program
+type Options = {plugins: string, locals: string}
 export function SetCommandsLocation(path: string) {
 	NODE_MCE = new Program(path)
 	return NODE_MCE
 }
-export async function SingleStyle(command: string) {
+export async function Execute(command: string, {plugins, locals}: Options = {} as Options ) {
     output.clear()
-	readdirSync.mockReset()
-	readdirSync.mockReturnValueOnce([])
-    const result = await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {single: true})
-    return output.content || result
-}
-export async function GitStyle(command: string) {
-	output.clear()
-	const result = await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {locals: true})
-	return output.content || result
-}
-export async function WithPlugins(keyword: string, command: string) {
-
-	output.clear()
-	await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {locals: true, plugins: 'mce'})
-	return output.content
+    const result = await NODE_MCE.execute(['node', 'demo', ...command.split(' ')], {plugins, locals})
+	return result === true  ? output.content : output.content || result
 }
 export async function Reset() {
 	process.env.MCE_DRY_RUN = undefined
