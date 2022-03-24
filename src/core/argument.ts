@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-24T09:10:30.233Z
+Modified: 2022-03-24T09:21:15.898Z
 */
 import { ValueParsers, GetParser} from './options/parsers'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
@@ -55,10 +55,11 @@ export class Argument {
 		return this.parseValue( args.shift() )
 	}
 	private checkValue(result: unknown, value: unknown ) {
-		if(value && !result) {
+		if(value && result === undefined) {
 			throw new MCError(ARGUMENT_TYPE_MISSMATCH, 'Argument type missmatch')
 		}
-		if(!result && !this.rest) {
+		if(result === undefined && !this.rest) {
+			console.log({result})
 			if(this.required) {
 				throw new MCError(ARGUMENT_ERROR, `Argument ${this.name} is required`)
 			} else {

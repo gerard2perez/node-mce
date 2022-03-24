@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-24T08:55:13.620Z
+Modified: 2022-03-24T09:18:41.033Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -103,8 +103,9 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 	const isLegacy = applyLegacyFixtures(mappedOptions, Command, final_args)
 	const arg_count = argus.length + (isLegacy && options.length>0 ? 1 : 0)
 	const len = Command.action.length || 1
+	console.log({arg_count, len, l: final_args.length, isLegacy, o: options.length, a: argus.length })
 	if(arg_count !== len) {
-		throw new MCError(ARGUMENT_COUNT_ERROR, 'Argument count missmatch')
+		throw new MCError(ARGUMENT_COUNT_ERROR, 'Argument count missmatch' +`${arg_count}!=${len}`)
 	}
 	return await Command.action(...final_args)
 }
