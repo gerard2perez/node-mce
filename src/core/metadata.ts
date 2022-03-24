@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: metatdata.ts
 Created:  2022-01-30T03:55:36.567Z
-Modified: 2022-03-23T21:58:54.955Z
+Modified: 2022-03-24T08:07:23.394Z
 */
 
 import { ValueParsers } from './options'
@@ -20,11 +20,11 @@ export interface MetadataArgument {
 }
 export interface MetadataOption {
 	property: string
-	kind: ValueParsers
+	/** You can pass an enum in order to active enum parsing */
+	kind: ValueParsers | Record<string, unknown>
 	defaults: unknown
 	allowMulti?: boolean
 }
-
 export function metaArguments(target: unknown, fn: string) {
 	return Reflect.getMetadata('mce:data', target, fn) as Array<MetadataArgument>
 }

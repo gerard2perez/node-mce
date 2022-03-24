@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: verbosity.ts
 Created:  2022-03-23T21:38:52.029Z
-Modified: 2022-03-24T03:46:11.686Z
+Modified: 2022-03-24T06:16:51.221Z
 */
 
 import { IOptionParser } from '../custom'
@@ -25,7 +25,6 @@ export class VerbosityParser implements IOptionParser {
 		return str ? str.split(',').length : 0
 	}
 	helpLongTag(tag: string): [tag: string, param: string] {
-		console.log({tag})
 		return [`--${tag}`, '']
 	}
 	helpDefaults(data: unknown): string {

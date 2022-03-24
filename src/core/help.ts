@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-24T04:05:55.889Z
+Modified: 2022-03-24T08:05:20.152Z
 */
 import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
@@ -60,15 +60,13 @@ export abstract class HelpRenderer {
 		const padtoDesc =  longTagSize + shotTagLen
 		const { primary, secondary } = this.colorHelper('option')
 		const { primary: dprimary } = this.colorHelper('description')
-		const tagParser = option.tagParsers()
-		let defData = `${option.defaults||''}`
-		defData = defData ? `{Default:|${secondary}} {${option.defaults}|red}` : ''
-		const short = option.short ? `{${option.short}|${primary}}{,|${secondary}} `: ''
-		if(defData) {
-			defData = `\n{|padl:${indent+padtoDesc+shotTagLen}}${defData}\n`
+		const [longTag, tagParam = ''] = option.parseHelpTag()
+		const _default = option.parseHelpDefaults()
+		let defData = ''
+		if(_default) {
+			defData = `\n{|padl:${indent+padtoDesc+shotTagLen}}{Default:|${secondary}} {${_default}|red}\n`
 		}
-		if(option.oKind ==='boolean' && option.defaults !== 'true') defData = ''
-		const [longTag, tagParam = ''] = tagParser(option.name)
+		const short = option.short ? `{${option.short}|${primary}}{,|${secondary}} `: ''
 		let namedTag = `{${longTag}|${secondary}}`
 		if(option.hasValue) {
 			namedTag = `${namedTag} {${tagParam}|${dprimary}}`

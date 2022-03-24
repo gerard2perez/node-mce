@@ -21,8 +21,8 @@ function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
 }
 
 enum Styles {
-	git = 'git',
-	single= 'single'
+	git,
+	single
 }
 // export const alias = 'n'
 // export const options = {

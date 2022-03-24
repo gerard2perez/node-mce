@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: autowrap.ts
 Created:  2022-03-17T05:38:39.225Z
-Modified: 2022-03-18T23:18:40.991Z
+Modified: 2022-03-24T08:03:39.820Z
 */
 
 import { streams } from '../system-streams'
@@ -46,6 +46,6 @@ RegisterLogFormatter((text = '', start = 0) => {
 	return result
 		? result
 				.map((l, i) => (i ? ''.padStart(start, ' ') : '') + l)
-				.join('\r\n')
+				.join('\n')
 		: text.padStart(start, ' ')
 }, 'autowrap')

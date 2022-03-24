@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-23T21:21:59.491Z
+Modified: 2022-03-24T07:32:45.093Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
@@ -38,9 +38,11 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 				Insert( mArguments, nArg, runtimeClass.prototype )
 			}
 			for(const oOpt of ocmd.options) {
-				const meta = {
+				
+				const meta: any = {
 					defaults: oOpt.defaults,
-					kind: undefined,
+					kind: oOpt.validation ? oOpt.validation : undefined,
+					isEnum: !!oOpt.validation,
 					property: oOpt.name,
 				}
 				applyKindFixtures(oOpt, meta)
@@ -53,7 +55,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 			Insert(
 				mOptions,
 				new Option(
-					{kind: 'boolean', defaults: undefined, property: 'help'},
+					{kind: 'boolean', defaults: false, property: 'help'},
 					'Displays help for the command',
 					'-h'
 				),
@@ -70,8 +72,12 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 	})
 }
 
-function applyKindFixtures(oOpt: OldOption<any>, meta: { defaults: any; kind: any; property: string }) {
+function applyKindFixtures(oOpt: OldOption<any>, meta: { isEnum: boolean,  defaults: any; kind: any; property: string }) {
 	switch (oOpt.parser) {
+		case Parser.enum:
+			
+			// meta.kind = 'enum'
+			break
 		case Parser.increaseVerbosity:
 			meta.kind = 'verbosity'
 			break
@@ -94,7 +100,9 @@ function applyKindFixtures(oOpt: OldOption<any>, meta: { defaults: any; kind: an
 			meta.kind = 'boolean'
 			break
 		default:
-			meta.kind = 'string'
+			if(!meta.isEnum) {
+				meta.kind = 'string'
+			}
 			break
 	}
 }

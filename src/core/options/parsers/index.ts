@@ -6,8 +6,11 @@ Proprietary and confidential
 
 File: index.ts
 Created:  2022-03-23T21:56:57.473Z
-Modified: 2022-03-23T22:19:50.953Z
+Modified: 2022-03-24T06:41:08.986Z
 */
 
 export * from './register-parser'
 import './verbosity'
+import './enum'
+import './range'
+export { Range } from './range'

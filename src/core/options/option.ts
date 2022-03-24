@@ -6,11 +6,11 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-24T03:35:10.580Z
+Modified: 2022-03-24T07:42:22.680Z
 */
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from '../metadata'
-import { GetParser, GetTagParser, ValueParsers } from './parsers'
+import { GetDefaultParser, GetParser, GetTagParser, ValueParsers } from './parsers'
 
 export class Option {
 	static Get(target: unknown): Option[] {
@@ -20,32 +20,42 @@ export class Option {
 	tag: string
 	defaults: unknown
 	private kind: Array<ValueParsers>
-	oKind: string
+	private metaKind: ValueParsers | Record<string, unknown>
 	hasValue: boolean
 	private allowMulti: boolean
 	constructor(option: MetadataOption, public description: string, public short: string) {
 		this.name = option.property
-		this.oKind = option.kind
 		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
-		const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
-		this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
-		this.defaults =  option.defaults || (k1 === 'boolean' ? 'false' : option.defaults)
-		this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
+		this.metaKind = option.kind
+		if(typeof option.kind === 'string') {
+			const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
+			this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
+			this.defaults =  option.defaults || (k1 === 'boolean' ? false : option.defaults)
+			this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
+		} else {
+			this.kind = ['enum']
+			this.hasValue = true
+			this.defaults = GetParser('enum')(option.defaults as string, this.metaKind)
+		}
 		this.allowMulti = option.allowMulti
 	}
-	tagParsers() {
-		return GetTagParser(this.kind[1] || this.kind[0])
+	parseHelpDefaults() {
+		return GetDefaultParser(this.kind[1] || this.kind[0])(this.defaults as string, this.metaKind)
+	}
+	parseHelpTag() {
+		return GetTagParser(this.kind[1] || this.kind[0])(this.name)
 	}
 
 	parseValue(value: string) {
 		const [first, second] = this.kind
 		const parser1 = GetParser(first)
-		let result: unknown = parser1(value)
+		let result: unknown = parser1(value, this.metaKind)
 		if(result instanceof Array) {
 			result = result.map(d => this.checkValue(GetParser(second)(d), value)) as unknown
 		}
 		
-		return (first === 'boolean' ? false : undefined) || result
+		const res = (first === 'boolean' ? false : undefined) || result
+		return res
 	}
 	match<T = unknown>(args: string[]) {
 		const results = []
@@ -99,7 +109,7 @@ export class Option {
 	}
 	private checkValue(result: unknown, value: unknown ) {
 		if(!result) {
-			throw new Error(`Value '${value}' does not matches ${this.oKind} for option ${this.name}`)
+			throw new Error(`Value '${value}' does not matches ${this.metaKind} for option ${this.name}`)
 		}
 		return result
 	}

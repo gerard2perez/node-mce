@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:10:54.411Z
-Modified: 2022-03-24T03:20:19.632Z
+Modified: 2022-03-24T05:34:03.523Z
 */
 
 import { WrapDecorator } from '../../@utils/decorator'
@@ -30,7 +30,7 @@ function OptionDecorator(target: unknown, propertyKey: string, ...args: string[]
 		throw new Error('Short Tag must be only one character')
 	}
 	const metadata = metaOption(target, propertyKey)
-	if(metadata.kind.toLowerCase() === 'verbosity') {
+	if(typeof metadata.kind === 'string' && metadata.kind.toLowerCase() === 'verbosity') {
 		short = '-v'
 	}
 	const option = new Option(metadata, description, short )

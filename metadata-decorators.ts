@@ -69,10 +69,8 @@ function DecorateProperty(
 	let body = JSON.stringify(objBody)
 	body = body.replace('"_defaults"', defaults)
 	if(isEnum) {
-		
-		body = body.replace('"_kind"', `"enum", enum: ${kind}`)
+		body = body.replace('"_kind"', kind)
 	} else {
-		// body = body.replace('_defaults', defaults)
 		body = body.replace('_kind', kind)
 	}
 	return ctx.factory.createExpressionStatement(

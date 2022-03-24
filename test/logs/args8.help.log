@@ -2,7 +2,7 @@
       A description for your command
         -e, --enumeration <enumeration>   Define  the  style of command you will
                                           use
-                                          Default: git | single
+                                          Default: [git, single]
 
         -n, --number <number>             A number
         -f, --floating <floating>         A float number
@@ -13,4 +13,3 @@
         -b, --bool                        A boolean value
         -v, --verbose                     Increase system verbosity
         -h, --help                        Displays help for the command
-

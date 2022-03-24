@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-23T19:44:41.159Z
+Modified: 2022-03-24T06:51:31.765Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -45,11 +45,10 @@ export async function ExecuterDirector(argv: string[]): Promise<unknown> {
 		// 	console.log('existsdasd')
 		// 	process.exit(0)
 		// }
-		
 		const commandName = basename(_cmdName)
-		const help = new Option({ kind: 'boolean', defaults: 'false', property: 'help' }, '', '-h' )
+		const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
 		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
-		const version = new Option({kind: 'boolean', defaults: 'false', property: 'version'}, '', '')
+		const version = new Option({kind: 'boolean', defaults: false, property: 'version'}, '', '')
 		
 		if(version.match(preArguments)) {
 			const pack = await import(cliPath('package.json').replace('src', '').replace('dist', ''))

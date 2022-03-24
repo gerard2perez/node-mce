@@ -6,10 +6,9 @@ Proprietary and confidential
 w
 File: types.ts
 Created:  2022-01-30T03:33:26.342Z
-Modified: 2022-03-23T21:18:20.593Z
+Modified: 2022-03-24T06:38:59.532Z
 */
 
-export type Range = [start: number, end: number]
 export type Float = number
 export type Int = number
 export type Collection<T> = Array<T>

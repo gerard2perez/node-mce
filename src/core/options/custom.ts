@@ -6,11 +6,11 @@ Proprietary and confidential
 
 File: custom.ts
 Created:  2022-03-23T21:35:12.880Z
-Modified: 2022-03-24T03:40:50.275Z
+Modified: 2022-03-24T05:57:22.043Z
 */
 
 export interface IOptionParser {
 	parseValue(...values: unknown[]): unknown
 	helpLongTag(tag: string): [tag:string, param: string]
-	helpDefaults(data: unknown): string
+	helpDefaults(...values: unknown[]): string
 }
