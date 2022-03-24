@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-24T06:51:31.765Z
+Modified: 2022-03-24T08:55:13.620Z
 */
 import { cliPath } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -18,6 +18,7 @@ import { basename } from 'path'
 import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 import { locations } from './program'
+import { ARGUMENT_COUNT_ERROR, MCError } from './@utils/mce-error'
 process.env.MCE_VERBOSE = 0 as any
 function findCommands(path: string) {
 	const res = readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.ts')).map(p => p.replace('.js', '').replace('.ts', ''))
@@ -99,7 +100,12 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 	}
 	const mappedArguments = argus.map(argument => ({ index: argument.index, tag: argument.name, value: argument.match(programArgs) }))
 	const final_args = [...mappedArguments].sort((a, b) => a.index - b.index).map(arg => arg.value)
-	applyLegacyFixtures(mappedOptions, Command, final_args)
+	const isLegacy = applyLegacyFixtures(mappedOptions, Command, final_args)
+	const arg_count = argus.length + (isLegacy && options.length>0 ? 1 : 0)
+	const len = Command.action.length || 1
+	if(arg_count !== len) {
+		throw new MCError(ARGUMENT_COUNT_ERROR, 'Argument count missmatch')
+	}
 	return await Command.action(...final_args)
 }
 
@@ -118,8 +124,10 @@ function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value:
 	}, Command)
 	if ((Command as any)._legacyOptions) {
 		final_args.push((Command as any)._legacyOptions)
+		return true
 	} else {
 		// eslint-disable-next-line prefer-spread
 		final_args = [].concat.apply([], final_args)
+		return false
 	}
 }

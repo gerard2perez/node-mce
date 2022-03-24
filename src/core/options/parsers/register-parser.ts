@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: register-parser.ts
 Created:  2022-03-23T21:42:00.657Z
-Modified: 2022-03-24T07:50:10.355Z
+Modified: 2022-03-24T09:09:28.464Z
 */
 const collectionParser = (str: string|unknown[]) => {
 	if(str instanceof Array) return str
@@ -34,7 +34,15 @@ const ValueParsers = {
 	int: (str: string) => parseInt(str) || undefined,
 	number: (str: string) => parseFloat(str) || undefined,
 	float: (str: string) => parseFloat(str) || undefined,
-	boolean: (str: string) => str == 'true'
+	boolean: (str: string|boolean) => {
+		if(typeof str === 'boolean') {
+			return str
+		} else {
+			if(str=='true') return true
+			if(str == 'false') return false
+			return undefined
+		}
+	} 
 }
 const helpTagsParser = {
 	boolean: booleanTagParser

@@ -6,11 +6,11 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-23T21:59:38.844Z
+Modified: 2022-03-24T09:10:30.233Z
 */
 import { ValueParsers, GetParser} from './options/parsers'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
-import { ARGUMENT_ERROR, MCError } from '../@utils/mce-error'
+import { ARGUMENT_ERROR, ARGUMENT_TYPE_MISSMATCH, MCError } from '../@utils/mce-error'
 
 export class Argument {
 	static Get(target: unknown): Argument[] {
@@ -44,6 +44,7 @@ export class Argument {
 		if(result instanceof Array) {
 			result = result.map(d => this.checkValue(parser2(d), value)) as unknown
 		}
+		console.log({n: this.name, result, first, o: this.oKind})
 		this.checkValue(result, value)
 		return result
 	}
@@ -54,9 +55,12 @@ export class Argument {
 		return this.parseValue( args.shift() )
 	}
 	private checkValue(result: unknown, value: unknown ) {
+		if(value && !result) {
+			throw new MCError(ARGUMENT_TYPE_MISSMATCH, 'Argument type missmatch')
+		}
 		if(!result && !this.rest) {
 			if(this.required) {
-				throw new MCError(ARGUMENT_ERROR, `Argument {${this.name}|green} is required`)
+				throw new MCError(ARGUMENT_ERROR, `Argument ${this.name} is required`)
 			} else {
 				throw new MCError(ARGUMENT_ERROR, `Value '${value}' does not matches ${this.oKind} for argument ${this.name}`)
 			}

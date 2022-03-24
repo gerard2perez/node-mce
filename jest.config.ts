@@ -30,8 +30,7 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
-		'test/input.spec.ts',
-		'test/integration.spec.ts',
+		'test/integration.test.ts',
 		'test/plugins.spec.ts'
 	],
 	coverageDirectory: './coverage',

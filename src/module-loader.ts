@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-24T07:32:45.093Z
+Modified: 2022-03-24T09:12:29.102Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
@@ -21,13 +21,12 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 			const {[fname]: runtimeClass} = {
 				[fname]: class extends Command {
 					public _legacyOptions = {}
-					async action(...args: any[]) {
-						return await m.action(...args)
-					}
+					action = m.action
 				}
 			}
 			const ocmd = new OldCommand('mce', basename(path), m, false)
 			for(const oArg of ocmd.arguments) {
+				if(oArg.type==='bool')oArg.type = 'boolean'
 				const nArg = new Argument({
 					defaults: undefined,
 					kind: oArg.kind === OptionKind.varidac ? `${oArg.type}[]` : oArg.type as any,
@@ -35,6 +34,7 @@ export async function LoadModule(path: string): Promise<Ctor|undefined> {
 					rest: oArg.kind === OptionKind.varidac,
 					property: oArg.name
 				}, null, ocmd.arguments.indexOf(oArg))
+				
 				Insert( mArguments, nArg, runtimeClass.prototype )
 			}
 			for(const oOpt of ocmd.options) {
