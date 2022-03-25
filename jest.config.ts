@@ -1,17 +1,21 @@
 import type { Config } from '@jest/types'
 process.env.MCE_TEST = 'test'
 const config: Config.InitialOptions = {
+	globals: {
+        'ts-jest': {
+			compiler: 'ttypescript',
+            'diagnostics': false,
+            'tsconfig': 'test/tsconfig.json'
+        }
+    },
+	transform: {
+		'^.+\\.ts?$': 'ts-jest'
+	},
 	verbose: true,
 	testEnvironment: 'node',
 	preset: 'ts-jest',
 	maxWorkers: 1,
 	forceExit: true,
-	globals: {
-        'ts-jest': {
-            'diagnostics': false,
-            'tsconfig': 'test/tsconfig.json'
-        }
-    },
 	moduleNameMapper: {
 		'^@gerard2p/mce$': '<rootDir>/src',
 		'^@gerard2p/mce/(.*)$': '<rootDir>/src/$1',
@@ -30,6 +34,7 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
+		'test/.*.spec.ts'
 	],
 	coverageDirectory: './coverage',
 	collectCoverage: true,

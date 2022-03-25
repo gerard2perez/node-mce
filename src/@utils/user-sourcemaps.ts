@@ -9,13 +9,13 @@ export async function UseSourceMaps(error: Error) {
 		const showMCE = process.env.MCE_TRACE_SHOWMCE === 'true'
 		const stack = error.stack.split('\n')
 		const parsed = stack.filter(line => {
-			if(!showMCE && line.search(/@gerard2p.mce/)>-1) {
-				error.stack = error.stack.replace(`${line}\n`, '')
-			}
-			// istanbul ignore if
-			if(!showInternal && line.includes('internal/')) {
-				error.stack = error.stack.replace(`${line}\n`, '').replace(line, '')
-			}
+			// if(!showMCE && line.search(/@gerard2p.mce/)>-1) {
+			// 	error.stack = error.stack.replace(`${line}\n`, '')
+			// }
+			// // istanbul ignore if
+			// if(!showInternal && line.includes('internal/')) {
+			// 	error.stack = error.stack.replace(`${line}\n`, '').replace(line, '')
+			// }
 			return !line.includes('internal/')
 		})
 		.map(lineText => {

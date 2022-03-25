@@ -6,9 +6,9 @@ Proprietary and confidential
 
 File: rage.ts
 Created:  2022-03-24T06:27:20.178Z
-Modified: 2022-03-24T06:41:37.172Z
+Modified: 2022-03-25T17:57:27.141Z
 */
-import { IOptionParser } from '../custom'
+import { IOptionParser } from './option-parser'
 import { RegisterClassParser } from './register-parser'
 declare global {
 	namespace MCE {
@@ -18,7 +18,7 @@ declare global {
 	}
 }
 @RegisterClassParser
-export class RangeParser implements IOptionParser {
+export class RangeParser extends IOptionParser {
 	parseValue(str: string|string[]): unknown {
 		if( str instanceof Array) {
 			return str
@@ -27,12 +27,11 @@ export class RangeParser implements IOptionParser {
 		}
 	}
 	helpLongTag(tag: string): [tag: string, param: string] {
-		return [`--${tag}`, '<a>..<b>']
+		return [tag, '<a>..<b>']
 	}
 	helpDefaults(data: number[]): string {
 		return data.length ? `[${data[0]}..${data[1]}]` : ''
 	}
 	
 }
-
 export type Range = [start: number, end: number]

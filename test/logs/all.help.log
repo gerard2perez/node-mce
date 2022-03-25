@@ -1,19 +1,29 @@
-    mce add <command> [options]
-      Adds a new command to the git project.
-        -h, --help   displays help for the command
-
-    mce new <application> [options]
-      Alias: n
+    mce new application:string [options]
+     Alias: n
       Creates a new MCE project.
-        -a, --author          Author of the package [GIT_OR_NPM_USER]
-        -f, --force           Overrides target directory
-        -n, --npm             Install npm dependencies
-        -s, --style  <style>  Define the style of command you will use. If you need [single]
-                               more than one command use git.
-                               Values: git | single
+        -a, --author <author>     Author of the package
+                                  Default: GIT_OR_NPM_USER
 
-        --dry-run             Executes the program with out touching the disc or
-                               calling shell scripts
+        -f, --force               Overrides target directory
+        -n, --npm                 Install npm dependencies
+        -s, --style <style>       Define  the  style of command you will use. If
+                                  you need more than one command use git.
+                                  Default: [single, git]
 
-        -h, --help            displays help for the command
+            --dry-run             Executes the program without touching the disc
+                                  or calling shell scripts
+        -h, --help                Displays help for the command
 
+    mce add command:string [options]
+      Adds a new command to the git project.
+        -h, --help    Displays help for the command
+
+    mce build ...patterns:string[] [options]
+        -w, --watch                 watches for changes
+        -c, --tsc <tsc>             path to tsc
+                                    Default: ./node_modules/.bin/ttsc
+
+        -t, --tsconfig <tsconfig>   selects the tsconfig file
+                                    Default: tsconfig.json
+
+        -h, --help                  Displays help for the command

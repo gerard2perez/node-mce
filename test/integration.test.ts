@@ -1,10 +1,11 @@
-import { findCommands, Execute, Reset, Restore, SetProjectPath } from './@utils/loader'
-import { readLog } from './@utils/log-reader'
-import { mockSpawn } from '@gerard2p/mce/test/spawn'
-jest.mock('@gerard2p/mce/mockable/fs')
 jest.mock('cross-spawn')
+jest.mock('@gerard2p/mce/mockable/spawn-streams')
+jest.mock('@gerard2p/mce/mockable/fs')
 jest.mock('chokidar')
 jest.mock('glob')
+import { findCommands, Execute, Reset, Restore, SetProjectPath,  } from './@utils/loader'
+import { readLog } from './@utils/log-reader'
+import { mockSpawn } from '@gerard2p/mce/test/spawn'
 import { existsSync, readFileSync, unlinkSync, } from '@gerard2p/mce/mockable/fs'
 import * as $tree from '@gerard2p/mce/test/tree-maker'
 import { pack } from '@gerard2p/mce/test/package-json'
@@ -17,8 +18,9 @@ function buildTree(optional = true) {
 	$tree.root(
 		$tree.cpy(),
 		$tree.cpy(),
-		$tree.cmp(),
-		$tree.cmp(),
+		$tree.cpy(),
+		$tree.cmp({he: 626}),
+		$tree.cmp({he: 627}),
 		$tree.dir(
 			$tree.wrt(),
 			optional && $tree.cpy(),
@@ -26,62 +28,60 @@ function buildTree(optional = true) {
 		),
 		$tree.dir(
 			$tree.cpy(),
+			$tree.cpy(),
 			$tree.cpy()
 		),
 		$tree.pkg(),
 		$tree.cpy(),
-		$tree.cpy(),
-		$tree.cpy()
 	)
 }
 describe('Self Test', () => {
 	beforeAll(() => SetProjectPath('./src'))
-	beforeEach(() => Reset())
+	beforeEach(() => {
+		Reset()
+		findCommands('new.ts', 'add.ts', 'build')
+	})
 	afterAll(() => Restore())
 	// test('renders version', async() => {
-	// 	findCommands('new.ts')
-	// 	await expect(Execute('new --version'))
+	// 	await expect(Execute('mce new --version'))
 	// 			.resolves
 	// 			.toMatch(/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}/)
     // })
     // test('create a new project', async() => {
-	// 	findCommands('new.ts')
 	// 	mockSpawn((stdout, stderr) => {
 	// 		stderr.emit('data', Buffer.from(''))
 	// 		return 1
 	// 	})
 	// 	mockSpawn('gerard2perez@outlook.com')
 	// 	mockSpawn('gerard2p')
+	// 	pack({version: '2.0.0'})
+	// 	buildTree()
 	// 	mockSpawn((stdout, stderr) => {
 	// 		stdout.emit('data', Buffer.from('line1'))
 	// 		stderr.emit('data', Buffer.from('line2'))
 	// 		stdout.emit('data', Buffer.from('line3'))
 	// 		return 0
 	// 	})
-	// 	pack()
-	// 	buildTree()
-	// 	await expect(Execute('new single_repo -f -s single'))
+	// 	mockSpawn('done')
+	// 	await expect(Execute('mce new single_repo -f -s single'))
 	// 		.resolves.toBe(readLog('new.output.log'))
-	// 	expect(cspawn).toBeCalledTimes(4)
+	// 	expect(cspawn).toBeCalledTimes(5)
 	// })
 	// test('cancel project override', async() => {
-	// 	findCommands('new.ts')
 	// 	mockOverride(false, false)
 	// 	wait(10).then(_ => input.write('n'))
-	// 	await expect(Execute('new single_repo -s single'))
+	// 	await expect(Execute('mce new single_repo -s single'))
 	// 		.resolves.toBeDefined()
 	// 	expect(cspawn).toBeCalledTimes(0)
 	// })
 	// test('create a new project (dry run)', async() => {
-	// 	findCommands('new.ts')
 	// 	readFileSync.mockReturnValue(JSON.stringify({}))
 	// 	SpawnStreams.mockReturnValue(['pipe', new STDOut, new STDOut])
-	// 	await expect(Execute('new single_repo -fn -s single --dry-run'))
+	// 	await expect(Execute('mce new single_repo -fn -s single --dry-run'))
 	// 		.resolves.toBe(readLog('new.output.log'))
 	// 	expect(cspawn).toBeCalledTimes(0)
     // })
     // test('create a new project multicommand', async() => {
-	// 	findCommands('new.ts')
 	// 	mockSpawn('gerard2p')
 	// 	mockSpawn('gerard2perez@gmail')
 	// 	mockSpawn((stdout, stderr) => {
@@ -94,41 +94,40 @@ describe('Self Test', () => {
 	// 	})
 	// 	pack()
 	// 	buildTree(false)
-	// 	await expect(Execute('new git_repo -f -s -n git'))
+	// 	await expect(Execute('mce new git_repo -f -s -n git'))
 	// 			.resolves.toBe(readLog('new-git.output.log'))
     // })
     // test('command does not exist', async() => {
-	// 	await expect(Execute('trim'))
-	// 			.resolves.toBe('Command does not exists\n')
+	// 	await expect(Execute('mce trim'))
+	// 			.rejects.toThrowError()
 	// })
-    // test('renders all help', async() => {
-	// 	findCommands('new.ts', 'add.ts')
-	// 	await expect(Execute('-h'))
-	// 		.resolves
-	// 		.toBe(readLog('all.help.log'))
-	// })
+    test('renders all help', async() => {
+		await expect(Execute('mce -h'))
+			.resolves
+			.toBe(readLog('all.help.log'))
+	})
     // test('renders command help', async() => {
-	// 	findCommands('new.ts')
-	// 	await expect(Execute('new -h'))
+	// 	_____
+	// 	await expect(Execute('mce new -h'))
 	// 		.resolves
 	// 		.toBe(readLog('new.help.log'))
 	// })
 	// test('renders help for add command', async () => {
-	// 	findCommands('add.ts')
-	// 	await expect(Execute('add -h'))
+	// 	_____
+	// 	await expect(Execute('mce add -h'))
 	// 		.resolves
 	// 		.toBe(readLog('add.help.log'))
 	// })
 	// test('adds a dummy command fails', async () => {
-	// 	findCommands('add.ts')
-	// 	await expect(Execute('add dummy'))
+	// 	_____
+	// 	await expect(Execute('mce add dummy'))
 	// 		.resolves
 	// 		.toBe(readLog('add.fail.log'))
 	// })
 	// test('adds a dummy command', async () => {
-	// 	findCommands('add.ts')
+	// 	_____
 	// 	existsSync.mockReturnValueOnce(true)
-	// 	await expect(Execute('add dummy'))
+	// 	await expect(Execute('mce add dummy'))
 	// 		.resolves
 	// 		.toBe(readLog('add.log'))
 	// })
@@ -140,7 +139,7 @@ describe('Self Test', () => {
 // 	test('default commands', async () => {
 // 		const { sync } = await import('glob')
 
-// 		findCommands('build')
+// 		_____
 // 		pack({includes: ['**/*.ts'], compilerOptions: {}})
 // 		existsSync.mockReturnValueOnce(true)
 // 		pack({ bin: { mce: './mce'}, compilerOptions: {}})
@@ -152,7 +151,7 @@ describe('Self Test', () => {
 // 		sync.mockReturnValueOnce(undefined)
 // 		mockSpawn('')
 
-// 		await expect(Execute('build additional'))
+// 		await expect(Execute('mce build additional'))
 // 			.resolves. toBeDefined()
 
 // 		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')
@@ -168,7 +167,7 @@ describe('Self Test', () => {
 // 		existsSync.mockRestore()
 // 		unlinkSync.mockRestore()
 
-// 		findCommands('build')
+// 		_____
 
 // 		pack({
 // 			extends: 'tsconfig.build.json',
@@ -193,7 +192,7 @@ describe('Self Test', () => {
 // 			return this
 // 		}})
 // 		mockSpawn('')
-// 		await expect(Execute('build additional -w'))
+// 		await expect(Execute('mce build additional -w'))
 // 			.resolves. toBeDefined()
 
 // 		expect(readFileSync).toHaveBeenNthCalledWith(1, join(__dirname, '../src/tsconfig.json'), 'utf-8')

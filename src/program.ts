@@ -1,6 +1,5 @@
 import { PackageJSON } from './@utils/package-json'
-import { readFileSync } from 'fs'
-import { dirname, join } from 'path'
+import { dirname, join, resolve } from 'path'
 import { cliPath } from './fs'
 let _node_location: string
 let program_location: string
@@ -26,9 +25,11 @@ export interface IPackage {
 	devDependencies: Record<string, string>
 }
 export function information(location = cliPath('package.json')) {
-	const packageInformation = new PackageJSON(location)
+	location = resolve(location.replace('src', ''))
+	const packageInformation = new PackageJSON(location) || {bind: {}} as any
+	const { bin = {}} = packageInformation
 	const installationPath = dirname(program_location)
-	for(const key of Object.keys(packageInformation.bin)) {
+	for(const key of Object.keys(bin)) {
 		packageInformation.bin[key] =  join(installationPath, packageInformation.bin[key])
     }
     return {

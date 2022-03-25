@@ -6,10 +6,10 @@ Proprietary and confidential
 
 File: enum.ts
 Created:  2022-03-24T04:58:55.502Z
-Modified: 2022-03-24T07:43:13.465Z
+Modified: 2022-03-25T17:54:16.312Z
 */
 
-import { IOptionParser } from '../custom'
+import { IOptionParser } from './option-parser'
 import { RegisterClassParser } from './register-parser'
 
 declare global {
@@ -21,18 +21,19 @@ declare global {
 }
 
 @RegisterClassParser
-export class EnumParser implements IOptionParser {
+export class EnumParser extends IOptionParser {
 	parseValue(str: string|number, _enum: unknown): unknown {
-		if(typeof str === 'number') {
+		if( _enum instanceof Array) {
+			return _enum.includes(str) ? str : undefined
+		}
+		if(typeof str === 'string') {
 			return _enum[str]
 		}
 		return str // || _enum[0]
 	}
-	helpLongTag(tag: string): [tag: string, param: string] {
-		return [`--${tag}`, `<${tag}>`]
-	}
-	helpDefaults(data: string, _enum: unknown): string {
+	helpDefaults(data: string|number, _enum: unknown): string {
 		if(!_enum) return ''
+		if(typeof data === 'number') data = _enum[data]
 		const keys = Object.values(_enum).filter(v => typeof v !== 'number' && v !== data)
 		if(!data)data = keys.shift()
 		return `[{${data}|bold|underline}, ${keys.join(', ')}]`

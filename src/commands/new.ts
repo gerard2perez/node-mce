@@ -1,11 +1,10 @@
 import { error } from '../console'
 import { override } from '../input'
-import { information } from '../program'
 import { spin } from '../spinner'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
-import { arg, Collection, Command, opt, Options, Verbosity } from '../core'
+import { alias, arg, Command, description, DryRun, opt, Options, Verbosity } from '../core'
 import { PackageJSON } from '../@utils/package-json'
 import { exec } from '../spawn'
 import { SetSpinnerText } from '../spinner/console'
@@ -19,18 +18,12 @@ function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
 			.then(result => result.toString(), _ => onErrorReturn)
 	}
 }
-
 enum Styles {
 	git,
 	single
 }
-// export const alias = 'n'
-// export const options = {
-	
-// }
-let nproy
-// export const description = 'Creates a new MCE project.'
 
+let nproy
 async function createProjectExtructure(application: string, opt: Options<NewCommand>) {
 	let {author} = opt
 	await spin('Creating Files', async () => {
@@ -47,7 +40,8 @@ async function createProjectExtructure(application: string, opt: Options<NewComm
 			.withDefaults({
 				name: application,
 			})
-			.patchValues({
+
+			nPack.patchValues({
 				name: application,
 				description: '',
 				main: `./${application}`,
@@ -61,7 +55,7 @@ async function createProjectExtructure(application: string, opt: Options<NewComm
 				author,
 				license: 'MIT',
 				dependencies: {
-					'@gerard2p/mce': `^${information().version}`
+					'@gerard2p/mce': `^${nPack.version}`
 				}
 			})
 		root(application,
@@ -85,22 +79,19 @@ async function createProjectExtructure(application: string, opt: Options<NewComm
 		)
 	})
 }
-
+@alias('n')
+@description('Creates a new MCE project.')
 export default class NewCommand extends Command {
 	@opt('a', 'Author of the package') author = 'GIT_OR_NPM_USER'
 	@opt('f', 'Overrides target directory') force: boolean
-	@opt('n', 'Install npm dependencies') npm  = true
+	@opt('n', 'Install npm dependencies') npm: boolean
 	@opt('s', 'Define the style of command you will use. If you need more than one command use git.') style = Styles.single
-	@opt('a') age = 15
-	@opt('c') collect: Collection<number> = []
-	@opt dryRun: boolean
-	@opt verbose: Verbosity
+	@opt dryRun: DryRun
 	async action( @arg application: string ) {
 		nproy = callerPath.bind(null, application)
 		if(!await override('Directory already exist. Do you want to override it', nproy(), this.force))
 			return
 		await createProjectExtructure(application, this)
-
 		this.npm && await spin('Initializing npm', async() => {
 			const npmResult = await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000)
 			if (npmResult === false ) {
@@ -114,7 +105,7 @@ export default class NewCommand extends Command {
 			}
 			copy('gitignore', `${application}/.gitignore`)
 		})
-	return 0
+		return 0
 	}
 	
 }

@@ -5,6 +5,9 @@
       "@gerard2p/mce": ["."],
       "@gerard2p/mce/*": ["./*"]
     },
+    "plugins": [
+      {"transform" : "./metadata-decorators.ts", "after": true}
+    ]
   },
   "extends": "../tsconfig.json",
 }

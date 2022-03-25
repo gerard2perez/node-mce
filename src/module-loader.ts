@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-24T19:01:38.254Z
+Modified: 2022-03-25T18:41:47.020Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
@@ -52,19 +52,19 @@ export async function LoadModule(path: string, forcedName?: string): Promise<Cto
 			if(ocmd.description) {
 				Reflect.defineMetadata(mDescription, ocmd.description, runtimeClass)
 			}
-			Insert(
-				mOptions,
-				new Option(
-					{kind: 'boolean', defaults: false, property: 'help'},
-					'Displays help for the command',
-					'-h'
-				),
-				runtimeClass.prototype
-			)
 			return runtimeClass
 		}
 		return compileClass
 	}).then(module => {
+		Insert(
+			mOptions,
+			new Option(
+				{kind: 'boolean', defaults: false, property: 'help'},
+				'Displays help for the command',
+				'-h'
+			),
+			module.prototype
+		)
 		Reflect.defineMetadata(Command, forcedName || fname, module.prototype)
 		return module
 	}).catch(_ => {

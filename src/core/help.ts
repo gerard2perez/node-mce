@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-24T08:05:20.152Z
+Modified: 2022-03-25T18:54:41.909Z
 */
 import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
@@ -86,7 +86,7 @@ export abstract class HelpRenderer {
 	}
 	render(program: string, commands: Command[], single = false) {
 		const help = commands.map(command => this.generateHelp(program, command, single && commands.length === 1))
-		write`${help.join('\n')}\n`
+		write`${help.join('\n\n')}\n`
 	}
 	/**
 	 * Return and uncompiled command help

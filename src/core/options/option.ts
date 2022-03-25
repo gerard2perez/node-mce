@@ -6,12 +6,12 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-24T09:49:24.430Z
+Modified: 2022-03-25T18:38:52.164Z
 */
 import { MCError, MISSING_VALUE_OPTION } from '../../@utils/mce-error'
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from '../metadata'
-import { GetDefaultParser, GetParser, GetTagParser, ValueParsers } from './parsers'
+import { DefaultDescription, GetDefaultParser, GetParser, GetTagParser, ValueParsers } from './parsers'
 
 export class Option {
 	static Get(target: unknown): Option[] {
@@ -28,9 +28,13 @@ export class Option {
 		this.name = option.property
 		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
 		this.metaKind = option.kind
+		if(!this.description) {
+			this.description = DefaultDescription(option.property)
+		}
 		if(typeof option.kind === 'string') {
-			const [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
+			let [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
 			this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
+			k1 = this.kind[0]
 			this.defaults =  option.defaults || (k1 === 'boolean' ? false : option.defaults)
 			this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
 		} else {
@@ -44,7 +48,7 @@ export class Option {
 		return GetDefaultParser(this.kind[1] || this.kind[0])(this.defaults as string, this.metaKind)
 	}
 	parseHelpTag() {
-		return GetTagParser(this.kind[1] || this.kind[0])(this.name)
+		return GetTagParser(this.kind[1] || this.kind[0])(this.tag, this.name)
 	}
 
 	parseValue(value: string) {

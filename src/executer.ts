@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-24T20:27:24.503Z
+Modified: 2022-03-24T23:53:46.993Z
 */
 import { callerPath, cliPath, PackageJSON } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -42,7 +42,7 @@ async function checkCompletition(commands: string[], argv: string[]) {
 }
 function LoadPlugins(keyword: string) {
 	try {
-		const {dependencies, devDependencies} = new PackageJSON(callerPath('package.json'))
+		const {dependencies, devDependencies} = new PackageJSON(cliPath('package.json').replace('src', '').replace('dist', ''))
 		const packages = Object.keys({...dependencies, ...devDependencies})
 		for(let i=0; i< packages.length; i++) {
 			const { keywords = [], name } = new PackageJSON(callerPath('node_modules', packages[i], 'package.json'))
@@ -66,9 +66,7 @@ async function versionRequested(preArguments: string[]) {
 	}
 	return undefined
 }
-async function renderHelp(requestedCMD: string, commandName: string, preArguments: string[]) {
-	const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
-	const helpRequested: boolean = help.match(preArguments)
+async function renderHelp(helpRequested: boolean, requestedCMD: string, commandName: string) {
 	if(helpRequested) {
 		const hRenderer = new DefaultHelpRenderer(DefaultTheme)
 		const commadFileNames = requestedCMD ? [[requestedCMD, pathMapping.get(requestedCMD)]] as [string, string][] : Array.from(pathMapping.entries())
@@ -85,6 +83,11 @@ export async function ExecuterDirector(argv: string[], locals?: string, plugins?
 	const version = await versionRequested( preArguments ) 
 	if(version) return version
 
+	const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
+	const helpRequested: boolean = help.match(preArguments)
+	const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
+	process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
+
 	try {
 		findCommands(cliPath('commands'))
 		if(plugins) {
@@ -97,14 +100,11 @@ export async function ExecuterDirector(argv: string[], locals?: string, plugins?
 		// 	process.exit(0)
 		// }
 		const { requestedCMD, programArgs } = findRequestedCommand(preArguments)
-
-		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
-		process.env.MCE_VERBOSE = verbosity.match(programArgs).toString()
-
-		return await renderHelp(requestedCMD, commandName, programArgs)
+		return await renderHelp(helpRequested, requestedCMD, commandName)
 			|| await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
 		await UseSourceMaps(err)
+		console.log(err)
 		if(process.env.MCE_THROW_ERROR === 'true') {
 			throw err
 		} else {
@@ -117,7 +117,7 @@ function findRequestedCommand( preArguments: string[] ) {
 		let [requestedCMD, ...programArgs] = preArguments
 		if(!multiCommands) {
 			programArgs = [requestedCMD, ...programArgs].filter(f => f)
-			pathMapping.set('index', '../index')
+			pathMapping.set('index', cliPath('index'))
 			requestedCMD = 'index'
 		}
 		if(requestedCMD && !pathMapping.has(requestedCMD)) {
@@ -150,7 +150,7 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value: unknown }[], Command: Command, final_args: unknown[]) {
 	mappedOptions.reduce((command, option) => {
 		if(option.tag === 'verbose') option.value = parseInt(process.env.MCE_VERBOSE)
-		if(option.tag === 'dryRun') {
+		if(option.tag === 'dryRun' && option.value) {
 			process.env.MCE_DRY_RUN = 'true'
 		}
 		if ((command as any)._legacyOptions) {

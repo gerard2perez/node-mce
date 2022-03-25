@@ -13,7 +13,7 @@ export function pathResolver(_template: JoinPath, _target?: JoinPath) {
 }
 
 export function cliPath (...path: string[]) {
-    return resolve(process.env.MCE_ROOT, ...path).replace( /* istanbul ignore next */ process.env.MCE_TEST === 'test' ? 'src/' : '', '')
+    return resolve(process.env.MCE_ROOT, ...path)
 }
 export function callerPath (...path: string[]) {
     return resolve(process.cwd(), ...path)

@@ -20,7 +20,6 @@ export function wrt() {
 }
 export function cmp(file_contents: unknown = {}) {
 	readFileSync.mockReturnValueOnce(JSON.stringify(file_contents))
-	
 }
 export function unl() {
 	

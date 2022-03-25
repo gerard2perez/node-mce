@@ -6,34 +6,34 @@ describe('Arguments Parsing', () => {
 	beforeEach(() => Reset())
 	afterAll(() => Restore())
 	test('full rendering of arguments', async () => {
-		await expect(Execute('args8 -h')).resolves.toBe(readLog('args8.help.log'))
+		await expect(Execute('demo args8 -h')).resolves.toBe(readLog('args8.help.log'))
 	})
     test('throws if not required arguments', async() => {
-        const res = Execute('args8')
+        const res = Execute('demo args8')
         await expect(res).rejects.toThrow('Argument arg1 is required')
     })
     test('throws if optinal argument and variadac are together', async() => {
-        const res = Execute('args1 arg1 arg2')
+        const res = Execute('demo args1 arg1 arg2')
         await expect(res).rejects.toThrow('Optional Argument and Varidac cannot be next to each other')
     })
     test('thows errors if optional before than required argument', async () => {
-        const res = Execute('args2 arg1 arg2')
+        const res = Execute('demo args2 arg1 arg2')
         await expect(res).rejects.toThrow('All required arguments should go befere optional arguments')
     })
     test('throws argument count mismath', async () => {
-        const res = Execute('args3 arg1 arg2 arg3')
+        const res = Execute('demo args3 arg1 arg2 arg3')
         await expect(res).rejects.toThrow('Argument count missmatch')
     })
     test('throws argument type missmatch', async () => {
-        const res = Execute('args4 arg1 true')
+        const res = Execute('demo args4 arg1 true')
         await expect(res).rejects.toThrow('Argument type missmatch')
     })
     test('throws argument type missmatch', async () => {
-        const res = Execute('args4 10 arg2')
+        const res = Execute('demo args4 10 arg2')
         await expect(res).rejects.toThrow('Argument type missmatch')
 	})
 	test('parses arguments correctly', async () => {
-        const res = await Execute('args4 10 false')
+        const res = await Execute('demo args4 10 false')
         expect(res).toEqual({
 			arg1: 10,
 			arg2: false,
@@ -52,23 +52,23 @@ describe('Arguments Parsing', () => {
 		})
     })
     // test('throws argument does not match expression', async () => {
-    //     const res = Execute('args6 -n 5 -t xlk')
+    //     const res = Execute('demo args6 -n 5 -t xlk')
     //     await expect(res).rejects.toThrow('does not match expression')
     // })
     test('throws Missing value for argument', async () => {
-        const res = Execute('args6 -t lk -n -l')
+        const res = Execute('demo args6 -t lk -n -l')
         await expect(res).rejects.toThrow('Missing value for option: number')
     })
     test('throws duplicated short tag', async () => {
-        const res = Execute('args7 -h')
+        const res = Execute('demo args7 -h')
         await expect(res).rejects.toThrow('Duplicated short tag')
     })
     test('render help', async () => {
-		const help = await Execute('args6 -h')
+		const help = await Execute('demo args6 -h')
 		expect(help).toBeDefined()
     })
     test('Varidac argument can only be in last place', async () => {
-		const res = Execute('args5 true 10 arg2 -n=r -f=a')
+		const res = Execute('demo args5 true 10 arg2 -n=r -f=a')
         await expect(res).rejects.toThrow('Varidac argument can only be in last place')
 	})
 })

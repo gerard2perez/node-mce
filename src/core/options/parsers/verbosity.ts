@@ -6,10 +6,10 @@ Proprietary and confidential
 
 File: verbosity.ts
 Created:  2022-03-23T21:38:52.029Z
-Modified: 2022-03-24T06:16:51.221Z
+Modified: 2022-03-25T18:14:11.648Z
 */
 
-import { IOptionParser } from '../custom'
+import { IOptionParser } from './option-parser'
 import { RegisterClassParser } from './register-parser'
 declare global {
 	namespace MCE {
@@ -20,15 +20,16 @@ declare global {
 }
 
 @RegisterClassParser
-export class VerbosityParser implements IOptionParser {
+export class VerbosityParser extends IOptionParser {
 	parseValue(str: string): unknown {
 		return str ? str.split(',').length : 0
 	}
 	helpLongTag(tag: string): [tag: string, param: string] {
-		return [`--${tag}`, '']
+		return [tag, '']
 	}
 	helpDefaults(data: unknown): string {
 		return ''
 	}
 	
 }
+export type Verbosity = number
