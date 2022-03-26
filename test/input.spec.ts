@@ -1,8 +1,7 @@
 jest.mock('@gerard2p/mce/mockable/fs')
 import { input, output, Reset, Restore, SetProjectPath } from './@utils/loader'
-import { confirm, override, question } from '@gerard2p/mce/input'
 import { existsSync } from '@gerard2p/mce/mockable/fs'
-import { spin, wait } from '@gerard2p/mce/spinner'
+import { spin, wait, confirm, override, question } from '@gerard2p/mce'
 import { mockOverride } from '@gerard2p/mce/test'
 describe('test user interactions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))

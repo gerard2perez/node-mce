@@ -1,7 +1,7 @@
 import { dryRun } from './dry-run'
 import { writeFileSync } from '../mockable/fs'
 import { fs_interface } from './interface'
-import { ok } from '../console'
+import { ok } from '../output'
 import { RegisterDryRun } from './decorator'
 
 function _write(this: fs_interface, target: string, content: string) {

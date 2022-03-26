@@ -6,20 +6,22 @@ Proprietary and confidential
 
 File: autowrap.ts
 Created:  2022-03-17T05:38:39.225Z
-Modified: 2022-03-24T08:03:39.820Z
+Modified: 2022-03-26T03:15:17.417Z
 */
 
-import { streams } from '../system-streams'
-import { RegisterLogFormatter } from './string-formatters'
+import { streams } from '../../system-streams'
+import { RegisterLogFormater } from './register-log-formater'
 
 const wordWrap = (size: number) =>
 	new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
 
-RegisterLogFormatter((text = '', start = 0) => {
+RegisterLogFormater((text = '', start = 0) => {
 	let width = 80
 	try {
 		width = streams.output.getWindowSize()[0]
-	} catch (ex) {}
+	} catch (ex) {
+		void 0
+	}
 
 	const size = width - start
 	let result = ((text || '').match(wordWrap(size)) as string[]) || [text]

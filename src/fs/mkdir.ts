@@ -1,7 +1,7 @@
 import { dryRun } from  './dry-run'
 import { existsSync, MakeDirectoryOptions, mkdirSync } from '../mockable/fs'
 import { fs_interface } from './interface'
-import { ok } from '../console'
+import { ok } from '../output'
 import { RegisterDryRun } from './decorator'
 
 function _mkdir(this: fs_interface, dir: string, options?: MakeDirectoryOptions) {

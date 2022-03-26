@@ -4,12 +4,9 @@ Copyright (C) 2022 Gerardo Pérez Pérez - All Rights Reserved
 Unauthorized copying of this file, via any medium is strictly prohibited 
 Proprietary and confidential
 
-File: global-teardown.ts
-Created:  2022-03-24T20:14:53.633Z
-Modified: 2022-03-24T20:23:53.260Z
+File: path-mapper.ts
+Created:  2022-03-26T04:45:08.131Z
+Modified: 2022-03-26T04:45:20.833Z
 */
 
-import { input, output } from '../../src/test/mce'
-
-output.destroy()
-input.destroy()
+export const pathMapping = new Map<string, string>()

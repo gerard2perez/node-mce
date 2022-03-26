@@ -6,11 +6,12 @@ Proprietary and confidential
 
 File: common.ts
 Created:  2022-03-17T05:48:01.985Z
-Modified: 2022-03-23T01:06:01.941Z
+Modified: 2022-03-26T03:51:27.004Z
 */
 
-import { tagcompiler } from './tag-compiler'
-import { verbosity } from '../console'
+import { tagcompiler, tagReducer } from '../tag-compiler'
+import { print } from '../print'
+import { verbosity } from './verbosity'
 
 export function info(text: TemplateStringsArray, ...values: any[]) {
 	verbosity(2)`{info|sy|cyan} ${tagcompiler(text, ...values)}`
@@ -19,14 +20,15 @@ export function warn(text: TemplateStringsArray, ...values: any[]) {
 	verbosity(1)`{warning|sy|yellow} ${tagcompiler(text, ...values)}`
 }
 export function error(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(0)`{error|sy|red} ${tagcompiler(text, ...values)}`
+	print`{error|sy|red} ${tagReducer(text, ...values)}`
 }
 export function ok(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(0)`{success|sy|green} ${tagcompiler(text, ...values)}`
+	print`{success|sy|green} ${tagReducer(text, ...values)}`
 }
 export function updated(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(0)`{updated|sy|blueBright} ${tagcompiler(text, ...values)}`
+	print`{updated|sy|blueBright} ${tagReducer(text, ...values)}`
 }
 export function created(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(0)`{success|sy|blueBright} ${tagcompiler(text, ...values)}`
+	
+	print`{success|sy|blueBright} ${tagReducer(text, values)}`
 }

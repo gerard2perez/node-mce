@@ -8,9 +8,9 @@ File: help.ts
 Created:  2022-01-31T06:31:09.268Z
 Modified: 2022-03-25T20:47:37.670Z
 */
-import { write } from '../console'
+import { write } from '../output'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
-import { Color, Background } from '../formatters'
+import { Color, Background } from '../output/tag-formaters'
 export interface HelpTheme {
 	description: {
 		primary: [Color, Background?],

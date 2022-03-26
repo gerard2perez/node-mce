@@ -3,11 +3,10 @@ jest.mock('@gerard2p/mce/mockable/fs')
 process.env.MCE_DEV = 'true'
 process.env.MCE_TEST = 'test'
 process.env.MCE_VERBOSE = '0'
-export { input, output } from '@gerard2p/mce/test'
 import { existsSync, readdirSync } from '@gerard2p/mce/mockable/fs'
-import { Execute, pack, Reset, SetCommandsLocation } from '@gerard2p/mce/test'
+import { input, output, Execute, pack, Reset, SetCommandsLocation } from '@gerard2p/mce/test'
 import { join, resolve } from 'path'
-export { Reset, Execute }
+export { Reset, Execute, input, output }
 
 const origin = join(__dirname, '../../')
 SetCommandsLocation('./test/demo_project')

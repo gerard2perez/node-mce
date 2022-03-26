@@ -6,10 +6,10 @@ Proprietary and confidential
 
 File: colors.ts
 Created:  2022-03-17T05:33:55.174Z
-Modified: 2022-03-17T05:54:23.603Z
+Modified: 2022-03-26T04:10:03.549Z
 */
 import chalk from 'chalk'
-import { RegisterLogFormatter } from './string-formatters'
+import { RegisterLogFormater } from './register-log-formater'
 const Color = {
 	black: 'black', red: 'red', green: 'green', yellow: 'yellow', blue: 'blue', magenta: 'magenta', cyan: 'cyan', white: 'white',
 	blackBright: 'blackBright', grey: 'grey', gray: 'gray', redBright: 'redBright', greenBright: 'greenBright', yellowBright: 'yellowBright', blueBright: 'blueBright', magentaBright: 'magentaBright', cyanBright: 'cyanBright', whiteBright: 'whiteBright'
@@ -43,12 +43,8 @@ for( const id of chalkFns) {
     const fn = function(text: string) {
         return chalk[id](text)
     }
-    RegisterLogFormatter(fn, id)
+    RegisterLogFormater(fn, id)
 }
-export function cleanColor(text: string) {
-	// eslint-disable-next-line no-control-regex
-	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
-}
-RegisterLogFormatter(function(text: string, r, g, b) {
+RegisterLogFormater(function(text: string, r, g, b) {
     return chalk.rgb(r, g, b)(text)
 }, 'rgb')

@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, unlinkSync } from '../../mockable/fs'
 import { basename, dirname, normalize, posix, relative } from 'path'
-import { print } from '../../console'
+import { print } from '../../output'
 import { callerPath } from '../../fs'
 
 export function copy(from: string, to: string) {

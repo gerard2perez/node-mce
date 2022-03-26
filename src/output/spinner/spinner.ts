@@ -3,9 +3,9 @@
  */
 import chalk from 'chalk'
 import type { WriteStream } from 'tty'
-import { streams } from '../system-streams'
+import { streams } from '../../system-streams'
 import { animations } from './animations'
-import { clearColors } from './clear-colors'
+import { cleanColor } from '../clean-color'
 import { hideCursor, showCursor } from './control'
 import { isTTYSupported } from './istty'
 import { wcwidth } from './wcwidth'
@@ -40,7 +40,7 @@ export class Spinner {
 	set text(value) {
 		this[TEXT] = value
 		const columns = this.stream.columns || /*istanbul ignore next*/80
-		this.lineCount = clearColors('--' + value).split('\n').reduce((count, line) => {
+		this.lineCount = cleanColor('--' + value).split('\n').reduce((count, line) => {
 			return count + Math.max(1, Math.ceil(wcwidth(line) / columns))
 		}, 0)
 	}

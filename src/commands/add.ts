@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { error } from '../console'
+import { error } from '../output'
 import { existsSync } from '../mockable/fs'
 import { callerPath, copy, pathResolver } from '../fs'
 export const description = 'Adds a new command to the git project.'

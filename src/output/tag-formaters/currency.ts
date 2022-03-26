@@ -6,13 +6,13 @@ Proprietary and confidential
 
 File: currency.ts
 Created:  2022-03-17T05:37:49.608Z
-Modified: 2022-03-17T05:41:46.185Z
+Modified: 2022-03-26T04:10:59.603Z
 */
 
-import { cleanColor } from './colors'
-import { RegisterLogFormatter } from './string-formatters'
+import { cleanColor } from '../clean-color'
+import { RegisterLogFormater } from './register-log-formater'
 
-RegisterLogFormatter( (number_like: string, currency = 'MXN') => {
+RegisterLogFormater( (number_like: string, currency = 'MXN') => {
 	const formatter = new Intl.NumberFormat('es', {
 		style: 'currency',
 		currency: currency.toUpperCase(),

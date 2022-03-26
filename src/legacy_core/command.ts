@@ -3,7 +3,7 @@
  */
 import chalk from 'chalk'
 import { UseSourceMaps } from '../@utils/user-sourcemaps'
-import { MainSpinner } from '../spinner'
+import { MainSpinner } from '../output/spinner'
 import { Argument } from './argument'
 import { HelpRenderer } from './help-renderer'
 import { Option, OptionKind, Parser } from './option'

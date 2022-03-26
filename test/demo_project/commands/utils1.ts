@@ -1,5 +1,4 @@
-import { verbosity, pause, resume, created, error, info, ok, updated, warn, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
-import { spin } from '@gerard2p/mce/spinner'
+import { spin, verbosity, pause, resume, created, error, info, ok, updated, warn, bool, collect, enumeration, floating, list, numeric, Parsed, range, text, verbose } from '@gerard2p/mce'
 import { callerPath, cliPath } from '@gerard2p/mce/fs'
 export const description = 'A description for your command'
 export const args = ''

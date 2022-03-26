@@ -4,7 +4,7 @@ import cspawn from 'cross-spawn'
 import { WriteStream } from 'tty'
 import { dryRun } from './fs/dry-run'
 import { SpawnStreams } from './mockable/spawn-streams'
-import { wait } from './spinner'
+import { wait } from './output/spinner'
 export { cspawn as rawSpawn }
 export function exec(cmd: string, cmdOptions: string[], /* istanbul ignore next */ options: SpawnOptions = {}) {
 	return new LiveStream(cmd, cmdOptions, options)

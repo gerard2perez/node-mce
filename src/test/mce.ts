@@ -4,11 +4,11 @@ import { STDOut } from './stdout'
 export const output = new STDOut
 export const input = new STDIn
 SetStreams(output, input)
-import { Program } from '../director'
-let NODE_MCE: Program
+import { CLIExecuter } from '../executer'
+let NODE_MCE: CLIExecuter
 type Options = {plugins: string, locals: string}
 export function SetCommandsLocation(path: string) {
-	NODE_MCE = new Program(path)
+	NODE_MCE = new CLIExecuter(path)
 	return NODE_MCE
 }
 export async function Execute(command: string, {plugins, locals}: Options = {} as Options ) {

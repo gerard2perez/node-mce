@@ -9,7 +9,7 @@ Created:  2022-03-23T16:59:17.536Z
 Modified: 2022-03-26T01:04:05.179Z
 */
 
-import { tagcompiler } from '../console'
+import { tagcompiler } from '../output'
 
 
 export class MCError extends Error {

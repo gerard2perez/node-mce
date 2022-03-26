@@ -6,13 +6,13 @@ Proprietary and confidential
 
 File: subcommands.ts
 Created:  2022-03-18T23:47:40.659Z
-Modified: 2022-03-22T16:34:11.646Z
+Modified: 2022-03-26T03:59:58.467Z
 */
 
 import { DefaultHelpRenderer } from '../@utils/help.renderer'
 import { DefaultTheme } from '../@utils/theme'
 import { Command, Option, cleanColor, tagcompiler } from '../core'
-import { Trie } from '../dt/trie'
+import { Trie } from '../@utils/trie'
 import { cliPath } from '../fs'
 import { LoadModule } from '../module-loader'
 async function completeCommands(cmd: string, input: string, commands: string[]) {

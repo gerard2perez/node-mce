@@ -6,15 +6,17 @@ Proprietary and confidential
 
 File: tag-compiler.ts
 Created:  2022-03-17T05:42:51.036Z
-Modified: 2022-03-17T05:43:10.155Z
+Modified: 2022-03-26T03:52:57.046Z
 */
 
-import { GetLogFormatter } from '../formatters'
-
-export function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
-    let complete = text.reduce((message, part, index) => {
+import { GetLogFormater } from './tag-formaters'
+export function tagReducer(text: TemplateStringsArray, ...values: any[]) {
+	return text.reduce((message, part, index) => {
         return `${message}${part}${values[index]||''}`
     }, '')
+}
+export function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
+    let complete = tagReducer(text, values)
     const exp = /\{([^}{]*)\}/gm
     let result: RegExpExecArray
     
@@ -25,7 +27,7 @@ export function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
         let [value, ...pipesWithArgs] = fnWithPipes.split('|')
         for(const pipeWithArgs of pipesWithArgs) {
             const [pipeName, ...args] = pipeWithArgs.trim().split(':')
-			const pipe = GetLogFormatter(pipeName)
+			const pipe = GetLogFormater(pipeName)
 			// istanbul ignore else
             if(pipe) {
                 value = pipe(value, ...args) /* istanbul ignore next */ || ''

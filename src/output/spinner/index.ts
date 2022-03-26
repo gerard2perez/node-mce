@@ -1,8 +1,10 @@
 /**
  * @module @gerard2p/mce/spinner
  */
-import { ok } from '../console'
+import { ok } from '../verbosity'
 import { ISpinnerOptions, Spinner } from './spinner'
+export { SetSpinnerText } from './console'
+export * from './control'
 /** @ignore */
 export const MainSpinner = new Spinner({text: ''})
 export function wait(time=1000) {

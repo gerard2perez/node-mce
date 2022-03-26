@@ -1,5 +1,5 @@
 import { existsSync } from '../mockable/fs'
-import { spin } from '../spinner'
+import { spin } from '../output'
 import { unlink } from '../fs'
 import { confirm } from './confirm'
 

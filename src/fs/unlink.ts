@@ -2,7 +2,7 @@ import { dryRun } from './dry-run'
 import { existsSync, lstatSync, readdirSync, unlinkSync } from '../mockable/fs'
 import { RegisterDryRun } from './decorator'
 import { join } from 'path'
-import { print } from '../console'
+import { print } from '../output'
 function __unlink(dir: string, recursive = true) {
 	dir = this.project(dir)
 	if ( _unlink(dir, recursive) ) {

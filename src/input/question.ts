@@ -1,6 +1,5 @@
 import { createInterface, moveCursor } from 'readline'
-import { write } from '../console'
-import { MainSpinner } from '../spinner'
+import { write, MainSpinner } from '../output'
 import { streams } from '../system-streams'
 export function question (display: string): Promise<string> {
     const rl = createInterface({

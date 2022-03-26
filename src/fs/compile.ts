@@ -1,7 +1,7 @@
 import { dryRun } from './dry-run'
 import { readFileSync, writeFileSync } from '../mockable/fs'
 import { fs_interface } from './interface'
-import { ok } from '../console'
+import { ok } from '../output'
 import { RegisterDryRun } from './decorator'
 import { iter } from '../@utils/iter'
 export function _render(this: fs_interface, source: string, data: unknown) {

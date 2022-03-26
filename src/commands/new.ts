@@ -1,13 +1,12 @@
-import { error } from '../console'
+import { error, SetSpinnerText, spin } from '../output'
 import { override } from '../input'
-import { spin } from '../spinner'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
 import { alias, arg, Command, description, DryRun, opt, Options } from '../core'
 import { PackageJSON } from '../@utils/package-json'
 import { exec } from '../spawn'
-import { SetSpinnerText } from '../spinner/console'
+
 function dryExec<T>(cmd: string, cmdOptions: string[], options?: SpawnOptions) {
 	return function(onErrorReturn: T, wait_ms?: number, dryRunReturn = '') {
 		return exec(cmd, cmdOptions, options)

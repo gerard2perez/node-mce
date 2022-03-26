@@ -12,7 +12,7 @@ import { pack } from '@gerard2p/mce/test/package-json'
 import cspawn from 'cross-spawn'
 import { SpawnStreams } from '@gerard2p/mce/mockable/spawn-streams'
 import { input, mockOverride, STDOut } from '@gerard2p/mce/test'
-import { wait } from '@gerard2p/mce/spinner'
+import { wait } from '@gerard2p/mce'
 function buildTree(optional = true) {
 	$tree.root(
 		$tree.cpy(),

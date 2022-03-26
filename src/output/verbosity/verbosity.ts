@@ -4,20 +4,18 @@ Copyright (C) 2022 Gerardo Pérez Pérez - All Rights Reserved
 Unauthorized copying of this file, via any medium is strictly prohibited 
 Proprietary and confidential
 
-File: verbose.ts
+File: verbosity.ts
 Created:  2022-03-17T05:46:01.690Z
-Modified: 2022-03-23T00:59:35.616Z
+Modified: 2022-03-26T04:18:03.288Z
 */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { MainSpinner } from '../spinner'
-import { tagcompiler } from './tag-compiler'
+import { tagcompiler } from '../tag-compiler'
 
-export function verbosity(lvl: number, newLine?: boolean) {
-	newLine = newLine !== false
+export function verbosity(lvl: number) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
 		return (text: TemplateStringsArray, ...values: any[]) => { 
-			MainSpinner.log`${tagcompiler(text, ...values)}${newLine?'\n':''}`
+			MainSpinner.log`${tagcompiler(text, ...values)}\n`
 		}	
 	}
-	return () => {}
+	return () => void 0
 }

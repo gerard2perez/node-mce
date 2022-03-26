@@ -2,7 +2,7 @@ import { bool, Parsed, text } from '../../legacy_core/options'
 import { exec } from '../../spawn'
 import { SyncFiles } from './sync'
 import { TSConfig } from '../../@utils/tsconfig'
-import { print } from '../../console'
+import { print } from '../../output'
 import { existsSync, unlinkSync } from '../../mockable/fs'
 let firstReport = false
 export const options = {
