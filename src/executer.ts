@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: executer.ts
 Created:  2022-01-30T04:26:12.869Z
-Modified: 2022-03-24T23:53:46.993Z
+Modified: 2022-03-26T03:00:23.470Z
 */
 import { callerPath, cliPath, PackageJSON } from '.'
 import { DefaultHelpRenderer } from './@utils/help.renderer'
@@ -18,9 +18,9 @@ import { basename, join } from 'path'
 import { subCommandCompletition } from './completition/subcommands'
 import { UseSourceMaps } from './@utils/user-sourcemaps'
 import { locations } from './program'
-import { ARGUMENT_COUNT_ERROR, MCError } from './@utils/mce-error'
+import { ARGUMENT_COUNT_ERROR, UNEXPECTED_ARGUMENTS_PASSED, MCError } from './@utils/mce-error'
 process.env.MCE_VERBOSE = 0 as any
-const pathMapping = new Map<string, string>()
+let pathMapping = new Map<string, string>()
 function findCommands(path: string, prefix = '') {
 	const res = readdirSync(path).filter(p => !p.endsWith('.map') && !p.endsWith('.d.ts')).map(p => p.replace('.js', '').replace('.ts', ''))
 	for(const filePath of res) {
@@ -45,14 +45,13 @@ function LoadPlugins(keyword: string) {
 		const {dependencies, devDependencies} = new PackageJSON(cliPath('package.json').replace('src', '').replace('dist', ''))
 		const packages = Object.keys({...dependencies, ...devDependencies})
 		for(let i=0; i< packages.length; i++) {
-			const { keywords = [], name } = new PackageJSON(callerPath('node_modules', packages[i], 'package.json'))
+			const { keywords = [] } = new PackageJSON(callerPath('node_modules', packages[i], 'package.json'))
 			if(keywords.includes(keyword)) {
 				const commandsPath = callerPath('node_modules', packages[i], '@commands')
 				//TODO: find commands must return a fully qualified path
 				findCommands(commandsPath, packages[i]+':')
 			}
 		}
-		
 	} catch (_err) {
 		void 0
 	}
@@ -77,6 +76,7 @@ async function renderHelp(helpRequested: boolean, requestedCMD: string, commandN
 	return false
 }
 export async function ExecuterDirector(argv: string[], locals?: string, plugins?: string): Promise<unknown> {
+	pathMapping = new Map<string, string>()
 	const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
 	locations(_, _cmdName)
 	const commandName = basename(_cmdName)
@@ -104,7 +104,7 @@ export async function ExecuterDirector(argv: string[], locals?: string, plugins?
 			|| await hydrateCommand(requestedCMD, programArgs)
 	} catch(err) {
 		await UseSourceMaps(err)
-		console.log(err)
+		// console.log(err)
 		if(process.env.MCE_THROW_ERROR === 'true') {
 			throw err
 		} else {
@@ -114,16 +114,16 @@ export async function ExecuterDirector(argv: string[], locals?: string, plugins?
 }
 function findRequestedCommand( preArguments: string[] ) {
 	const multiCommands = pathMapping.size > 1
-		let [requestedCMD, ...programArgs] = preArguments
-		if(!multiCommands) {
-			programArgs = [requestedCMD, ...programArgs].filter(f => f)
-			pathMapping.set('index', cliPath('index'))
-			requestedCMD = 'index'
-		}
-		if(requestedCMD && !pathMapping.has(requestedCMD)) {
-			throw new MCError(0, `The requested command '{${requestedCMD}|cyan}' does not exists\n  Options: ${Array.from(pathMapping.keys()).join('  ')}\n`)
-		}
-		return { requestedCMD, programArgs}
+	let [requestedCMD, ...programArgs] = preArguments
+	if(!multiCommands) {
+		programArgs = [requestedCMD, ...programArgs].filter(f => f)
+		pathMapping.set('index', cliPath('index'))
+		requestedCMD = 'index'
+	}
+	if(requestedCMD && !pathMapping.has(requestedCMD)) {
+		throw new MCError(0, `The requested command '{${requestedCMD}|cyan}' does not exists\n  Options: ${Array.from(pathMapping.keys()).join('  ')}\n`)
+	}
+	return { requestedCMD, programArgs}
 }
 
 async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
@@ -139,12 +139,15 @@ async function hydrateCommand(requestedCMD: string, programArgs: string[]) {
 	const mappedArguments = argus.map(argument => ({ index: argument.index, tag: argument.name, value: argument.match(programArgs) }))
 	const final_args = [...mappedArguments].sort((a, b) => a.index - b.index).map(arg => arg.value)
 	const isLegacy = applyLegacyFixtures(mappedOptions, Command, final_args)
-	const arg_count = argus.length + (isLegacy && options.length>0 ? 1 : 0)
-	const len = Command.action.length || 1
+	const arg_count =  (Command as any).arg_count || argus.length
+	const len = final_args.length + programArgs.length
+	if(programArgs.length) {
+		throw new MCError(UNEXPECTED_ARGUMENTS_PASSED, `Unexpected arguments passed: ${programArgs.join(', ')}`)
+	}
 	if(arg_count !== len) {
 		throw new MCError(ARGUMENT_COUNT_ERROR, 'Argument count missmatch' +`${arg_count}!=${len}`)
 	}
-	return await Command.action(...final_args)
+	return await Command.action(...final_args, {arg_count, len, ...programArgs})
 }
 
 function applyLegacyFixtures(mappedOptions: { index: number; tag: string; value: unknown }[], Command: Command, final_args: unknown[]) {

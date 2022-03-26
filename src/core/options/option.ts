@@ -6,12 +6,12 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-25T18:38:52.164Z
+Modified: 2022-03-25T23:34:18.195Z
 */
 import { MCError, MISSING_VALUE_OPTION } from '../../@utils/mce-error'
 import 'reflect-metadata'
 import { mOptions, getMetadata, MetadataOption } from '../metadata'
-import { DefaultDescription, GetDefaultParser, GetParser, GetTagParser, ValueParsers } from './parsers'
+import { DefaultDescription, GetDefaultParser, GetParser, GetTagParser, ParserHasValue, ValueParsers } from './parsers'
 
 export class Option {
 	static Get(target: unknown): Option[] {
@@ -32,11 +32,15 @@ export class Option {
 			this.description = DefaultDescription(option.property)
 		}
 		if(typeof option.kind === 'string') {
-			let [_, k1, k2] = option.kind.match(/(.*)<(.*)>/) || [null, option.kind]
-			this.kind = [k1, k2].filter(k => k).map(k => k.toLowerCase()) as Array<ValueParsers>
+			let [_, k1, k2] = option.kind.toLowerCase().match(/(.*)<(.*)>/) || [null, option.kind.toLocaleLowerCase()]
+			this.kind = [k1, k2].filter(k => k) as Array<ValueParsers>
 			k1 = this.kind[0]
 			this.defaults =  option.defaults || (k1 === 'boolean' ? false : option.defaults)
-			this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
+			this.hasValue =  ParserHasValue(k1) 
+			//TODO: remove this, final value must be returned from ParserHasValue()
+			if(this.hasValue === undefined) {
+				this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
+			}
 		} else {
 			this.kind = ['enum']
 			this.hasValue = true

@@ -11,7 +11,7 @@ Modified: 2022-03-25T18:36:42.922Z
 
 import { IOptionParser } from './option-parser'
 import { booleanParser, RegisterClassParser } from './register-parser'
-@RegisterClassParser
+@RegisterClassParser({ simple: true })
 export class DryRunParser extends IOptionParser {
 	parseValue(...values: unknown[]): unknown {
 		return booleanParser(values[0] as string)

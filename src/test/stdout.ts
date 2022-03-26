@@ -1,6 +1,7 @@
 /* eslint-disable no-control-regex */
 import { Stream } from 'stream'
 export class STDOut extends Stream.Writable {
+	columns = 80
 	content = ''
 	isFake = true
 	isTTY = true

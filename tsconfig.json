@@ -1,8 +1,4 @@
 {
-  "ts-node": {
-    "compiler": "ttypescript",
-    "swc": true
-  },
   "compilerOptions": {
     "resolveJsonModule": true,
     "baseUrl": "./src",

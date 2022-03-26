@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: index.ts
 Created:  2022-03-17T05:32:55.954Z
-Modified: 2022-03-17T05:41:52.766Z
+Modified: 2022-03-26T01:46:21.237Z
 */
 
 export * from './string-formatters'
@@ -15,3 +15,4 @@ export * from './ico'
 export * from './padding'
 export * from './currency'
 export * from './autowrap'
+export * from './console'

@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: verbosity.ts
 Created:  2022-03-23T21:38:52.029Z
-Modified: 2022-03-25T18:14:11.648Z
+Modified: 2022-03-25T23:02:15.700Z
 */
 
 import { IOptionParser } from './option-parser'
@@ -19,7 +19,7 @@ declare global {
 	}
 }
 
-@RegisterClassParser
+@RegisterClassParser({simple: true})
 export class VerbosityParser extends IOptionParser {
 	parseValue(str: string): unknown {
 		return str ? str.split(',').length : 0

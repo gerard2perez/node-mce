@@ -6,25 +6,30 @@ Proprietary and confidential
 
 File: module-loader.ts
 Created:  2022-03-17T04:30:50.811Z
-Modified: 2022-03-25T18:41:47.020Z
+Modified: 2022-03-25T21:26:27.027Z
 */
 import { basename } from 'path'
 import { Command as OldCommand, Option as OldOption, OptionKind, Parser} from './legacy_core'
 import { Argument, Command, Insert, mArguments, mDescription, mOptions, Option } from './core'
 import 'reflect-metadata'
+const Cache = new Map<string, Ctor>()
 export type Ctor =  new () => Command
 export async function LoadModule(path: string, forcedName?: string): Promise<Ctor|undefined> {
 	const fname = basename(path)
+	if(Cache.has(path)) {
+		return Promise.resolve(Cache.get(path))
+	}
 	return await import(path).then(m => {
 		const { action, default: compileClass } = m
 		if( action ) {
+			const ocmd = new OldCommand('mce', basename(path), m, false)
 			const {[fname]: runtimeClass} = {
 				[fname]: class extends Command {
 					public _legacyOptions = {}
 					action = m.action
+					arg_count = ocmd.arguments.length + 1
 				}
 			}
-			const ocmd = new OldCommand('mce', basename(path), m, false)
 			for(const oArg of ocmd.arguments) {
 				if(oArg.type==='bool')oArg.type = 'boolean'
 				const nArg = new Argument({
@@ -66,6 +71,7 @@ export async function LoadModule(path: string, forcedName?: string): Promise<Cto
 			module.prototype
 		)
 		Reflect.defineMetadata(Command, forcedName || fname, module.prototype)
+		Cache.set(path, module)
 		return module
 	}).catch(_ => {
 		throw _

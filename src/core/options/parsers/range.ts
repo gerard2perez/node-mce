@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: rage.ts
 Created:  2022-03-24T06:27:20.178Z
-Modified: 2022-03-25T17:57:27.141Z
+Modified: 2022-03-25T23:02:19.249Z
 */
 import { IOptionParser } from './option-parser'
 import { RegisterClassParser } from './register-parser'
@@ -17,7 +17,7 @@ declare global {
 		}
 	}
 }
-@RegisterClassParser
+@RegisterClassParser()
 export class RangeParser extends IOptionParser {
 	parseValue(str: string|string[]): unknown {
 		if( str instanceof Array) {

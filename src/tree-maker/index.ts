@@ -32,7 +32,7 @@ export const cmp = makeChainable(fs.compile)
  * removes a file or a directory
  */
 export const unl = makeChainable(fs.unlink)
-export * from './console'
+export * from '../formatters'
 export { PackageJSON2Chain } from './package-json'
 // istanbul ignore next
 export { makeChainable }

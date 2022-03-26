@@ -6,13 +6,13 @@ Proprietary and confidential
 
 File: register-parser.ts
 Created:  2022-03-23T21:42:00.657Z
-Modified: 2022-03-25T18:38:47.297Z
+Modified: 2022-03-25T23:41:16.185Z
 */
+import 'reflect-metadata'
 const collectionParser = (str: string|unknown[]) => {
 	if(str instanceof Array) return str
 	return str ? str.replace(/^\[|\]$/gm, '').split(',') : []
 }
-
 declare global {
 	namespace MCE {
 		// eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -29,8 +29,7 @@ export function booleanParser(str: string|boolean) {
 		if(str == 'false') return false
 		return undefined
 	}
-} 
-
+}
 const stringParser = str => str
 function booleanTagParser(tag: string) {
 	return [tag]
@@ -39,7 +38,6 @@ function namedTagParser(tag: string, name: string ): [string, string] {
 	return [tag, `<${name}>`]
 }
 function defaultParser(tag) { return tag ? `${tag}` : '' }
-
 const ValueParsers = {
 	string: stringParser,
 	collection: collectionParser,
@@ -54,25 +52,37 @@ const helpTagsParser = {
 }
 const helpDefaultsParser = { boolean: val => val }
 const defaultDescriptions = {}
-
 type CorceKind = typeof ValueParsers
-type Coerce<T = CorceKind> = {
-	[k in keyof T]: T[k]
-}
+type Coerce<T = CorceKind> = { [k in keyof T]: T[k] }
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Parsers extends MCE.ValueParsers, Coerce {
-	
-}
+interface Parsers extends MCE.ValueParsers, Coerce {}
 export type ValueParsers = keyof Parsers | `List<${keyof Parsers}>`
 type ParserFunction = (str: string, extra?: unknown) => unknown
 type TagParser = typeof namedTagParser
-
-export function RegisterClassParser(constructor: new () => unknown) {
-	const name = constructor.name.replace('Parser', '').toLowerCase()
-	Add(name, ValueParsers, constructor.prototype.parseValue)
-	Add(name, helpTagsParser, constructor.prototype.helpLongTag)
-	Add(name, helpDefaultsParser, constructor.prototype.helpDefaults)
-	Add(name, defaultDescriptions, (constructor as any).defaultDescription)
+const TYPES = new Map<string, symbol>()
+interface ParserOptions {
+	/**
+	 * Idicates if the option has a value (false)
+	 * or if the options is a simple tag (true)
+	 */
+	simple?: boolean
+}
+export function RegisterClassParser({ simple }: ParserOptions  = {}) {
+	return function(constructor: new () => unknown) {
+		const name = constructor.name.replace('Parser', '').toLowerCase()
+		TYPES.set(name, Symbol(name))
+		Add(name, ValueParsers, constructor.prototype.parseValue)
+		Add(name, helpTagsParser, constructor.prototype.helpLongTag)
+		Add(name, helpDefaultsParser, constructor.prototype.helpDefaults)
+		Add(name, defaultDescriptions, (constructor as any).defaultDescription)
+		const KEY = TYPES.get(name)
+		Reflect.defineMetadata(KEY, constructor.prototype.parseValue, RegisterClassParser, 'value')
+		Reflect.defineMetadata(KEY, constructor.prototype.helpLongTag, RegisterClassParser, 'tag')
+		Reflect.defineMetadata(KEY, constructor.prototype.helpDefaults, RegisterClassParser, 'default')
+		Reflect.defineMetadata(KEY, (constructor as any).defaultDescription, RegisterClassParser, 'description')
+		Reflect.defineMetadata(KEY, !simple, RegisterClassParser, 'hasValue')
+	}
+	
 }
 function Add(name: string, collection: any, parser: ParserFunction) {
 	name = name.toLocaleLowerCase()
@@ -82,15 +92,18 @@ function Add(name: string, collection: any, parser: ParserFunction) {
 		collection[name] = parser
 	}
 }
+export function ParserHasValue(name: string) {
+	return Reflect.getMetadata(TYPES.get(name), RegisterClassParser, 'hasValue')
+}
 export function GetParser(name: string): ParserFunction {
-	return ValueParsers[name] || stringParser
+	return Reflect.getMetadata(TYPES.get(name), RegisterClassParser, 'value') || ValueParsers[name] || stringParser
 }
 export function GetTagParser(name: string): TagParser {
-	return helpTagsParser[name] || namedTagParser
+	return Reflect.getMetadata(TYPES.get(name), RegisterClassParser, 'tag') || helpTagsParser[name] || namedTagParser
 }
 export function GetDefaultParser(name: string): ParserFunction {
-	return helpDefaultsParser[name] || defaultParser
+	return Reflect.getMetadata(TYPES.get(name), RegisterClassParser, 'default') || helpDefaultsParser[name] || defaultParser
 }
 export function DefaultDescription(name: string): string {
-	return defaultDescriptions[name.toLowerCase()]
+	return Reflect.getMetadata(TYPES.get(name), RegisterClassParser, 'description') || defaultDescriptions[name.toLowerCase()]
 }

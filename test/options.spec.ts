@@ -1,8 +1,16 @@
-import { Execute, Reset, Restore, SetProjectPath } from './@utils/loader'
+jest.mock('cross-spawn')
+jest.mock('@gerard2p/mce/mockable/spawn-streams')
+jest.mock('@gerard2p/mce/mockable/fs')
+jest.mock('chokidar')
+jest.mock('glob')
+import { Execute, find, Reset, Restore, SetProjectPath } from './@utils/loader'
 
 describe('Options Parsing', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
-	beforeEach(() => Reset())
+	beforeEach(() => {
+		Reset()
+		find.commands('options', 'utils1')
+	})
 	afterAll(() => Restore())
     test('get defaults options', async () => {
         const res = await Execute('demo options file.js')
@@ -26,9 +34,9 @@ describe('Options Parsing', () => {
     })
     test('parses options values', async () => {
         const res = await Execute(
-			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
+			'demo options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
 			)
-        expect(res).toEqual({
+        expect(res)	.toEqual({
             arg1: 'file.js',
             varidac: [
                 'var2'
@@ -52,7 +60,7 @@ describe('Options Parsing', () => {
 	})
 	test('parses options set string to undefined', async () => {
 		const res = await Execute(
-			'options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
+			'demo options file.js --enumeration single var2 --number 10 --floating 1.258 --range 2..55 --text demo --bool --list h1,h2,h5 --collect h3 --collect h6 --verbose'
 			)
 		expect(res).toEqual({
 			arg1: 'file.js',
@@ -78,7 +86,7 @@ describe('Options Parsing', () => {
 	})
     test('parses options values with symbol =', async () => {
         const res = await Execute(
-            'options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
+            'demo options file.js --enumeration single var2 --number=5 --floating=12.58 --range=2..55 --text=demo --bool --list=h10,h21 --collect=h30 --collect=h3 --collect=h6'
             )
         expect(res).toEqual({
             arg1: 'file.js',
@@ -104,7 +112,7 @@ describe('Options Parsing', () => {
     })
     test('parses options values with short tags', async () => {
         const res = await Execute(
-            'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'
+            'demo options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b -l=h10,h21 -c=h30 -c=h3 -c=h6'
             )
         expect(res).toEqual({
             arg1: 'file.js',
@@ -130,7 +138,7 @@ describe('Options Parsing', () => {
 	})
 	// test('parses options values with short tags (misstype)', async () => {
     //     const res = await Execute(
-    //         'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
+    //         'demo options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
     //         )
     //     expect(res).toEqual({
     //         arg1: 'file.js',
@@ -157,13 +165,13 @@ describe('Options Parsing', () => {
     // })
 	test('Invalid options passed throw error', async () => {
         const res = Execute(
-            'options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
+            'demo options file.js -e git var2 -n=5 -f=12.58 -r=2..55 -t=demo -b --l=h10,h21 -c=h30 -c=h3 -c=h6'
             )
         await expect(res).rejects.toThrow('This command does not support this options: --l')
     })
     test('parses options mixed formats', async () => {
         const res = await Execute(
-            'options file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
+            'demo options file.js --enumeration single var2 -n=5 --floating=12.58 -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             )
         expect(res).toEqual({
             arg1: 'file.js',
@@ -189,7 +197,7 @@ describe('Options Parsing', () => {
 	})
 	test('multiple short tags together', async () => {
 		const res = await Execute(
-			'options file.js -e single var2 -nf 5 12.58 -rtb 2..55 demo --list=h10,h21 --collect=h30 --collect=h3 --collect=h6 -vvv'
+			'demo options file.js -e single var2 -nf 5 12.58 -rtb 2..55 demo --list=h10,h21 --collect=h30 --collect=h3 --collect=h6 -vvv'
 			)
 		expect(res).toEqual({
 			arg1: 'file.js',
@@ -215,7 +223,7 @@ describe('Options Parsing', () => {
 	})
     test('parses options mixed formats', async () => {
         const res = await Execute(
-            'options file.js --enumeration single var2 -n=5 --floating=gb -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
+            'demo options file.js --enumeration single var2 -n=5 --floating=gb -r 2..55 --text demo --bool --list=h10,h21 -c=h30 --collect h3 --collect=h6'
             )
         expect(res).toEqual({
             arg1: 'file.js',

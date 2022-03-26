@@ -1,9 +1,13 @@
-import { Execute, Reset, Restore, SetProjectPath } from './@utils/loader'
+jest.mock('@gerard2p/mce/mockable/fs')
+import { Execute, find, Reset, Restore, SetProjectPath } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 
 describe('Arguments Parsing', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
-	beforeEach(() => Reset())
+	beforeEach(() => {
+		Reset()
+		find.commands('args1', 'args2', 'args3', 'args4', 'args5', 'args6', 'args7', 'args8')
+	})
 	afterAll(() => Restore())
 	test('full rendering of arguments', async () => {
 		await expect(Execute('demo args8 -h')).resolves.toBe(readLog('args8.help.log'))
@@ -22,7 +26,7 @@ describe('Arguments Parsing', () => {
     })
     test('throws argument count mismath', async () => {
         const res = Execute('demo args3 arg1 arg2 arg3')
-        await expect(res).rejects.toThrow('Argument count missmatch')
+        await expect(res).rejects.toThrowError(/Unexpected arguments passed: .*/)
     })
     test('throws argument type missmatch', async () => {
         const res = Execute('demo args4 arg1 true')

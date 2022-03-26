@@ -4,7 +4,7 @@ import { spin } from '../spinner'
 import { cpy, dir, match, PackageJSON2Chain as pkg, wrt, cmp, root } from '../tree-maker'
 import { callerPath, cliPath, copy } from '../fs'
 import { SpawnOptions } from 'child_process'
-import { alias, arg, Command, description, DryRun, opt, Options, Verbosity } from '../core'
+import { alias, arg, Command, description, DryRun, opt, Options } from '../core'
 import { PackageJSON } from '../@utils/package-json'
 import { exec } from '../spawn'
 import { SetSpinnerText } from '../spinner/console'
@@ -25,7 +25,7 @@ enum Styles {
 
 let nproy
 async function createProjectExtructure(application: string, opt: Options<NewCommand>) {
-	let {author} = opt
+	let { author } = opt
 	await spin('Creating Files', async () => {
 		// istanbul ignore else
 		if(author === 'GIT_OR_NPM_USER') {

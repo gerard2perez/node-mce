@@ -1,9 +1,8 @@
 import { watch } from 'chokidar'
-import { existsSync, readFileSync, unlinkSync } from '../../mockable/fs'
-import { sync } from 'glob'
+import { existsSync, unlinkSync } from '../../mockable/fs'
 import { posix } from 'path'
-import { logger, unlink, Mode } from './copy'
-const {relative, join, normalize} = posix
+import { logger, Mode } from './copy'
+const {relative, join} = posix
 function genId(baseDir: string, file: string) {
 	return relative(baseDir, file.replace(/\\/, '/')).replace(/.ts|.js/, '')
 }
@@ -44,7 +43,5 @@ export function WatchIncremental(outDir: string, baseDir = './src') {
 			for(const file of transpiled) {
 				if(existsSync(file))unlinkSync(file)
 			}
-			// fileVersions.delete(source)
-			// logger(Mode.rmv, source)
 		})
 }

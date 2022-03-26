@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: enum.ts
 Created:  2022-03-24T04:58:55.502Z
-Modified: 2022-03-25T17:54:16.312Z
+Modified: 2022-03-25T23:01:01.018Z
 */
 
 import { IOptionParser } from './option-parser'
@@ -20,7 +20,7 @@ declare global {
 	}
 }
 
-@RegisterClassParser
+@RegisterClassParser()
 export class EnumParser extends IOptionParser {
 	parseValue(str: string|number, _enum: unknown): unknown {
 		if( _enum instanceof Array) {

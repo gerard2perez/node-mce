@@ -34,7 +34,6 @@ const config: Config.InitialOptions = {
 		'node_modules',
 		'coverage',
 		'lib',
-		'test/.*.spec.ts'
 	],
 	coverageDirectory: './coverage',
 	collectCoverage: true,

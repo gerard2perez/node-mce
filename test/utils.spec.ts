@@ -1,5 +1,5 @@
 jest.mock('@gerard2p/mce/mockable/fs')
-import { findCommands, Reset, Restore, SetProjectPath, Execute } from './@utils/loader'
+import { find, Reset, Restore, SetProjectPath, Execute } from './@utils/loader'
 import { readLog } from './@utils/log-reader'
 import { existsSync, readFileSync, writeFileSync, readdirSync } from '@gerard2p/mce/mockable/fs'
 import { dirname, join, resolve } from 'path'
@@ -8,7 +8,7 @@ describe('Utils functions', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => {
 		Reset()
-		findCommands('utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts')
+		find.commands('utils.ts', 'utils1.ts', 'utils2.ts', 'utils3.ts')
 	})
 	afterAll(() => Restore())
     test('gets correct paths', async () => {
@@ -43,24 +43,23 @@ describe('Utils functions', () => {
     })
 	test('executes a single command', async () => {
 		Reset()
-		findCommands('single.ts')
+		find.commands('single.ts')
         await Execute('demo -v')
-		findCommands('single')
+		find.commands('single')
 		await Execute('demo -h')
-		findCommands('single')
-		await Execute('demo ')
-		findCommands('single')
-		await Execute('demo --version')
-    })
-    test('executes a single command legacy', async () => {
-        await Execute('demo -v')
-		await Execute('demo -h')
-		await Execute('demo ')
+		find.commands('rest.ts')
+		await Execute('demo')
+		find.commands('single')
 		await Execute('demo --version')
     })
     test('test override util', async () => {
-		readdirSync.mockReset()
-		readdirSync.mockReturnValue([])
+		find.commands('utils', 'utils2', 'utils3')
+		readFileSync.mockReturnValueOnce(JSON.stringify({
+			name: 'demoapp',
+			bin: {demoapp: 'demoapp'},
+			main: 'index.js',
+			version: '0.0.0'
+		}))
 		const res: any = await Execute('demo utils3 -vvv')
 		expect(res).toHaveProperty('information')
 		const object = expect(res.information)

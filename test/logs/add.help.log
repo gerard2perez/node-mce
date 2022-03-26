@@ -1,4 +1,3 @@
-    mce add <command> [options]
+    mce add command:string [options]
       Adds a new command to the git project.
-        -h, --help   displays help for the command
-
+        -h, --help    Displays help for the command

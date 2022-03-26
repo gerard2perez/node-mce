@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-24T09:39:25.513Z
+Modified: 2022-03-26T01:09:09.879Z
 */
 import { ValueParsers, GetParser} from './options/parsers'
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
@@ -49,7 +49,7 @@ export class Argument {
 	}
 	match(args: string[]) {
 		if(this.rest) {
-			return this.parseValue(args.join(', '))
+			return this.parseValue(args.splice(0).join(', '))
 		}
 		return this.parseValue( args.shift() )
 	}

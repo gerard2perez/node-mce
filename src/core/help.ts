@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: help.ts
 Created:  2022-01-31T06:31:09.268Z
-Modified: 2022-03-25T18:54:41.909Z
+Modified: 2022-03-25T20:47:37.670Z
 */
 import { write } from '../console'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
@@ -30,7 +30,7 @@ export interface HelpTheme {
 	}
 
 }
-type HelpKey = keyof HelpTheme
+export type HelpKey = keyof HelpTheme
 export abstract class HelpRenderer {
 	constructor(protected theme: HelpTheme) {}
 	protected colorHelper(key: HelpKey) {
@@ -109,7 +109,6 @@ export abstract class HelpRenderer {
 		if(description) {
 			help += `{|padl:${ident+2}}{${description}|${primary}}\n`
 		}
-		
 		const args_fill = argus.map(opt => opt.name.length).sort().pop() + 3
 		const str_args = argus.filter(f => f.description).map(arg => `{|padl:${ident+3}}${this.arguments(arg, args_fill)}`).join('\n')
 		if(str_args.length) {
@@ -120,5 +119,4 @@ export abstract class HelpRenderer {
 		help += `${str_options}`
 		return help
 	}
-
 }
