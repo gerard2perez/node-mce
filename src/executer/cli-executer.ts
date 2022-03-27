@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: execute-director.ts
 Created:  2022-01-31T07:37:27.395Z
-Modified: 2022-03-26T05:12:03.160Z
+Modified: 2022-03-27T07:00:58.490Z
 */
 import { basename } from 'path'
 import { locations } from '../program'
@@ -39,21 +39,22 @@ export class CLIExecuter {
 	async execute<T=unknown>(argv: string[], data: GitStyle): Promise<T>
 	async execute<T=unknown>(argv: string[], data: SingleCommand): Promise<T>
 	async execute<T=unknown>(argv: string[], _data: GitStyle|SingleCommand) {
-		process.env.MCE_THROW_ERROR = _data.silentError ? 'false' : 'true'
-		const {plugins, locals} = _data as GitStyle
-		pathMapping.clear()
-		const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
-		locations(_, _cmdName)
-		const commandName = basename(_cmdName)
-		const version = await versionReporter( preArguments ) 
-		if(version) return version
-
-		const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
-		const helpRequested: boolean = help.match(preArguments)
-		const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
-		process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
-
 		try {
+			process.env.MCE_THROW_ERROR = _data.silentError ? 'false' : 'true'
+			const {plugins, locals} = _data as GitStyle
+			pathMapping.clear()
+			const [_, _cmdName, ...preArguments] = argv.join('=').split('=')
+			locations(_, _cmdName)
+			const commandName = basename(_cmdName)
+			const version = await versionReporter( preArguments ) 
+			if(version) return version
+
+			const help = new Option({ kind: 'boolean', defaults: false, property: 'help' }, '', '-h' )
+			const helpRequested: boolean = help.match(preArguments)
+			const verbosity = new Option({ kind: 'verbosity', defaults: undefined, property: 'verbose', allowMulti: true }, '', '-v' )
+			process.env.MCE_VERBOSE = verbosity.match(preArguments).toString()
+
+		
 			findCommands(cliPath('commands'))
 			if(plugins) {
 				LoadPlugins(plugins)

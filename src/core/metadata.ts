@@ -6,10 +6,11 @@ Proprietary and confidential
 w
 File: metatdata.ts
 Created:  2022-01-30T03:55:36.567Z
-Modified: 2022-03-24T08:07:23.394Z
+Modified: 2022-03-27T06:22:00.421Z
 */
 
-import { ValueParsers } from './options'
+import { ValueParsers } from './parser'
+
 
 export interface MetadataArgument {
 	property: string

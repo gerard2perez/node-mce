@@ -12,7 +12,7 @@ Modified: 2022-03-24T05:34:03.523Z
 import { WrapDecorator } from '../../@utils/decorator'
 import { Command } from '../../core/command'
 import { Insert, metaOption, mOptions } from '../metadata'
-import { Option } from '../options/option'
+import { Option } from '../option'
 
 function OptionDecorator(target: unknown, propertyKey: string, ...args: string[]) {
 	let short: string

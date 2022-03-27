@@ -6,11 +6,10 @@ Proprietary and confidential
 
 File: enum.ts
 Created:  2022-03-24T04:58:55.502Z
-Modified: 2022-03-25T23:01:01.018Z
+Modified: 2022-03-27T08:57:43.543Z
 */
 
-import { IOptionParser } from './option-parser'
-import { RegisterClassParser } from './register-parser'
+import { IValueParser, ITagParser, BaseParser, RegisterClassParser } from '../parser'
 
 declare global {
 	namespace MCE {
@@ -21,8 +20,8 @@ declare global {
 }
 
 @RegisterClassParser()
-export class EnumParser extends IOptionParser {
-	parseValue(str: string|number, _enum: unknown): unknown {
+export class EnumParser extends BaseParser implements ITagParser, IValueParser<number|string> {
+	parseValue(str: string|number, _enum: unknown) {
 		if( _enum instanceof Array) {
 			return _enum.includes(str) ? str : undefined
 		}
@@ -37,7 +36,5 @@ export class EnumParser extends IOptionParser {
 		const keys = Object.values(_enum).filter(v => typeof v !== 'number' && v !== data)
 		if(!data)data = keys.shift()
 		return `[{${data}|bold|underline}, ${keys.join(', ')}]`
-	}
-	
+	}	
 }
-

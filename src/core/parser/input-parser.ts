@@ -4,10 +4,11 @@ Copyright (C) 2022 Gerardo Pérez Pérez - All Rights Reserved
 Unauthorized copying of this file, via any medium is strictly prohibited 
 Proprietary and confidential
 
-File: index.ts
-Created:  2022-03-23T21:33:31.757Z
-Modified: 2022-03-23T22:19:53.679Z
+File: input-parser.ts
+Created:  2022-03-27T01:34:50.252Z
+Modified: 2022-03-27T01:41:42.624Z
 */
 
-export * from './option'
-export * from './parsers'
+export interface IValueParser<T> {
+	parseValue(value: T | string, ...extra: unknown[]): T
+}

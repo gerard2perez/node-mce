@@ -6,19 +6,21 @@ Proprietary and confidential
 
 File: rage.ts
 Created:  2022-03-24T06:27:20.178Z
-Modified: 2022-03-25T23:02:19.249Z
+Modified: 2022-03-27T07:58:41.390Z
 */
-import { IOptionParser } from './option-parser'
-import { RegisterClassParser } from './register-parser'
+import { IValueParser, BaseParser, RegisterClassParser, ITagParser } from '../parser'
 declare global {
 	namespace MCE {
 		interface ValueParsers {
 			range()
 		}
+		interface ListValueParsers {
+			range()
+		}
 	}
 }
-@RegisterClassParser()
-export class RangeParser extends IOptionParser {
+@RegisterClassParser({tagHasValue: true})
+export class RangeParser extends BaseParser implements ITagParser, IValueParser<unknown> {
 	parseValue(str: string|string[]): unknown {
 		if( str instanceof Array) {
 			return str
@@ -29,8 +31,11 @@ export class RangeParser extends IOptionParser {
 	helpLongTag(tag: string): [tag: string, param: string] {
 		return [tag, '<a>..<b>']
 	}
-	helpDefaults(data: number[]): string {
-		return data.length ? `[${data[0]}..${data[1]}]` : ''
+	helpDefaults(data: unknown): string {
+		if(data instanceof Array) {
+			return data && data.length > 1 ? `[${data[0]}..${data[1]}]` : ''
+		}
+		return ''
 	}
 	
 }

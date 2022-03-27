@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { CLIExecuter } = require('./executer')
+const { CLIExecuter } = require('@gerard2p/mce')
 new CLIExecuter(__dirname).execute(process.argv, {
 	plugins: 'mce',
 	silentError: true

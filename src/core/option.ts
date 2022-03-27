@@ -6,13 +6,12 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-25T23:34:18.195Z
+Modified: 2022-03-27T08:54:39.377Z
 */
-import { MCError, MISSING_VALUE_OPTION } from '../../@utils/mce-error'
+import { MCError, MISSING_VALUE_OPTION } from '../@utils/mce-error'
 import 'reflect-metadata'
-import { mOptions, getMetadata, MetadataOption } from '../metadata'
-import { DefaultDescription, GetDefaultParser, GetParser, GetTagParser, ParserHasValue, ValueParsers } from './parsers'
-
+import { mOptions, getMetadata, MetadataOption } from './metadata'
+import { DefaultDescription, GetDefaultParser, GetParser, GetTagParser, ParserHasValue, ValueParsers, GetParserChain, ParserFunction } from './parser'
 export class Option {
 	static Get(target: unknown): Option[] {
 		return getMetadata(mOptions, target) || []
@@ -22,49 +21,41 @@ export class Option {
 	defaults: unknown
 	private kind: Array<ValueParsers>
 	private metaKind: ValueParsers | Record<string, unknown>
+	private baseType: string
+	parserChain: ParserFunction
 	hasValue: boolean
 	private allowMulti: boolean
-	constructor(option: MetadataOption, public description: string, public short: string) {
-		this.name = option.property
+	constructor(metadata: MetadataOption, public description: string, public short: string) {
+		this.name = metadata.property
 		this.tag = '--' + this.name.replace(/([A-Z])/gm, '-$1').toLowerCase()
-		this.metaKind = option.kind
-		if(!this.description) {
-			this.description = DefaultDescription(option.property)
-		}
-		if(typeof option.kind === 'string') {
-			let [_, k1, k2] = option.kind.toLowerCase().match(/(.*)<(.*)>/) || [null, option.kind.toLocaleLowerCase()]
-			this.kind = [k1, k2].filter(k => k) as Array<ValueParsers>
-			k1 = this.kind[0]
-			this.defaults =  option.defaults || (k1 === 'boolean' ? false : option.defaults)
-			this.hasValue =  ParserHasValue(k1) 
-			//TODO: remove this, final value must be returned from ParserHasValue()
-			if(this.hasValue === undefined) {
-				this.hasValue = k1 !== 'boolean' && k1 !== 'verbosity'
-			}
+		this.metaKind = metadata.kind
+		this.allowMulti = metadata.allowMulti
+		if(typeof metadata.kind === 'string') {
+			let _list: boolean, _repeat: boolean
+			[this.baseType, this.parserChain, _list, _repeat] = GetParserChain(metadata.kind, this.checkValue.bind(this))
+			this.allowMulti = _list || _repeat
+			this.defaults =  metadata.defaults || (this.baseType === 'boolean' ? false : metadata.defaults)
+			this.hasValue =  ParserHasValue(this.baseType)
 		} else {
+			this.baseType = 'enum'
+			this.parserChain = GetParser('enum')
 			this.kind = ['enum']
 			this.hasValue = true
-			this.defaults = GetParser('enum')(option.defaults as string, this.metaKind)
+			this.allowMulti = false
+			this.defaults = this.parserChain(metadata.defaults as string, this.metaKind)
 		}
-		this.allowMulti = option.allowMulti
+		if(!this.description) {
+			this.description = DefaultDescription(this.baseType)
+		}
 	}
 	parseHelpDefaults() {
-		return GetDefaultParser(this.kind[1] || this.kind[0])(this.defaults as string, this.metaKind)
+		return GetDefaultParser(this.baseType)(this.defaults as string, this.metaKind)
 	}
 	parseHelpTag() {
-		return GetTagParser(this.kind[1] || this.kind[0])(this.tag, this.name)
+		return GetTagParser(this.baseType)(this.tag, this.name)
 	}
-
 	parseValue(value: string) {
-		const [first, second] = this.kind
-		const parser1 = GetParser(first)
-		let result: unknown = parser1(value, this.metaKind)
-		if(result instanceof Array) {
-			result = result.map(d => this.checkValue(GetParser(second)(d), value)) as unknown
-		}
-		
-		const res = (first === 'boolean' ? false : undefined) || result
-		return res
+		return this.parserChain(value, this.metaKind)
 	}
 	match<T = unknown>(args: string[]) {
 		const results = []
@@ -76,7 +67,7 @@ export class Option {
 				results.push(args[i])
 			}
 		}
-		if(this.kind.length===1 && results.length > 1 && !this.allowMulti) {
+		if(results.length > 1 && !this.allowMulti) {
 			throw Error(`Options ${this.tag}|${this.short} can only be prensnet once`)
 		}
 		const values = [] as string[]

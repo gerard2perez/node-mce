@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: tag-compiler.ts
 Created:  2022-03-17T05:42:51.036Z
-Modified: 2022-03-26T03:52:57.046Z
+Modified: 2022-03-26T06:27:30.409Z
 */
 
 import { GetLogFormater } from './tag-formaters'
@@ -16,7 +16,7 @@ export function tagReducer(text: TemplateStringsArray, ...values: any[]) {
     }, '')
 }
 export function tagcompiler(text: TemplateStringsArray, ...values: any[]) {
-    let complete = tagReducer(text, values)
+    let complete = tagReducer(text, ...values)
     const exp = /\{([^}{]*)\}/gm
     let result: RegExpExecArray
     
