@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "paths": {
       "@gerard2p/mce": ["../../src"],
       "@gerard2p/mce/*": ["../../src/*"]

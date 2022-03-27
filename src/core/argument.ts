@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: argument.ts
 Created:  2022-01-30T03:32:50.703Z
-Modified: 2022-03-27T09:13:44.275Z
+Modified: 2022-03-27T17:44:29.267Z
 */
 import { MetadataArgument, mArguments, getMetadata } from './metadata'
 import { ARGUMENT_ERROR, ARGUMENT_TYPE_MISSMATCH, MCError } from '../@utils/mce-error'
@@ -39,7 +39,7 @@ export class Argument {
 	}
 	match(args: string[]) {
 		if(this.rest) {
-			return this.parseValue(args.splice(0).join(', '))
+			return this.parseValue(args.splice(0).join(','))
 		}
 		return this.parseValue( args.shift() )
 	}

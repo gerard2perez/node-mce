@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: hydrate-command.ts
 Created:  2022-03-26T04:50:37.117Z
-Modified: 2022-03-26T04:52:48.476Z
+Modified: 2022-03-27T17:43:11.875Z
 */
 import { Argument, Option } from '../core'
 import { LoadModule } from '../module-loader'
@@ -23,9 +23,13 @@ export async function hydrateCommand(requestedCMD: string, programArgs: string[]
 	if (iligalOptions.length) {
 		throw new Error(`This command does not support this options: ${iligalOptions.join(', ')}`)
 	}
-	const mappedArguments = argus.map(argument => ({ index: argument.index, tag: argument.name, value: argument.match(programArgs) }))
+	let hasSpredArguments = false
+	const mappedArguments = argus.map(argument => {
+		hasSpredArguments = argument.rest
+		return { index: argument.index, tag: argument.name, value: argument.match(programArgs) }
+	})
 	const final_args = [...mappedArguments].sort((a, b) => a.index - b.index).map(arg => arg.value)
-	applyLegacyFixtures(mappedOptions, Command, final_args)
+	const isLegacy = applyLegacyFixtures(mappedOptions, Command, final_args)
 	const arg_count =  (Command as any).arg_count || argus.length
 	const len = final_args.length + programArgs.length
 	if(programArgs.length) {
@@ -34,5 +38,9 @@ export async function hydrateCommand(requestedCMD: string, programArgs: string[]
 	if(arg_count !== len) {
 		throw new MCError(ARGUMENT_COUNT_ERROR, 'Argument count missmatch' +`${arg_count}!=${len}`)
 	}
-	return await Command.action(...final_args, {arg_count, len, ...programArgs})
+	if(hasSpredArguments && !isLegacy) {
+		const spread = final_args.pop() as unknown[]
+		final_args.push(...spread)
+	}
+	return await Command.action(...final_args)
 }

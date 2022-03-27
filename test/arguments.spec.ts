@@ -6,7 +6,7 @@ describe('Arguments Parsing', () => {
 	beforeAll(() => SetProjectPath('./test/demo_project'))
 	beforeEach(() => {
 		Reset()
-		find.commands('args1', 'args2', 'args3', 'args4', 'args5', 'args6', 'args7', 'args8')
+		find.commands('args1', 'args2', 'args3', 'args4', 'args5', 'args6', 'args7', 'args8', 'args9')
 	})
 	afterAll(() => Restore())
 	test('full rendering of arguments', async () => {
@@ -74,5 +74,15 @@ describe('Arguments Parsing', () => {
     test('Varidac argument can only be in last place', async () => {
 		const res = Execute('demo args5 true 10 arg2 -n=r -f=a')
         await expect(res).rejects.toThrow('Varidac argument can only be in last place')
+	})
+	test('Varidac Parser for new API', async () => {
+		const result = await Execute('demo args9 10 hello world')
+		expect(result).toEqual({
+			arg1: 10,
+			arg2: [
+				'hello',
+				'world'
+			]
+		})
 	})
 })
