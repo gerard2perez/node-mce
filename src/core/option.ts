@@ -6,7 +6,7 @@ Proprietary and confidential
 w
 File: option.ts
 Created:  2022-01-30T04:03:09.903Z
-Modified: 2022-03-27T08:54:39.377Z
+Modified: 2022-04-18T21:24:24.312Z
 */
 import { MCError, MISSING_VALUE_OPTION } from '../@utils/mce-error'
 import 'reflect-metadata'
@@ -61,6 +61,7 @@ export class Option {
 		const results = []
 		for(let i=0; i<args.length; i++) {
 			const tag = args[i]
+			if(!tag.startsWith('-'))continue
 			if(tag ===this.tag || tag === this.short) {
 				results.push(tag)
 			} else if(tag && this.decompressTags(tag, i, args) ) {

@@ -12,6 +12,25 @@ describe('Arguments Parsing', () => {
 	test('full rendering of arguments', async () => {
 		await expect(Execute('demo args8 -h')).resolves.toBe(readLog('args8.help.log'))
 	})
+	test('Correctly handles arguments with hypen', async() => {
+        const res = await Execute('demo args8 arg1-args1a arg2')
+        await expect(res).toEqual({
+			arg1: 'arg1-args1a',
+			varidac: ['arg2'],
+			opt: {
+                enumeration: undefined,
+                number: undefined,
+                floating: undefined,
+				help: false,
+                range: [],
+                text: undefined,
+                bool: false,
+                list: [],
+                collect: [],
+                verbose: 0
+            }
+		})
+    })
     test('throws if not required arguments', async() => {
         const res = Execute('demo args8')
         await expect(res).rejects.toThrow('Argument arg1 is required')

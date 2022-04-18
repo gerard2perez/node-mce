@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: hydrate-command.ts
 Created:  2022-03-26T04:50:37.117Z
-Modified: 2022-03-27T17:43:11.875Z
+Modified: 2022-04-18T21:24:48.864Z
 */
 import { Argument, Option } from '../core'
 import { LoadModule } from '../module-loader'
@@ -19,7 +19,7 @@ export async function hydrateCommand(requestedCMD: string, programArgs: string[]
 	const argus = Argument.Get(Command)
 
 	const mappedOptions = options.map((opt, idx) => ({ index: idx, tag: opt.name, value: opt.match(programArgs) }))
-	const iligalOptions = programArgs.filter(parg => parg.includes('-', 0))
+	const iligalOptions = programArgs.filter(parg => parg.startsWith('-', 0))
 	if (iligalOptions.length) {
 		throw new Error(`This command does not support this options: ${iligalOptions.join(', ')}`)
 	}
