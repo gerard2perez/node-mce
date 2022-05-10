@@ -10,13 +10,13 @@ Modified: 2022-03-26T04:17:02.306Z
 */
 
 import { LogSymbols } from '../spinner/symbols'
-import { RegisterLogFormater } from './register-log-formater'
+import { RegisterLogFormatter } from './register-log-formatter'
 
 
 
-RegisterLogFormater(function(symbol: string) {
+RegisterLogFormatter(function(symbol: string) {
     return LogSymbols[symbol]
 }, 'sy')
-RegisterLogFormater(function(symbol: string) {
+RegisterLogFormatter(function(symbol: string) {
     return LogSymbols[symbol]
 }, 'ico')

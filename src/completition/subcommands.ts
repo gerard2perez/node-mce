@@ -11,7 +11,7 @@ Modified: 2022-03-26T03:59:58.467Z
 
 import { DefaultHelpRenderer } from '../@utils/help.renderer'
 import { DefaultTheme } from '../@utils/theme'
-import { Command, Option, cleanColor, tagcompiler } from '../core'
+import { Command, Option, cleanColor, tagCompiler } from '../core'
 import { Trie } from '../@utils/trie'
 import { cliPath } from '../fs'
 import { LoadModule } from '../module-loader'
@@ -28,8 +28,8 @@ async function completeCommands(cmd: string, input: string, commands: string[]) 
 			// return Command.getName(ctr.prototype)
 			return {
 				command: Command.getName(ctr.prototype),
-				header: cleanColor(tagcompiler`${hRenderer.header(cmd, commands.length===0, build)}`),
-				help: cleanColor(tagcompiler`${hRenderer.generateHelp(cmd, build)}`)
+				header: cleanColor(tagCompiler`${hRenderer.header(cmd, commands.length===0, build)}`),
+				help: cleanColor(tagCompiler`${hRenderer.generateHelp(cmd, build)}`)
 			}
 		})
 		console.log(JSON.stringify(toRender))
@@ -47,7 +47,7 @@ async function completeArgumentsFor(requestedCMD: string, input: string) {
 		return {
 			command: argument,
 			header: argument,
-			help: cleanColor(tagcompiler`${hRenderer.options(_options.find(opt => opt.tag === argument || opt.short === argument), 0, 20)}`),
+			help: cleanColor(tagCompiler`${hRenderer.options(_options.find(opt => opt.tag === argument || opt.short === argument), 0, 20)}`),
 		}
 	}))
 	console.log(JSON.stringify(toRender))

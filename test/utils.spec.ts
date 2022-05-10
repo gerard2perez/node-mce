@@ -47,8 +47,6 @@ describe('Utils functions', () => {
         await Execute('demo -v')
 		find.commands('single')
 		await Execute('demo -h')
-		find.commands('rest.ts')
-		await Execute('demo')
 		find.commands('single')
 		await Execute('demo --version')
     })

@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: execute-director.ts
 Created:  2022-01-31T07:37:27.395Z
-Modified: 2022-03-27T07:00:58.490Z
+Modified: 2022-05-10T20:19:25.048Z
 */
 import { basename } from 'path'
 import { locations } from '../program'
@@ -80,12 +80,10 @@ export class CLIExecuter {
 		}
 	}
 	private patchRequestedCommand( preArguments: string[] ) {
-		const multiCommands = pathMapping.size > 1
 		let [requestedCMD, ...programArgs] = preArguments
-		if(!multiCommands) {
+	if(pathMapping.size === 1) {
 			programArgs = [requestedCMD, ...programArgs].filter(f => f)
-			pathMapping.set('index', cliPath('index'))
-			requestedCMD = 'index'
+			requestedCMD = Array.from(pathMapping.keys())[0]
 		}
 		if(requestedCMD && !pathMapping.has(requestedCMD)) {
 			throw new MCError(0, `The requested command '{${requestedCMD}|cyan}' does not exists\n  Options: ${Array.from(pathMapping.keys()).join('  ')}\n`)

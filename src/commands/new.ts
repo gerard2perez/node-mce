@@ -22,8 +22,8 @@ enum Styles {
 	single
 }
 
-let nproy
-async function createProjectExtructure(application: string, opt: Options<NewCommand>) {
+let projectFolder = () => ''
+async function createProjectStructure(application: string, opt: Options<NewCommand>) {
 	let { author } = opt
 	await spin('Creating Files', async () => {
 		// istanbul ignore else
@@ -87,18 +87,18 @@ export default class NewCommand extends Command {
 	@opt('s', 'Define the style of command you will use. If you need more than one command use git.') style = Styles.single
 	@opt dryRun: DryRun
 	async action( @arg application: string ) {
-		nproy = callerPath.bind(null, application)
-		if(!await override('Directory already exist. Do you want to override it', nproy(), this.force))
+		projectFolder = callerPath.bind(null, application)
+		if(!await override('Directory already exist. Do you want to override it', projectFolder(), this.force))
 			return
-		await createProjectExtructure(application, this)
+		await createProjectStructure(application, this)
 		this.npm && await spin('Initializing npm', async() => {
-			const npmResult = await dryExec('npm', ['install', '-S'], {cwd: nproy()})(false, 1000)
+			const npmResult = await dryExec('npm', ['install', '-S'], {cwd: projectFolder()})(false, 1000)
 			if (npmResult === false ) {
 				error`npm installation failed`
 			}
 		})
 		await spin('Initializing git', async() => {
-			const initResult = await dryExec('git', ['init'], {cwd: nproy()})(false, 1000)
+			const initResult = await dryExec('git', ['init'], {cwd: projectFolder()})(false, 1000)
 			if ( initResult === false ) {
 				error`git init`
 			}

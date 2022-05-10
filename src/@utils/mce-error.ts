@@ -9,13 +9,13 @@ Created:  2022-03-23T16:59:17.536Z
 Modified: 2022-03-26T01:04:05.179Z
 */
 
-import { tagcompiler } from '../output'
+import { tagCompiler } from '../output'
 
 
 export class MCError extends Error {
 	constructor(public exitCode: number, message: string) {
-		super( tagcompiler`${message}`)
-		this.stack = this.stack.replace('Error', tagcompiler`{Error|red}`)
+		super( tagCompiler`${message}`)
+		this.stack = this.stack.replace('Error', tagCompiler`{Error|red}`)
 	}
 }
 

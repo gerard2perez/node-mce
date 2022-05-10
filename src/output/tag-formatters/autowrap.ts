@@ -10,12 +10,12 @@ Modified: 2022-03-26T03:15:17.417Z
 */
 
 import { streams } from '../../system-streams'
-import { RegisterLogFormater } from './register-log-formater'
+import { RegisterLogFormatter } from './register-log-formatter'
 
 const wordWrap = (size: number) =>
 	new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
 
-RegisterLogFormater((text = '', start = 0) => {
+RegisterLogFormatter((text = '', start = 0) => {
 	let width = 80
 	try {
 		width = streams.output.getWindowSize()[0]

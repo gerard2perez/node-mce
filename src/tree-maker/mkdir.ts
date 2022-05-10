@@ -6,7 +6,7 @@ import { Chainable, chainable } from './chainable'
 export function mkdir(folder: string, ...operations: chainable[] ) {
 	this.path = join(this.path, folder)
 	const {path, root} = this
-	raw_mkdir(path)
+	raw_mkdir(path, {recursive: true})
 	for(const rtnOBJ of operations.filter(d => d) as Chainable[]) {
 		const fsInterface: fs_interface = {
 			root,

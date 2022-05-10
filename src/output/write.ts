@@ -10,7 +10,7 @@ Modified: 2022-03-26T03:46:00.014Z
 */
 
 import { streams } from '../system-streams'
-import { tagcompiler } from './tag-compiler'
+import { tagCompiler } from './tag-compiler'
 export function write(text: TemplateStringsArray, ...values: any[]) {
-	streams.output.write(tagcompiler(text, ...values))
+	streams.output.write(tagCompiler(text, ...values))
 }

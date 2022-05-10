@@ -9,12 +9,12 @@ Created:  2022-03-17T05:46:01.690Z
 Modified: 2022-03-26T04:18:03.288Z
 */
 import { MainSpinner } from '../spinner'
-import { tagcompiler } from '../tag-compiler'
+import { tagCompiler } from '../tag-compiler'
 
 export function verbosity(lvl: number) {
 	if( parseInt(process.env.MCE_VERBOSE) >= lvl) {
 		return (text: TemplateStringsArray, ...values: any[]) => { 
-			MainSpinner.log`${tagcompiler(text, ...values)}\n`
+			MainSpinner.log`${tagCompiler(text, ...values)}\n`
 		}	
 	}
 	return () => void 0

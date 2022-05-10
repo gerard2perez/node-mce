@@ -9,7 +9,7 @@ Created:  2022-03-17T05:33:55.174Z
 Modified: 2022-03-26T04:10:03.549Z
 */
 import chalk from 'chalk'
-import { RegisterLogFormater } from './register-log-formater'
+import { RegisterLogFormatter } from './register-log-formatter'
 const Color = {
 	black: 'black', red: 'red', green: 'green', yellow: 'yellow', blue: 'blue', magenta: 'magenta', cyan: 'cyan', white: 'white',
 	blackBright: 'blackBright', grey: 'grey', gray: 'gray', redBright: 'redBright', greenBright: 'greenBright', yellowBright: 'yellowBright', blueBright: 'blueBright', magentaBright: 'magentaBright', cyanBright: 'cyanBright', whiteBright: 'whiteBright'
@@ -43,8 +43,8 @@ for( const id of chalkFns) {
     const fn = function(text: string) {
         return chalk[id](text)
     }
-    RegisterLogFormater(fn, id)
+    RegisterLogFormatter(fn, id)
 }
-RegisterLogFormater(function(text: string, r, g, b) {
+RegisterLogFormatter(function(text: string, r, g, b) {
     return chalk.rgb(r, g, b)(text)
 }, 'rgb')

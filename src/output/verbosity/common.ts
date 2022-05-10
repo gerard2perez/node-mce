@@ -9,15 +9,15 @@ Created:  2022-03-17T05:48:01.985Z
 Modified: 2022-03-26T03:51:27.004Z
 */
 
-import { tagcompiler, tagReducer } from '../tag-compiler'
+import { tagCompiler, tagReducer } from '../tag-compiler'
 import { print } from '../print'
 import { verbosity } from './verbosity'
 
 export function info(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(2)`{info|sy|cyan} ${tagcompiler(text, ...values)}`
+	verbosity(2)`{info|sy|cyan} ${tagCompiler(text, ...values)}`
 }
 export function warn(text: TemplateStringsArray, ...values: any[]) {
-	verbosity(1)`{warning|sy|yellow} ${tagcompiler(text, ...values)}`
+	verbosity(1)`{warning|sy|yellow} ${tagCompiler(text, ...values)}`
 }
 export function error(text: TemplateStringsArray, ...values: any[]) {
 	print`{error|sy|red} ${tagReducer(text, ...values)}`

@@ -10,7 +10,7 @@ Modified: 2022-03-25T20:47:37.670Z
 */
 import { write } from '../output'
 import { Command, Option, Argument, mDescription, getMetadata, mAlias } from '../core'
-import { Color, Background } from '../output/tag-formaters'
+import { Color, Background } from '../output/tag-formatters'
 export interface HelpTheme {
 	description: {
 		primary: [Color, Background?],
