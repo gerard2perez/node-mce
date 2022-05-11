@@ -6,7 +6,7 @@ Proprietary and confidential
 
 File: execute-director.ts
 Created:  2022-01-31T07:37:27.395Z
-Modified: 2022-05-10T20:19:25.048Z
+Modified: 2022-05-11T03:39:37.571Z
 */
 import { basename } from 'path'
 import { locations } from '../program'
@@ -33,8 +33,11 @@ type GitStyle = {
 }
 
 export class CLIExecuter {
-	constructor(root: string) {
+	constructor(root: string, name?: string) {
 		process.env.MCE_ROOT = root
+		if(name) {
+			process.argv[1] = name
+		}
 	}
 	async execute<T=unknown>(argv: string[], data: GitStyle): Promise<T>
 	async execute<T=unknown>(argv: string[], data: SingleCommand): Promise<T>

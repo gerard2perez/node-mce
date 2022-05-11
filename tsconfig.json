@@ -16,7 +16,7 @@
     "esModuleInterop": true,
     "plugins": [
       {"transform" : "./metadata-decorators.ts", "after": true}
-    ],
+    ]
   },
   "include": [
     "src/**/*.ts"

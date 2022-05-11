@@ -11,12 +11,9 @@ function executeFunction(outDir: string, fn: any) {
 	}
 }
 export function SyncFiles(patterns: string[], outDir = './lib') {
-	const localPackage = new PackageJSON(callerPath('package.json'))
-	const bins = Object.keys(localPackage.bin).map(bin => localPackage.bin[bin]).map(bin => `${sync(bin)}:.`)
 	patterns = [
 		'templates/**/*:.',
 		'?(package.json|README.md|LICENSE):.',
-		...bins,
 		...patterns
 	]
 	const AllPatterns = []
