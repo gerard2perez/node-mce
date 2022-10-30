@@ -17,6 +17,6 @@ import { RegisterLogFormatter } from './register-log-formatter'
 RegisterLogFormatter(function(symbol: string) {
     return LogSymbols[symbol]
 }, 'sy')
-RegisterLogFormatter(function(symbol: string) {
+RegisterLogFormatter(function ico(symbol: string) {
     return LogSymbols[symbol]
 }, 'ico')

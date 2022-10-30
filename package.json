@@ -5,7 +5,7 @@
   "main": "./index.js",
   "private": false,
   "bin": {
-    "mce": "./mce"
+    "mce": "./cli.js"
   },
   "engines": {
     "node": ">= 10.0.0"
